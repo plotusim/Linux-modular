@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "module.h": "c",
+        "toolfunc.h": "c",
+        "unexport_symbol.h": "c"
+    }
+}
