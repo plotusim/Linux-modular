@@ -9,7 +9,7 @@
 
 
 // #endif
-struct mutex _text_mutex;
+struct mutex *_text_mutex;
 u32 (*_aarch64_insn_gen_branch_imm)(unsigned long pc, unsigned long addr,enum aarch64_insn_branch_type type); 
 int (*_aarch64_insn_patch_text_nosync)(void *addr, u32 insn);
 
