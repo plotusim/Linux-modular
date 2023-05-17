@@ -7,7 +7,7 @@ import re
 module_name = 'sys_module'         #模块目录名称
 driver_dir = 'drivers/user'
 src_dir = now_dir = os.path.join(os.getcwd(),'src')    # 源目录路径
-dst_dir = os.path.dirname(os.path.abspath(__file__)) + '/../linux-5.10.156-1/' + driver_dir   # 目标目录路径
+dst_dir = os.path.dirname(os.path.abspath(__file__)) + '/../../linux-5.10.156-1/' + driver_dir   # 目标目录路径
 module_dir = os.path.join(dst_dir, module_name)
 
 def add_src(): #将src的代码添加到kernel/driver/user中
@@ -50,7 +50,7 @@ kconfig_path = dst_dir + '/Kconfig'    # 待操作的文件路径
 def modify_build(): #修改kernel/driver/user中的Makefile和Kconfig
     #修改Makefile
     # 判断目标字符串是否存在于文件中,如果目标字符串不存在，则在文件最后一行添加该字符串
-    if(find_str(makefile_path, makefile_str)):
+    if(not find_str(makefile_path, makefile_str)):
         with open(makefile_path,'a') as f:
             f.write(makefile_str + '\n')
     
@@ -69,24 +69,37 @@ def modify_build(): #修改kernel/driver/user中的Makefile和Kconfig
 
         # 最后一个匹配行不为None，则在其后添加新字符串
         if last_match_line is not None:
-            with open(file_path, 'r+') as f:
+            with open(kconfig_path, 'r+') as f:
                 lines = f.readlines()
-                lines.insert(last_match_line, kconfig_str)
+                lines.insert(last_match_line, kconfig_str + "\n")
                 f.seek(0)
-            f.writelines(lines)     
+                f.writelines(lines)     
 
-def restore_bulid(): #恢复Makefile和Kconfig
-    #恢复Makefile
+def delete_str(file_path,str):
     with fileinput.input(files=(file_path), inplace=True) as f:
         for line in f:
             # 删除包含目标字符串的整行
-            if not re.search(target_str, line):
+            if not str in line:
                 print(line, end='')
+
+def restore_bulid(): #恢复Makefile和Kconfig
+    #恢复Makefile
+    delete_str(makefile_path,makefile_str)
     
     #恢复Kconfig
+    delete_str(kconfig_path,kconfig_str)
+
 
 def modify_code(): #修改kernel/sys.c中的代码
     print()
 
 if __name__ =="__main__":
-    print()
+    num = int(input("请输入数字："))
+    if(num == 1):        
+        add_src()
+        modify_build()
+    elif(num == 2):
+        remove_src()
+        restore_bulid()
+    else:
+        print("输入数字错误")

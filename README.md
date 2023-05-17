@@ -1,1 +1,1 @@
-Linux kernel modular backend demo
+Linux kernel modular demo

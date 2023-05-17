@@ -1,4 +1,6 @@
 #include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/cpumask.h>
 
 #include "toolfunc.h"
 #include "jmp_interface.h"
@@ -11,7 +13,7 @@ MODULE_DESCRIPTION("new module");
 
 
 static int find_symbol(void){
-    _text_mutex = *(void *)kallsyms_lookup_name("text_mutex");
+    _text_mutex = (void *)kallsyms_lookup_name("text_mutex");
     if (!_text_mutex) {
 		printk("text相关工作失败!");
 		return -1;
@@ -40,25 +42,27 @@ static int mod_install(void){
         return -1;
     }
     jmp_init();
+    printk("jmp init success");
     get_online_cpus();
-	mutex_lock(&_text_mutex);
+	mutex_lock(_text_mutex);
     JMP_OPERATION(install);
-    mutex_unlock(&_text_mutex);
+    mutex_unlock(_text_mutex);
 	put_online_cpus();
 
     printk(KERN_INFO "Module install\n");
+    return 1;
 } 
 
 static void restore_function(void){
     get_online_cpus();
-	mutex_lock(&_text_mutex);
+	mutex_lock(_text_mutex);
     JMP_OPERATION(remove);
-    mutex_unlock(&_text_mutex);
+    mutex_unlock(_text_mutex);
 	put_online_cpus();
 }
 
 static int __init mod_init(void){
-    if(mod_install){
+    if(mod_install()){
         printk("module install success");
     }
     else{
