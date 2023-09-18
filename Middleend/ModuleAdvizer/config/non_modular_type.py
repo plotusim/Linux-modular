@@ -1,0 +1,2 @@
+non_modular_type = {"INIT", "EXPORT", "INIT_REACH", "TRACE", "VIRTUAL_STRUCTS_REACH_LEVEL_1", "VIRTUAL_STRUCTS",
+                    "VIRTUAL_STRUCTS_REACH"}
