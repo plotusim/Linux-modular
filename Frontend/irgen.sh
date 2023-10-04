@@ -1,6 +1,6 @@
 # Configurations
 
-KERNEL_SRC="/home/plot/Linux-modular/linux-5.10.172"
+KERNEL_SRC="$(pwd)/kernel_src"
 IRDUMPER="$(pwd)/IRDumper/build/lib/libDumper.so"
 CLANG="$(pwd)/llvm-project/prefix/bin/clang"
 CONFIG="defconfig"
