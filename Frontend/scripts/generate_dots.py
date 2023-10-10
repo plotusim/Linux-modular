@@ -63,7 +63,13 @@ def GraphToDot(source_dir, target_dir):
 
 
 def main():
-    GraphToDot(graph_dir, dot_dir)
+    parser = argparse.ArgumentParser(description='Transfer dots')
+    parser.add_argument('--source_txt', help='source txts path', required=True)
+    parser.add_argument('--dot_path', help='output dots directory path',required=True)
+    args = parser.parse_args()
+
+
+    GraphToDot(args.source_txt, args.dot_path)
 
 
 if __name__=='__main__' :

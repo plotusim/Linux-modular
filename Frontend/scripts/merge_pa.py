@@ -5,7 +5,7 @@ from collections import defaultdict
 base_path = "../"
 dot_pa_dir = os.path.join(base_path, "Data/dots_pa")
 dot_dir = os.path.join(base_path, "Data/dots")
-merged_dot_dir = os.path.join(base_path, "Data/merged_dots")
+merged_dot_dir = os.path.join(base_path, "Data/dots_merge")
 
 func_use_gv = defaultdict(set)
 gv_use_func = defaultdict(set)

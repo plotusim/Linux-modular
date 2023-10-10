@@ -2,11 +2,9 @@ import os
 
 base_path = "../"
 
-source_dir = os.path.join(base_path,'Frontend/kernel_src')
-graph_dir = os.path.join(base_path,'Data/txts')
-library_path = os.path.join(base_path,'Frontend/ExtendedFuncGraph/ExtendedFuncGraph.so')
+source_dir = os.path.join(base_path,'Frontend/KERNEL_SRC')
 
-opt_path = "/home/plot/Linux-modular/TypeDive/mlta/llvm-project/prefix/bin/opt"
+opt_path = os.path.join(base_path,"Frontend/llvm-project/prefix/bin/opt")
 
 def modify(file_name):
     lines = []
@@ -29,7 +27,7 @@ def modify(file_name):
         f.writelines(lines)
 
 
-def IRToGraph(source_dir, target_dir):
+def IRToGraph(source_dir, target_dir, library_path):
     # 遍历源文件夹下的所有文件和子文件夹
     for root, dirs, files in os.walk(source_dir):
         # 遍历所有文件
@@ -52,7 +50,12 @@ def IRToGraph(source_dir, target_dir):
 
 
 def main():
-    IRToGraph(source_dir, graph_dir)
+    parser = argparse.ArgumentParser(description='Classify analyze .so')
+    parser.add_argument('--so', help='llvm analyze pass', required=True)
+    parser.add_argument('--output_txt', help='output directory path',required=True)
+    args = parser.parse_args()
+
+    IRToGraph(source_dir, args.output_txt, args.so)
 
 
 if __name__=='__main__' :

@@ -2,61 +2,104 @@
 
 ## 生成.bc
 
-# # 生成.txt
-# generate_txt_file="scripts/generate_txts.py"
+## 生成.txt
+generate_txt_file="scripts/generate_txts.py"
 
-# python "$generate_txt_file"
+### 函数分析
+so_path="./LLVM_PASS/ExtendedFuncGraph.so"
+txt_path="../Data/txts"
+python "$generate_txt_file" --so "$so_path" --output_txt "$txt_path"
 
-# if [ $? -ne 0 ]; then
-#     echo "执行 $generate_txt_file 时出现错误"
-#     exit 1
-# fi
+if [ $? -ne 0 ]; then
+    echo "执行 $generate_txt_file 时出现错误 :$so_path"
+    exit 1
+fi
 
-# echo "generate .txts exit"
+echo "generate txts exit :$txt_path"
 
-# ## 生成.dot
+### 指针分析
+so_path="./LLVM_PASS/Steensggard.so"
+txt_path="../Data/txts_pa"
+python "$generate_txt_file" --so "$so_path" --output_txt "$txt_path"
 
-# generate_dot_file="scripts/generate_dots.py"
+if [ $? -ne 0 ]; then
+    echo "执行 $generate_txt_file 时出现错误:$so_path"
+    exit 1
+fi
 
-# python "$generate_dot_file"
+echo "generate txts exit :$txt_path"
 
-# if [ $? -ne 0 ]; then
-#     echo "执行 $generate_dot_file 时出现错误"
-#     exit 1
-# fi
+## 生成.dot
+generate_dot_file="scripts/generate_dots.py"
 
-# echo "generate .dots exit"
+### 函数分析的dots
+txt_path="../Data/txts"
+dot_path="../Data/dots"
 
-# 合并dot文件
+python "$generate_dot_file" --source_txt "$txt_path" --dot_path "$dot_path"
 
-# base_path="../"
+if [ $? -ne 0 ]; then
+    echo "执行 $generate_dot_file 时出现错误 :$txt_path -> $dot_path"
+    exit 1
+fi
 
-# combine_python_file="scripts/combine_dots.py"
-# input_file="${base_path}Data/dots"
-# output_file="${base_path}Data/dots/all.dot"
+echo "generate $dot_path exit"
 
-# python "$combine_python_file" -i "$input_file" -o "$output_file"
+### 指针分析的dots
+txt_path="../Data/txts_pa"
+dot_path="../Data/dots_pa"
 
-# if [ $? -ne 0 ]; then
-#     echo "执行 $python_file 时出现错误"
-#     exit 1
-# fi
+python "$generate_dot_file" --source_txt "$txt_path" --dot_path "$dot_path"
 
-# echo "combine all dots to all.dot"
+if [ $? -ne 0 ]; then
+    echo "执行 $generate_dot_file 时出现错误 :$txt_path -> $dot_path"
+    exit 1
+fi
+
+echo "generate $dot_path exit"
 
 
-python_files=("scripts/classify_functions.py")
-# 遍历文件列表并执行每个 Python 文件
-for file in "${python_files[@]}"
-do
-    # 执行 Python 文件
-    python "$file"
+## 生成增量dots
+merge_dot_file="scripts/merge_pa.py"
 
-    # 检查上一次命令的返回值
-    if [ $? -ne 0 ]; then
-        echo "执行 $file 时出现错误"
-        exit 1
-    fi
-done
+python "$merge_dot_file"
 
-echo "所有 Python 文件已成功执行"
+if [ $? -ne 0 ]; then
+    echo "执行 $gmerge_dot_file 时出现错误"
+    exit 1
+fi
+
+echo "merge dots_pa to dots"
+
+
+## 合并dot文件到all.dot
+base_path="../"
+
+combine_python_file="scripts/combine_dots.py"
+input_file="${base_path}Data/dots_merge"
+output_file="${base_path}Data/dots_merge/all.dot"
+
+python "$combine_python_file" -i "$input_file" -o "$output_file"
+
+if [ $? -ne 0 ]; then
+    echo "执行 $python_file 时出现错误"
+    exit 1
+fi
+
+echo "combine all dots to all.dot"
+
+
+## 函数分类
+classify_funcs_file="scripts/classify_functions.py"
+
+python "$classify_funcs_file"
+
+# 检查上一次命令的返回值
+if [ $? -ne 0 ]; then
+    echo "执行 $classify_funcs_file 时出现错误"
+    exit 1
+fi
+
+echo "classify functions finish"
+
+echo "Frontend finished !"
