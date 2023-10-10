@@ -1,23 +1,29 @@
-import os
+import os.path
 
-current_path = os.path.abspath(__file__)
-project_root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_path))))
-data_folder = os.path.join(project_root_path, "Data")
+# Frontend data path
+func_list_files_dir = '/home/plot/lls_test_frontend/Data/func_list_pa/'
+dots_root_folder = '/home/plot/lls_test_frontend/Data/merged_dots'
 
-# 存放前端生成的dots
-dots_root_folder = os.path.join(data_folder, 'dots')
+# Funcs list file name 
+init_funcs_list_file = os.path.join(func_list_files_dir, 'init_funcs.txt')
+init_reach_funcs_list_file = os.path.join(func_list_files_dir, 'init_reach_funcs.txt')
+export_funcs_list_file = os.path.join(func_list_files_dir, 'export_symbols.txt')
+trace_funcs_list_file = os.path.join(func_list_files_dir, 'trace_funcs.txt')
+modular_funcs_list_file = os.path.join(func_list_files_dir, 'modular_funcs.txt')
+virtual_structs_reach_funcs_list_file = os.path.join(func_list_files_dir, 'virtual_structs_reach_funcs.txt')
+virtual_structs_list_file = os.path.join(func_list_files_dir, 'virtual_structs.txt')
+virtual_structs_top_funcs_list_file = os.path.join(func_list_files_dir, 'virtual_structs_top_funcs.txt')
+syscall_funcs_list_file = os.path.join(func_list_files_dir, 'syscall_funcs.txt')
 
-# 存放前端分析的init函数列表
-init_func_list_file = os.path.join(data_folder, 'func_list', 'initfuncs.txt')
+# Cache for kernel graph
+linux_whole_kernel_dot = os.path.join(dots_root_folder, 'all.dot')
 
+temp_dir = "./temp/"
+if not os.path.exists(temp_dir):
+    os.mkdir(temp_dir)
 
-init_reach_func_list_file = os.path.join(data_folder, 'func_list', 'init_reach_funcs.txt')
-export_func_list_file = os.path.join(data_folder, 'func_list', 'export_symbols.txt')
-virtual_structs_reach_level1_list_file = os.path.join(data_folder, 'func_list',
-                                                      'virtual_structs_reach_level1_list_file.txt')
-all_virtual_structs_reach_funcs_list_file = os.path.join(data_folder, 'func_list',
-                                                         'all_virtual_structs_reach_funcs_list_file.txt')
+kernel_graph_reverse_adjacency_list_cache = os.path.join(temp_dir, dots_root_folder.split(os.path.sep)[
+    -1] + '_kernel_graph_reverse_adjacency_list_cache.pkl')
 
-whole_kernel_dot_file = os.path.join(data_folder, 'new_linux_all_with_file_label.dot')
-
-whole_kernel_graph_cache = os.path.join(data_folder, 'whole_kernel_graph_cache.pkl')
+kernel_graph_adjacency_list_cache = os.path.join(temp_dir, dots_root_folder.split(os.path.sep)[
+    -1] + '_kernel_graph_adjacency_list_cache.pkl')

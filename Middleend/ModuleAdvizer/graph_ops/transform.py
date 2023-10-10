@@ -1,18 +1,22 @@
 import pydot
-from typing import Dict
 
 
-def set_nodes_type(graph, node_types, default_type):
-    dicts = {}
-    for node in graph.get_nodes():
-        flag = False
-        for node_type, files in node_types.items():
-            if node.get_name() in files:
-                node.set("type", node_type)
-                flag = True
-                break
-        if not flag:
-            node.set("type", default_type)
+def set_nodes_type(graph: pydot.Graph, node_types):
+    for node_type, func_name_set in node_types.items():
+        for func_name in func_name_set:
+            func_node = graph.get_node(func_name)
+            if func_node:
+                func_node = func_node[0]
+                if func_node.get("type") is None:
+                    func_node.set("type", node_type)
+
+    return graph
+
+
+def set_default_type(graph: pydot.Graph):
+    for func_node in graph.get_nodes():
+        if func_node.get("type") is None:
+            func_node.set("type", "PLAIN")
     return graph
 
 

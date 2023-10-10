@@ -13,9 +13,11 @@ function_color_mapping = {
     "EXTERNAL": "green",
     "VIRTUAL": "gray",
     "VIRTUAL_STRUCTS": "brown",
-    "VIRTUAL_STRUCTS_REACH_LEVEL_1": "goldenrod",
+    "VIRTUAL_STRUCTS_REACH_TOP": "goldenrod",
     "VIRTUAL_STRUCTS_REACH": "cyan",
-    "TRACE": "darkgreen"
+    "TRACE": "darkgreen",
+    "SYSCALL": "purple",
+    "MODULAR": "orange"
 }
 recommendation_color_mapping = {
     "INTERFACE": "blue",

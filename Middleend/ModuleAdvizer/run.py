@@ -1,7 +1,8 @@
-import main
 from graph_ops import partition_graph
 import argparse
+
 import os
+from analyze import run_analysis
 from config.data_path import dots_root_folder
 
 
@@ -13,7 +14,6 @@ def dfs(relative_path, result_folder):
         if not os.path.exists(os.path.join(result_folder, relative_path, i)):
             os.mkdir(os.path.join(result_folder, relative_path, i))
 
-
     main(relative_path, result_folder)
 
     for i in subdirectories:
@@ -22,6 +22,8 @@ def dfs(relative_path, result_folder):
 
 
 def run_all(result_folder):
+    if not os.path.exists(result_folder):
+        os.makedirs(result_folder)
     subdirectories = [entry.name for entry in os.scandir(dots_root_folder) if entry.is_dir()]
     for i in subdirectories:
         if not os.path.exists(os.path.join(result_folder, i)):
@@ -34,7 +36,7 @@ def main(subsystem, result_folder):
     temp_folder = os.path.join(result_folder, subsystem, "temp")
     if not os.path.exists(temp_folder):
         os.mkdir(temp_folder)
-    graph = main(dot_file_folder, temp_folder)
+    graph = run_analysis(dot_file_folder, temp_folder)
     partition_graph.main(graph, os.path.join(result_folder, subsystem, "res.dot"))
 
 

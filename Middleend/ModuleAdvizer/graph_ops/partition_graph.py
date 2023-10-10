@@ -1,5 +1,5 @@
 from utils.read_file import read_dot
-from transform import set_color
+from graph_ops.transform import set_color
 from config.color_mapping import recommendation_color_mapping
 import pydot
 import argparse
@@ -9,10 +9,11 @@ from collections import defaultdict
 class UnionFind:
     def __init__(self):
         self.parent = {}
+        self.rank = {}
 
     def find(self, u):
         if u != self.parent.setdefault(u, u):
-            self.parent[u] = self.find(self.parent[u])
+            self.parent[u] = self.find(self.parent[u])  # 路径压缩
         return self.parent[u]
 
     def union(self, u, v):
@@ -20,7 +21,14 @@ class UnionFind:
         v = self.find(v)
         if u == v:
             return
-        self.parent[u] = v
+
+        if self.rank.setdefault(u, 0) < self.rank.setdefault(v, 0):
+            u, v = v, u
+
+        self.parent[v] = u
+
+        if self.rank[u] == self.rank[v]:
+            self.rank[u] += 1
 
     def subgraphs(self):
         subgraphs_dict = defaultdict(list)

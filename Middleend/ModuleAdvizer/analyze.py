@@ -17,9 +17,9 @@ def parse_args():
     return parser.parse_args()
 
 
-def main(dot_file_folder, output_folder):
-    graph = get_origin_graph(dot_file_folder)
-    output_path = os.path.join(output_folder, dot_file_folder.split("/")[-1])
+def run_analysis(dot_file_folder_path, output_folder_path):
+    graph = get_origin_graph(dot_file_folder_path)
+    output_path = os.path.join(output_folder_path, dot_file_folder_path.split("/")[-1])
     graph.write(output_path + "_origin" + "_v" + ".dot")
     print("build external edges")
     graph = build_external_edges(graph)
@@ -32,4 +32,4 @@ if __name__ == '__main__':
     args = parse_args()
     dot_file_folder = args.dot_file_folder
     output_folder = args.output_folder
-    main(dot_file_folder, output_folder)
+    run_analysis(dot_file_folder, output_folder)

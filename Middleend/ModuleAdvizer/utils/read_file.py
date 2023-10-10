@@ -13,10 +13,14 @@ def read_dot(filepath):
 
 def read_funcs(func_list_file):
     funcs_list = set()
-    with open(func_list_file, 'r') as file:
-        funcs = file.readlines()
-        for func in funcs:
-            func = func.strip()
-            if len(func) > 0:
-                funcs_list.add(func)
+    try:
+        with open(func_list_file, 'r') as file:
+            funcs = file.readlines()
+            for func in funcs:
+                func = func.strip()
+                if len(func) > 0:
+                    funcs_list.add(func)
+    except FileNotFoundError:
+        print(f"File '{func_list_file}' not found. Returning an empty set.")
+
     return funcs_list

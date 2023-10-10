@@ -1,6 +1,6 @@
 import pydot
 
-from utils.load_graph import get_whole_linux_graph
+from utils.load_adjacency_list import get_whole_linux_kernel_reverse_adjacency_list
 
 
 def add_edge(graph, source, destination):
@@ -17,18 +17,14 @@ def add_edge(graph, source, destination):
 
 
 def build_external_edges(graph):
-    external_graph = get_whole_linux_graph()
-    external_edges = external_graph.get_edges()
+    reverse_adjacency_list = get_whole_linux_kernel_reverse_adjacency_list()
 
     nodes_set = {}
     for i in graph.get_nodes():
         nodes_set[i.get_name()] = i
 
-    for i in external_edges:
-        source: str = i.get_source()
-        destination: str = i.get_destination()
-        # filter out the external-to-external edge
-        if destination in nodes_set and nodes_set[destination].get("type") != "EXTERNAL":
-            add_edge(graph, source, destination)
+    for node in nodes_set.keys():
+        for i in reverse_adjacency_list[node]:
+            add_edge(graph, i, node)
 
     return graph

@@ -1,4 +1,4 @@
-from config import non_modular_type
+from config.non_modular_type import non_modular_type
 from config.color_mapping import function_color_mapping
 from graph_ops.transform import remove_nodes_with_predicate, set_color
 from graph_ops.recommendation import update_recommendation_info
