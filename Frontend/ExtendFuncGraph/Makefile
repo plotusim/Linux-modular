@@ -1,18 +1,26 @@
-LLVM_PATH := /path/to/llvm
+LLVM_PATH := ../llvm-project/prefix
 
 CXX := clang++
 CXXFLAGS := $(shell $(LLVM_PATH)/bin/llvm-config --cxxflags)
 LDFLAGS := $(shell $(LLVM_PATH)/bin/llvm-config --ldflags)
 
-TARGET := ExtendedCallGraph.so
-SRC := ExtendedCallGraph.cpp
+
+TARGET1 := ExtendedFuncGraph.so
+SRC1 := ExtendedFuncGraph.cpp
+
+
+TARGET2 := Steensggard.so
+SRC2 := Steensggard.cpp
 
 .PHONY: all clean
 
-all: $(TARGET)
+all: $(TARGET1) $(TARGET2)
 
-$(TARGET): $(SRC)
+$(TARGET1): $(SRC1)
+	$(CXX) $(CXXFLAGS) -Wl,-znodelete -fno-rtti -fPIC -shared $< -o $@ $(LDFLAGS)
+
+$(TARGET2): $(SRC2)
 	$(CXX) $(CXXFLAGS) -Wl,-znodelete -fno-rtti -fPIC -shared $< -o $@ $(LDFLAGS)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET1) $(TARGET2)

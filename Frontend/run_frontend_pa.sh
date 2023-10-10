@@ -32,8 +32,8 @@
 # base_path="../"
 
 # combine_python_file="scripts/combine_dots.py"
-# input_file="${base_path}Data/dots"
-# output_file="${base_path}Data/dots/all.dot"
+# input_file="${base_path}Data/dots_pa"
+# output_file="${base_path}Data/dots_pa/all.dot"
 
 # python "$combine_python_file" -i "$input_file" -o "$output_file"
 
@@ -45,7 +45,7 @@
 # echo "combine all dots to all.dot"
 
 
-python_files=("scripts/classify_functions.py")
+python_files=("scripts/classify_functions_pa.py")
 # 遍历文件列表并执行每个 Python 文件
 for file in "${python_files[@]}"
 do

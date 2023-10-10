@@ -19,7 +19,11 @@ def combine_dots(folder_path: str):
             if filename.endswith(".dot") and not filename.endswith("mod.dot"):
                 # 解析 .dot 文件并获取 Dot 对象
                 file_path = os.path.join(root, filename)
-                dot_graph = pydot.graph_from_dot_file(file_path)[0]
+                try:
+                    dot_graph = pydot.graph_from_dot_file(file_path)[0]
+                except TypeError:
+                    print(file_path)
+                    return
 
                 # 遍历节点并添加到新的 Dot 对象中
                 for node in dot_graph.get_nodes():
@@ -42,8 +46,11 @@ def combine_dots(folder_path: str):
             if filename.endswith(".dot") and not filename.endswith("mod.dot"):
                 # 解析 .dot 文件并获取 Dot 对象
                 file_path = os.path.join(root, filename)
-                dot_graph = pydot.graph_from_dot_file(file_path)[0]
-
+                try:
+                    dot_graph = pydot.graph_from_dot_file(file_path)[0]
+                except TypeError:
+                    print(file_path)
+                    return
                 for edge in dot_graph.get_edges():
                     merged_graph.add_edge(edge)
                     if edge.get_destination() not in nodes_dict:

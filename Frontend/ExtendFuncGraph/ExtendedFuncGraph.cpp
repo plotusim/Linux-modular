@@ -25,6 +25,7 @@ using namespace llvm;
 class ExtendedFuncGraph : public ModulePass {
 public:
     static char ID;
+
     ExtendedFuncGraph() : ModulePass(ID) {}
 
     void addNodeAndEdge(CallGraph &CG, Function *Caller, Function *Callee) {
@@ -36,38 +37,66 @@ public:
         CallerNode->addCalledFunction(nullptr, CalleeNode);
     }
 
-    std::set<llvm::Function*> initFunctions;
-    llvm::Function* initVirtualFunc;
+    std::set<llvm::Function *> initFunctions;
+    llvm::Function *initVirtualFunc;
 
-    void AddInternal(const Constant *CV) {
+    // stack to record struct/array name in mutual recursion
+    std::vector <std::string> nameStack;
+
+    void AddInternal(const Constant *CV, StringRef name) {
+
+
         // ConstantArray
         if (const ConstantArray *CA = dyn_cast<ConstantArray>(CV)) {
+
             // output first element
-            AddFunctionInternal(CA->getOperand(0));
+            AddFunctionInternal(CA->getOperand(0), name);
             for (unsigned i = 1, e = CA->getNumOperands(); i != e; ++i) {
-                AddFunctionInternal(CA->getOperand(i));
+                AddFunctionInternal(CA->getOperand(i), name);
             }
             return;
         }
 
         // ConstantStruct
         if (const ConstantStruct *CS = dyn_cast<ConstantStruct>(CV)) {
+
+
+            // push name of current data structure onto stack
+
+            nameStack.push_back(name.str());
+
             unsigned N = CS->getNumOperands();
+
             if (N) {
                 // first element
-                AddFunctionInternal(CS->getOperand(0));
+                AddFunctionInternal(CS->getOperand(0), name);
                 for (unsigned i = 1; i < N; i++) {
-                    AddFunctionInternal(CS->getOperand(i));
+                    AddFunctionInternal(CS->getOperand(i), name);
                 }
             }
+
+            // pop
+
+
+            nameStack.pop_back();
+
             return;
         }
     }
 
-    void AddFunctionInternal(const Value *V) {
+    void AddFunctionInternal(const Value *V, StringRef name) {
         if (V->hasName()) {
-            if(const Function *func = dyn_cast<Function>(V)) {
-                initFunctions.insert(const_cast<llvm::Function *>(dyn_cast<Function>(V)));
+            if (const Function *func = dyn_cast<Function>(V)) {
+                // todo
+                std::string funcName = V->getName().str();
+//                for (const auto &structureName: nameStack) {
+//                    funcName = funcName + '+' + structureName;
+//                }
+
+                Function *F = const_cast<llvm::Function *>(dyn_cast<Function>(V));
+//                F->setName(funcName);
+                initFunctions.insert(F);
+
                 return;
             }
             return;
@@ -75,98 +104,107 @@ public:
 
         // if is constant
         const Constant *CV = dyn_cast<Constant>(V);
-        if(CV){
-            AddInternal(CV);
+        if (CV) {
+            if (const ConstantStruct *CS = dyn_cast<ConstantStruct>(CV)) {
+                if (CS->getType()->hasName()) {
+                    nameStack.push_back(CS->getType()->getName().str());
+                    AddInternal(CS, CS->getType()->getName().str());
+                    nameStack.pop_back();
+                }
+            }
+            else {
+                AddInternal(CV, name);
+            }
         }
     }
 
+
     void DealingInitializers(Module &M, CallGraph &CG) {
         // deal with initializers
-        for(GlobalVariable &GV : M.globals()) {
-            if(GV.hasInitializer()) {
+        for (GlobalVariable &GV: M.globals()) {
+
+            if (GV.hasInitializer()) {
+
                 Constant *Init = GV.getInitializer();
                 if (Init) {
-                    if(Function *func = dyn_cast<Function>(Init)) {
+                    if (Function * func = dyn_cast<Function>(Init)) {
                         initFunctions.insert(const_cast<llvm::Function *>(dyn_cast<Function>(Init)));
-                    }
-                    else {
+                    } else {
                         // deal with struct or array
-                        AddInternal(Init);
+                        AddInternal(Init, GV.getName());
                     }
                 }
             }
         }
 
-        // if no initialize funcs then skip initializeing initFunction
-        // if there are/is init funcs, we initialize a initVirtualFunc as virtual node to connect them
-        if(initFunctions.size() != 0 ) {
-            std::string str = M.getName().str();
-            // use modulename + __virtual_init as virtual node's name
-            std::replace(str.begin(), str.end(), '/', '_');
-            std::replace(str.begin(), str.end(), '.', '_');
-            std::replace(str.begin(), str.end(), '-', '_');
-            std::string initVirtualFunctionName = str + "__virtual_init";
-            // create a function, set it accessable for other modules
-            initVirtualFunc = Function::Create(FunctionType::get(Type::getVoidTy(M.getContext()), false), 
-                                                GlobalValue::LinkageTypes::ExternalLinkage, 
-                                                initVirtualFunctionName, 
-                                                &M);
-            // make edge and node with funcs in initFunctions with initVirtualFunc
-            for(Function* F : initFunctions) {
-                addNodeAndEdge(CG, initVirtualFunc, F);
-            }
-        }
+//         if no initialize funcs then skip initializeing initFunction
+//         if there are/is init funcs, we initialize a initVirtualFunc as virtual node to connect them
+         if(initFunctions.size() != 0 ) {
+             std::string str = M.getName().str();
+             // use modulename + __virtual_init as virtual node's name
+             std::replace(str.begin(), str.end(), '/', '_');
+             std::replace(str.begin(), str.end(), '.', '_');
+             std::replace(str.begin(), str.end(), '-', '_');
+             std::string initVirtualFunctionName = str + "__virtual_init";
+             // create a function, set it accessable for other modules
+             initVirtualFunc = Function::Create(FunctionType::get(Type::getVoidTy(M.getContext()), false),
+                                                 GlobalValue::LinkageTypes::ExternalLinkage,
+                                                 initVirtualFunctionName,
+                                                 &M);
+             // make edge and node with funcs in initFunctions with initVirtualFunc
+             for(Function* F : initFunctions) {
+                 addNodeAndEdge(CG, initVirtualFunc, F);
+             }
+         }
     }
 
     void AnalysisFunctionCall(Module &M, CallGraph &CG) {
         // make a copy
-        std::vector<CallGraphNode *> CallGraphNodes;
-        for(auto iter = CG.begin(); iter != CG.end(); ++iter) {
-            std::unique_ptr<CallGraphNode> &NodePtr = iter->second;
+        std::vector < CallGraphNode * > CallGraphNodes;
+        for (auto iter = CG.begin(); iter != CG.end(); ++iter) {
+            std::unique_ptr <CallGraphNode> &NodePtr = iter->second;
             CallGraphNode *Node = NodePtr.get();
             CallGraphNodes.push_back(Node);
         }
 
         // analysis all nodes
-        for(CallGraphNode *Node : CallGraphNodes) {
+        for (CallGraphNode *Node: CallGraphNodes) {
             Function *F = Node->getFunction();
-            if(F == nullptr) continue;
+            if (F == nullptr) continue;
             //if(F->getName() == "__SCT__tp_func_drv_abort_pmsr")
-                //outs() << F->getName() << "____\n";
-            
+            //outs() << F->getName() << "____\n";
+
             // analysis load instructions
-            for(BasicBlock &BB : *F) {
-                for(Instruction &I : BB) {
+            for (BasicBlock &BB: *F) {
+                for (Instruction &I: BB) {
                     // identify load inst
                     // for situation: a = g();
-                    if(LoadInst *Load = dyn_cast<LoadInst>(&I)){
+                    if (LoadInst * Load = dyn_cast<LoadInst>(&I)) {
                         Value *PointerOperand = Load->getPointerOperand();
-                        if(CallInst *Call = dyn_cast<CallInst>(PointerOperand)) {
-                            Function * CalledFunction = Call->getCalledFunction();
-                            if(CalledFunction) {
+                        if (CallInst * Call = dyn_cast<CallInst>(PointerOperand)) {
+                            Function *CalledFunction = Call->getCalledFunction();
+                            if (CalledFunction) {
                                 Node->addCalledFunction(nullptr, CG.getOrInsertFunction(CalledFunction));
                             }
-                        
+
                         }
                     }
-                    // identify store inst
-                    // for situation: func_ptr = &func; / func_ptr = foo_ptr;
-                    else if (StoreInst *Store = dyn_cast<StoreInst>(&I)) {
+                        // identify store inst
+                        // for situation: func_ptr = &func; / func_ptr = foo_ptr;
+                    else if (StoreInst * Store = dyn_cast<StoreInst>(&I)) {
                         Value *valueOperand = Store->getValueOperand();
-                        if(Function* involvedFunc = dyn_cast<Function>(valueOperand)) {
-                            if(involvedFunc) {
+                        if (Function * involvedFunc = dyn_cast<Function>(valueOperand)) {
+                            if (involvedFunc) {
                                 Node->addCalledFunction(nullptr, CG.getOrInsertFunction(involvedFunc));
                             }
                         }
                     }
-                    // identify phi inst
-                    else if (PHINode *phi = dyn_cast<PHINode>(&I) )
-                    {
-                        for( int i = 0; i < phi->getNumIncomingValues(); ++ i)
-                        {
+                        // identify phi inst
+                    else if (PHINode * phi = dyn_cast<PHINode>(&I)) {
+                        for (int i = 0; i < phi->getNumIncomingValues(); ++i) {
                             Value *valueOperand = phi->getIncomingValue(i);
-                            if(Function* involvedFunc = dyn_cast<Function>(valueOperand)) {
-                                if(involvedFunc) {
+                            if (Function * involvedFunc = dyn_cast<Function>(valueOperand)) {
+                                if (involvedFunc) {
                                     Node->addCalledFunction(nullptr, CG.getOrInsertFunction(involvedFunc));
                                     //llvm::outs() << "phi: " << involvedFunc->getName() << "\n";
                                 }
@@ -198,31 +236,30 @@ public:
                         for (int I = 0, E = Call->arg_size(); I < E; ++I) {
                             Value *valueOperand = Call->getArgOperand(I);
                             //if (!valueOperand->getType()->isPointerTy())
-                                //continue;
-                            if(Function* involvedFunc = dyn_cast<Function>(valueOperand)) {
-                                if(involvedFunc) {
+                            //continue;
+                            if (Function * involvedFunc = dyn_cast<Function>(valueOperand)) {
+                                if (involvedFunc) {
                                     Node->addCalledFunction(nullptr, CG.getOrInsertFunction(involvedFunc));
                                 }
                             }
                         }
-                    }    
-                    
+                    }
+
                 }
             }
         }
     }
-    
+
     void addSuffix(CallGraph &CG) {
-        for(auto &Node : CG) {
+        for (auto &Node: CG) {
             Function *F = Node.second->getFunction();
-            if ( F && F->getName().str().find("llvm.") != std::string::npos)
+            if (F && F->getName().str().find("llvm.") != std::string::npos)
                 continue;
             else if (F && F->isDeclaration()) {
                 std::string NewName = F->getName().str();
                 NewName += "@isDeclaration";
                 F->setName(NewName);
-            }
-            else if(F && F->hasExactDefinition()) {
+            } else if (F && !F->isDeclaration()) {
                 std::string NewName = F->getName().str();
                 NewName += "@isDefinition";
                 F->setName(NewName);
@@ -232,7 +269,7 @@ public:
 
     // print
     void outputCallGraph(CallGraph &CG) {
-        for (auto &Node : CG) {
+        for (auto &Node: CG) {
             Function *F = Node.second->getFunction();
             if (!F)
                 continue;
@@ -248,32 +285,31 @@ public:
 
 
         //qali-add: print function signature
-        outs() << "\n";
-        outs() << "\n";
-        llvm::outs() << "Function Signature: \n";
-        for (auto &Node : CG) {
-            Function *F = Node.second->getFunction();
-            if (!F)
-                continue;
-            llvm::FunctionType* funcType = F->getFunctionType();
-            llvm::Type* returnType = funcType->getReturnType();
-
-            outs() << F->getName() << ":";
-            returnType->getScalarType()->print(llvm::outs());
-            outs() << " (";
-            if(funcType->getNumParams() > 0)
-            {
-                funcType->getParamType(0)->getScalarType()->print(llvm::outs());
-            }
-
-            for (unsigned i = 1; i < funcType->getNumParams(); ++i) {
-                llvm::outs() << ", ";
-                funcType->getParamType(i)->getScalarType()->print(llvm::outs());
-            }
-            outs() << ")\n";
-        }   
+//        outs() << "\n";
+//        outs() << "\n";
+//        llvm::outs() << "Function Signature: \n";
+//        for (auto &Node: CG) {
+//            Function *F = Node.second->getFunction();
+//            if (!F)
+//                continue;
+//            llvm::FunctionType *funcType = F->getFunctionType();
+//            llvm::Type *returnType = funcType->getReturnType();
+//
+//            outs() << F->getName() << ":";
+//            returnType->getScalarType()->print(llvm::outs());
+//            outs() << " (";
+//            if (funcType->getNumParams() > 0) {
+//                funcType->getParamType(0)->getScalarType()->print(llvm::outs());
+//            }
+//
+//            for (unsigned i = 1; i < funcType->getNumParams(); ++i) {
+//                llvm::outs() << ", ";
+//                funcType->getParamType(i)->getScalarType()->print(llvm::outs());
+//            }
+//            outs() << ")\n";
+//        }
     }
-    
+
     bool runOnModule(Module &M) override {
         // 获取 CallGraphWrapperPass 对象
         CallGraph &CG = getAnalysis<CallGraphWrapperPass>().getCallGraph();
@@ -282,7 +318,7 @@ public:
 
         AnalysisFunctionCall(M, CG);
 
-        //addSuffix(CG);
+        addSuffix(CG);
 
         outputCallGraph(CG);
 
@@ -298,4 +334,4 @@ public:
 char ExtendedFuncGraph::ID = 0;
 
 // true: module pass   ;   true: won't change module
-static RegisterPass<ExtendedFuncGraph> X("ExtendedFuncGraph", "Extended Func Graph Pass", true, true);
+static RegisterPass <ExtendedFuncGraph> X("ExtendedFuncGraph", "Extended Func Graph Pass", true, true);
