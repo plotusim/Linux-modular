@@ -12,13 +12,12 @@ res_graph_dot_path = "/home/plot/Linux-modular/cjh/Linux-modular/result/net/netf
 # 要修改的源代码的根目录
 kernel_source_root_path = "/home/plot/Linux-modular/cjh/Linux-modular/linux-name"
 
-# kernel_source_root_path = "/home/plot/Linux-modular/cjh/auto_test/linux-5.10.176.netfilter"
 
 # 包含源代码编译出的LLVM BC文件的根目录
-kernel_bc_file_root_path = "/home/plot/clang-linux-5.10.176/linux-5.10.176"
+kernel_bc_file_root_path = "../../Frontend/Kernel_src"
 
 # 存放模块化模版文件的目录地址
-module_template_files_dir = "/home/plot/build/Linux_kernel_modular_project/Backend/sys_module"
+module_template_files_dir = "../sys_module"
 
 # 要修改的内核源代码目录下的drivers目录，用于存放我们的模块源代码
 drivers_dir_path = os.path.join(kernel_source_root_path, "drivers")
