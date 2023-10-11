@@ -16,7 +16,6 @@ syscall_funcs = set()
 init_reach_funcs = set()
 virtual_structs = set()
 virtual_structs_top_funcs = set()
-virtual_structs_reach_funcs = set()
 
 modular_funcs = set()
 
@@ -27,13 +26,13 @@ base_path = "../"
 # write path
 wirte_path = os.path.join(base_path,"Data/func_list")
 # vmlinux path
-vmlinux_path = os.path.join(base_path+"Frontend/kernel_src","vmlinux")
+vmlinux_path = os.path.join(base_path+"Frontend/Kernel_src","vmlinux")
 # kernel path
-kernel_path = base_path + "Frontend/kernel_src"
+kernel_path = base_path + "Frontend/Kernel_src"
 # config
 config = ".config"
 # kernel dot
-kernel_dot = os.path.join(base_path+"Data/dots","all.dot")
+kernel_dot = os.path.join(base_path+"Data/dots_merge","all.dot")
 
 typedict = {
     "init_funcs": init_funcs,
@@ -43,7 +42,6 @@ typedict = {
     "init_reach_funcs":init_reach_funcs,
     "virtual_structs":virtual_structs,
     "virtual_structs_top_funcs":virtual_structs_top_funcs,
-    "virtual_structs_reach_funcs":virtual_structs_reach_funcs,
     "modular_funcs":modular_funcs,
 }
 
@@ -90,15 +88,17 @@ def find_symbols_from_vmlinux():
                 if section.name == ".text":
                     text_index = index
 
-            #识别init函数
+            
             if init_text_index is not None and export_index is not None:
                 for symbol in symtab.iter_symbols():
+                    # 识别init函数
                     if symbol['st_shndx'] == init_text_index:
                         name = symbol.name
                         if strtab is not None:
                             name = strtab.get_string(symbol['st_name'])
                         init_funcs.add(name)
 
+                    # 识别export函数
                     if symbol['st_shndx'] == export_index:
                         name = symbol.name
                         if strtab is not None:
@@ -107,6 +107,7 @@ def find_symbols_from_vmlinux():
                             cut_name = name.replace('__kstrtab_', '')
                             export_symbols.add(cut_name)
                     
+                    # 识别trace函数
                     if symbol['st_shndx'] == text_index:
                         name = symbol.name
                         if strtab is not None:
@@ -136,7 +137,7 @@ def find_symbols_from_vmlinux():
 
 
     
-#识别init_reach函数，识别virtual_structs函数，识别virtual_struts_reach函数
+#识别syscall函数，trace函数，virtual_structs函数，virtual_structs_top_funcs函数
 def find_symbols_from_kernel_dot():
     try:
         print("ready to read kernel dot")
@@ -146,7 +147,7 @@ def find_symbols_from_kernel_dot():
         print("请先合并所有的dot文件,并命名为all.dot")
         return
     
-    # 识别virtual_structs函数
+    # 识别syscall函数，识别trace函数
     nodes = graph.get_nodes()
     for node in nodes:
         name = node.get_name()
@@ -167,7 +168,7 @@ def find_symbols_from_kernel_dot():
     # 识别trace函数
     print("trace funcs:" + str(len(trace_funcs)))
     
-    # 识别virtual_structs_reach函数
+    # 识别virtual_structs_top_funcs函数
     find = set()
     for i in virtual_structs:
         if i in edge_dict.keys():
@@ -177,15 +178,6 @@ def find_symbols_from_kernel_dot():
                     virtual_structs_top_funcs.add(j)
 
     print("virtual structs top funcs:" + str(len(virtual_structs_top_funcs)))
-    
-    while(len(find)>0):
-        element = find.pop()
-        virtual_structs_reach_funcs.add(element)
-        if element in edge_dict.keys():
-            for child in edge_dict[element]:
-                if child not in virtual_structs_reach_funcs:
-                    find.add(child)
-    print("virtual structs reach funcs:" + str(len(virtual_structs_reach_funcs)))
     
     #识别init_reach函数
     init_find = set()
@@ -200,16 +192,14 @@ def find_symbols_from_kernel_dot():
         init_reach_funcs.add(element)
         if element in edge_dict.keys():
             for child in edge_dict[element]:
-                if child not in init_reach_funcs:
+                if child not in init_reach_funcs and child not in init_funcs:
                     init_find.add(child)
-    print("init reach funcs :" + str(len(init_reach_funcs)))
 
-    #保存virtual_structs函数，virtual_structs_reach函数，init_reach函数
+    #保存函数
     write_to_file("syscall_funcs")
+    write_to_file("trace_funcs")
     write_to_file("virtual_structs")
     write_to_file("virtual_structs_top_funcs")
-    write_to_file("virtual_structs_reach_funcs")
-    write_to_file("trace_funcs")
     write_to_file("init_reach_funcs")
 
 
@@ -220,7 +210,7 @@ def find_modular_functions():
     
     dot_files = set()
     temp_module_files = tempConfig.modualr_files
-    dot_files = [os.path.join(base_path + "Data/dots",it[len(kernel_path)+1:].replace(".c", ".dot")) for it in temp_module_files]
+    dot_files = [os.path.join(base_path + "Data/dots_merge",it[len(kernel_path)+1:].replace(".c", ".dot")) for it in temp_module_files]
 
     #打开dot文件，把其中的node节点作为modular函数
     for dotf in dot_files:
@@ -232,7 +222,6 @@ def find_modular_functions():
             modular_funcs.add(node.get_name())
     print("modular funcs:" + str(len(modular_funcs)))
     write_to_file("modular_funcs")
-
 
 def classify_functions():
     find_symbols_from_vmlinux()
