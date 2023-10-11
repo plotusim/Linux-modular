@@ -23,12 +23,9 @@ IRDUMPER="$(pwd)/IRDumper/build/lib/libDumper.so"
 CLANG="$(pwd)/llvm-project/prefix/bin/clang"
 CONFIG="defconfig"
 
-
 # Use -Wno-error to avoid turning warnings into errors
 NEW_CMD="\n\n\
 KBUILD_USERCFLAGS += -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER\nKBUILD_CFLAGS += -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER"
-
-
 
 if [ ! -f "$KERNEL_SRC/Makefile.bak" ]; then
 	# Back up Linux Makefile
