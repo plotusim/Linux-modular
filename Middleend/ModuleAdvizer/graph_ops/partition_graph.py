@@ -1,11 +1,10 @@
 from utils.read_file import read_dot
-from graph_ops.transform import set_color
-from config.color_mapping import recommendation_color_mapping
 import pydot
 import argparse
 from collections import defaultdict
 
 
+# 并查集
 class UnionFind:
     def __init__(self):
         self.parent = {}
@@ -68,8 +67,6 @@ def partition(origin_graph: pydot.Graph):
 
 def main(graph, output):
     res = partition(graph)
-    for cluster in res.get_subgraphs():
-        set_color(cluster, recommendation_color_mapping, attribute="recommendation")
     res.write(output)
 
 

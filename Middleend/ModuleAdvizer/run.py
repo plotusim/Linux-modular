@@ -1,4 +1,3 @@
-from graph_ops import partition_graph
 import argparse
 
 import os
@@ -36,8 +35,8 @@ def main(subsystem, result_folder):
     temp_folder = os.path.join(result_folder, subsystem, "temp")
     if not os.path.exists(temp_folder):
         os.mkdir(temp_folder)
-    graph = run_analysis(dot_file_folder, temp_folder)
-    partition_graph.main(graph, os.path.join(result_folder, subsystem, "res.dot"))
+    graph = run_analysis(dot_file_folder, temp_folder, True)
+    graph.write(os.path.join(result_folder, subsystem, "res.dot"))
 
 
 if __name__ == '__main__':

@@ -3,29 +3,42 @@ import pydot
 import os
 import sys
 
-
 base_path = "../"
 
-graph_dir = os.path.join(base_path,"Data/txts")
-dot_dir = os.path.join(base_path,"Data/dots")
+graph_dir = os.path.join(base_path, "Data/txts_pa")
+dot_dir = os.path.join(base_path, "Data/dots_pa")
+
 
 def TxtToDot(source_path, destination_path):
     # 读取文件内容
     with open(source_path, 'r') as f:
         # 创建dot
         graph = pydot.Dot(graph_type='digraph')
-        structures = set()
         lines = f.readlines()
         # 解析每一行
         for line in lines:
             match = re.match(r'([\w@]+) -> (.*)', line)
             if match:
                 caller = match.group(1)
-                callees = match.group(2).split()
-                if caller.split('@')[1] == "isDefinition":
-                    graph.add_node(pydot.Node(caller.split('@')[0]))
+                callees = set()
+                for i in match.group(2).split():
+                    callees.add(i)
+
+                caller_splits = caller.split('@')
+                if "llvm." in caller_splits[0]:
+                    continue
+
+                # print(caller.split('@'))
+
+                if caller_splits[1] == "isDefinition":
+                    new_node = pydot.Node(caller_splits[0])
+                    new_node.set("file", source_path[len(graph_dir):-4])
+                    graph.add_node(new_node)
                 for callee in callees:
-                    edge = pydot.Edge(caller.split('@')[0], callee.split('@')[0])
+                    callee_splits = callee.split('@')
+                    if "llvm." in callee_splits[0]:
+                        continue
+                    edge = pydot.Edge(caller_splits[0], callee_splits[0])
                     graph.add_edge(edge)
 
     # 遍历所有的节点和边
@@ -54,7 +67,7 @@ def GraphToDot(source_dir, target_dir):
                 # 获取文件的绝对路径
                 file_path = os.path.join(root, file)
                 target_file_path = file_path.replace(source_dir, target_dir).replace('.txt', '.dot')
-                
+
                 # 创建目标文件夹
                 os.makedirs(os.path.dirname(target_file_path), exist_ok=True)
 
@@ -65,5 +78,5 @@ def main():
     GraphToDot(graph_dir, dot_dir)
 
 
-if __name__=='__main__' :
+if __name__ == '__main__':
     main()

@@ -12,6 +12,14 @@ linux内核自动模块化工具。
    ```
 2. python require packages
 
+   * Frontend
+     ```
+     kconfiglib==14.1.0
+     openpyxl==3.1.2
+     pydot==1.4.2
+     pyelftools==0.29
+     ```
+
 # 使用说明
 
 ## Frontend

@@ -1,4 +1,5 @@
 import os
+import argparse
 
 base_path = "../"
 
@@ -42,8 +43,10 @@ def IRToGraph(source_dir, target_dir, library_path):
                 os.makedirs(os.path.dirname(target_file_path), exist_ok=True)
                 
                 # 编译源文件
-                #os.system(f'opt -load {library_path} -ExtendedCallGraph {source_file_path} -enable-new-pm=0 > {target_file_path}')
-                os.system(f'{opt_path} -load {library_path} -ExtendedFuncGraph {source_file_path} -enable-new-pm=0 > {target_file_path}')
+                if os.path.basename(library_path) == "ExtendedFuncGraph.so":
+                    os.system(f'{opt_path} -load {library_path} -ExtendedFuncGraph {source_file_path} -enable-new-pm=0 > {target_file_path}')
+                if os.path.basename(library_path) == "Steensggard.so":
+                    os.system(f'{opt_path} -load {library_path} -Steensggard {source_file_path} -enable-new-pm=0 > {target_file_path}')
 
                 # 由于输出有bug 结尾有乱码，需要稍微处理一下
                 modify(target_file_path)

@@ -5,7 +5,7 @@ def directed_adjacency_list(graph):
     # 获取图中的所有边
     edges = graph.get_edges()
 
-    # 使用字典存储每个节点的相邻节点
+    # 使用字典存储每个节点的相邻子节点
     adjacency_list_res = defaultdict(set)
 
     for edge in edges:
@@ -22,7 +22,7 @@ def reverse_directed_adjacency_list(graph):
     # 获取图中的所有边
     edges = graph.get_edges()
 
-    # 使用字典存储每个节点的相邻节点
+    # 使用字典存储每个节点的相邻父节点
     reverse_adjacency_list_res = defaultdict(set)
 
     for edge in edges:

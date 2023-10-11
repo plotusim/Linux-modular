@@ -1,7 +1,6 @@
 from config.non_modular_type import non_modular_type
 from config.color_mapping import function_color_mapping
 from graph_ops.transform import remove_nodes_with_predicate, set_color
-from graph_ops.recommendation import update_recommendation_info
 
 
 def merge_external_edges(graph):
@@ -24,8 +23,6 @@ def simplify_graph(graph):
     graph = merge_external_edges(graph)
     print("merge non-modular nodes")
     graph = remove_non_modular_nodes(graph)
-
-    graph = update_recommendation_info(graph)
-    graph = remove_virtual(graph)
+    print("update nodes' color")
     graph = set_color(graph, function_color_mapping, "type")
     return graph

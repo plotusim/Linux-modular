@@ -14,7 +14,6 @@ def combine_dots(folder_path: str):
 
     # 遍历文件夹中的所有 .dot 文件
     for root, dirs, files in os.walk(folder_path):
-        print("node: " + root[len(folder_path):])
         for filename in files:
             if filename.endswith(".dot") and not filename.endswith("mod.dot"):
                 # 解析 .dot 文件并获取 Dot 对象
@@ -41,7 +40,6 @@ def combine_dots(folder_path: str):
 
     # 遍历边并添加到新的 Dot 对象中
     for root, dirs, files in os.walk(folder_path):
-        print("edge: " + root[len(folder_path):])
         for filename in files:
             if filename.endswith(".dot") and not filename.endswith("mod.dot"):
                 # 解析 .dot 文件并获取 Dot 对象

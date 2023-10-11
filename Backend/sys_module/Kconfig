@@ -1,0 +1,5 @@
+config SYS_MODULE
+    tristate "system call module"
+    default m
+    help
+    some system call module

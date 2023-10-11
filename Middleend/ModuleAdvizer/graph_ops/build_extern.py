@@ -3,6 +3,7 @@ import pydot
 from utils.load_adjacency_list import get_whole_linux_kernel_reverse_adjacency_list
 
 
+# 添加边，添加边中不在graph的端点，设置类型为EXTERNAL
 def add_edge(graph, source, destination):
     edges_list = graph.get_edge(source, destination)
     if len(edges_list) == 0:
@@ -16,7 +17,9 @@ def add_edge(graph, source, destination):
     return graph
 
 
+# 从整个内核中寻找调用函数的外部函数
 def build_external_edges(graph):
+    print("build external edges")
     reverse_adjacency_list = get_whole_linux_kernel_reverse_adjacency_list()
 
     nodes_set = {}

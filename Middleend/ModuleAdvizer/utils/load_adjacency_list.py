@@ -24,8 +24,6 @@ def get_whole_linux_kernel_adjacency_list():
     return get_obj_else_run_f(kernel_graph_adjacency_list_cache, f, dot_file_mtime)
 
 
-
-
 def get_pa_reverse_adjacency_list():
     dot_file_mtime = os.path.getmtime(linux_whole_kernel_dot)
 

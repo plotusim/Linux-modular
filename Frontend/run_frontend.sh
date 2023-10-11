@@ -25,7 +25,7 @@ CONFIG="defconfig"
 
 # Use -Wno-error to avoid turning warnings into errors
 NEW_CMD="\n\n\
-KBUILD_USERCFLAGS += -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER\nKBUILD_CFLAGS += -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER"
+KBUILD_USERCFLAGS += -Wno-unused-parameter -Wno-sign-compare -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER\nKBUILD_CFLAGS += -Wno-unused-parameter -Wno-sign-compare -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER"
 
 if [ ! -f "$KERNEL_SRC/Makefile.bak" ]; then
 	# Back up Linux Makefile
@@ -40,6 +40,7 @@ cd $KERNEL_SRC && make $CONFIG
 echo $CLANG
 echo $NEW_CMD
 make CC=$CLANG -j`nproc` -k -i
+cd ..
 
 ## 生成.txt
 generate_txt_file="scripts/generate_txts.py"
@@ -47,69 +48,56 @@ generate_txt_file="scripts/generate_txts.py"
 ### 函数分析
 so_path="./LLVM_PASS/ExtendedFuncGraph.so"
 txt_path="../Data/txts"
-python "$generate_txt_file" --so "$so_path" --output_txt "$txt_path"
-
-if [ $? -ne 0 ]; then
-    echo "执行 $generate_txt_file 时出现错误 :$so_path"
-    exit 1
-fi
-
-echo "generate txts exit :$txt_path"
 
 ### 指针分析
-so_path="./LLVM_PASS/Steensggard.so"
-txt_path="../Data/txts_pa"
-python "$generate_txt_file" --so "$so_path" --output_txt "$txt_path"
+pa_so_path="./LLVM_PASS/Steensggard.so"
+pa_txt_path="../Data/txts_pa"
 
-if [ $? -ne 0 ]; then
-    echo "执行 $generate_txt_file 时出现错误:$so_path"
-    exit 1
-fi
+echo "generate txts start"
 
-echo "generate txts exit :$txt_path"
+python "$generate_txt_file" --so "$so_path" --output_txt "$txt_path" &
+python "$generate_txt_file" --so "$pa_so_path" --output_txt "$pa_txt_path"
+
+echo "generate txts exit"
 
 
 ## 生成.dot
 generate_dot_file="scripts/generate_dots.py"
+generate_pa_dot_file="scripts/generate_dots_pa.py"
 
 ### 函数分析的dots
-txt_path="../Data/txts"
-dot_path="../Data/dots"
-
-python "$generate_dot_file" --source_txt "$txt_path" --dot_path "$dot_path"
-
-if [ $? -ne 0 ]; then
-    echo "执行 $generate_dot_file 时出现错误 :$txt_path -> $dot_path"
-    exit 1
-fi
-
-echo "generate $dot_path exit"
-
 ### 指针分析的dots
-txt_path="../Data/txts_pa"
-dot_path="../Data/dots_pa"
 
-python "$generate_dot_file" --source_txt "$txt_path" --dot_path "$dot_path"
+echo "generate dots start"
 
-if [ $? -ne 0 ]; then
-    echo "执行 $generate_dot_file 时出现错误 :$txt_path -> $dot_path"
-    exit 1
+python "$generate_dot_file"  &
+python "$generate_pa_dot_file" 
+
+echo "generate dots exit"
+
+base_path="../"
+
+combine_python_file="scripts/combine_dots.py"
+input_file="${base_path}Data/dots_pa"
+output_file="${base_path}Data/dots_pa/all.dot"
+
+if [ ! -f "$output_file" ]; then
+    echo "combine dots_pa to all.dot"
+    python "$combine_python_file" -i "$input_file" -o "$output_file"
+    echo "combine dots_pa finish"
 fi
 
-echo "generate $dot_path exit"
+
 
 
 ## 生成增量dots
 merge_dot_file="scripts/merge_pa.py"
 
+echo "merge dots_pa to dots"
+
 python "$merge_dot_file"
 
-if [ $? -ne 0 ]; then
-    echo "执行 $gmerge_dot_file 时出现错误"
-    exit 1
-fi
-
-echo "merge dots_pa to dots"
+echo "merge finish"
 
 
 ## 合并dot文件到all.dot
@@ -121,24 +109,13 @@ output_file="${base_path}Data/dots_merge/all.dot"
 
 python "$combine_python_file" -i "$input_file" -o "$output_file"
 
-if [ $? -ne 0 ]; then
-    echo "执行 $python_file 时出现错误"
-    exit 1
-fi
-
-echo "combine all dots to all.dot"
+echo "combine merge dots to all.dot"
 
 
 ## 函数分类
 classify_funcs_file="scripts/classify_functions.py"
 
 python "$classify_funcs_file"
-
-# 检查上一次命令的返回值
-if [ $? -ne 0 ]; then
-    echo "执行 $classify_funcs_file 时出现错误"
-    exit 1
-fi
 
 echo "classify functions finish"
 

@@ -2,8 +2,8 @@ import pydot
 
 from config.color_mapping import function_color_mapping
 from config.data_path import init_funcs_list_file, init_reach_funcs_list_file, export_funcs_list_file, \
-    trace_funcs_list_file, virtual_structs_reach_funcs_list_file, virtual_structs_list_file, \
-    virtual_structs_top_funcs_list_file, syscall_funcs_list_file, modular_funcs_list_file
+    trace_funcs_list_file, virtual_structs_list_file, modular_funcs_list_file, \
+    virtual_structs_top_funcs_list_file, syscall_funcs_list_file
 from graph_ops.transform import set_nodes_type, set_color, set_default_type
 from utils.merge_dots import combine_dots_from_folder_with_locations
 from utils.read_file import read_funcs
@@ -12,26 +12,39 @@ from utils.read_file import read_funcs
 def init_funcs_graph(graph):
     edges = graph.get_edges()
 
+    # 读取前端分析出来的各种函数的列表
     init_func_list = read_funcs(init_funcs_list_file)
     init_reach_list = read_funcs(init_reach_funcs_list_file)
     export_func_list = read_funcs(export_funcs_list_file)
     virtual_structs_reach_level1_list = read_funcs(virtual_structs_top_funcs_list_file)
     trace_func_list = read_funcs(trace_funcs_list_file)
-    virtual_structs_reach = read_funcs(virtual_structs_reach_funcs_list_file)
+    # virtual_structs_reach = read_funcs(virtual_structs_reach_funcs_list_file)
     syscall_func_list = read_funcs(syscall_funcs_list_file)
     virtual_structs_list = read_funcs(virtual_structs_list_file)
     modular_funcs_list = read_funcs(modular_funcs_list_file)
 
-    graph = set_nodes_type(graph, {"INIT": init_func_list, "INIT_REACH": init_reach_list})
+    # 设置函数节点的类型
+    graph = set_nodes_type(graph, {
+        "INIT": init_func_list,
+        "INIT_REACH": init_reach_list
+    })
 
-    graph = set_nodes_type(graph, {"SYSCALL": syscall_func_list, "TRACE": trace_func_list,
-                                   "EXPORT": export_func_list, "MODULAR": modular_funcs_list,
-                                   "VIRTUAL_STRUCTS": virtual_structs_list})
+    graph = set_nodes_type(graph, {
+        "SYSCALL": syscall_func_list,
+        "TRACE": trace_func_list,
+        "EXPORT": export_func_list,
+        "MODULAR": modular_funcs_list,
+        "VIRTUAL_STRUCTS": virtual_structs_list
+    })
+
     graph = set_nodes_type(graph, {
         "VIRTUAL_STRUCTS_REACH_TOP": virtual_structs_reach_level1_list,
-        "VIRTUAL_STRUCTS_REACH": virtual_structs_reach, })
+        # "VIRTUAL_STRUCTS_REACH": virtual_structs_reach,
+    })
 
     graph = set_default_type(graph)
+
+    # 对于内部函数引用的外部函数设置为EXTERNAL
     for edge in edges:
         endpoints = [edge.get_source(), edge.get_destination()]
         for i in endpoints:
