@@ -2,7 +2,7 @@ import os
 
 base_path = "../"
 
-source_dir = os.path.join(base_path,'Frontend/KERNEL_SRC')
+source_dir = os.path.join(base_path,'Frontend/Kernel_src')
 
 opt_path = os.path.join(base_path,"Frontend/llvm-project/prefix/bin/opt")
 

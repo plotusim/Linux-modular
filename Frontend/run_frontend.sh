@@ -1,6 +1,48 @@
 #!/bin/bash
 
+## Pre：编译.so
+### 进入LLVM_PASS，编译.so
+cd ./LLVM_PASS
+make
+cd ..
+
+### 进入IRDumper，编译
+cd ./IRDumper/
+make
+cd ..
+
+## Pre：copy kernel src
+source_dir="../Kernel"
+target_dir="./Kernel_src"
+
+cp -r "$source_dir"/* "$target_dir"
+
 ## 生成.bc
+KERNEL_SRC="$(pwd)/Kernel_src"
+IRDUMPER="$(pwd)/IRDumper/build/lib/libDumper.so"
+CLANG="$(pwd)/llvm-project/prefix/bin/clang"
+CONFIG="defconfig"
+
+
+# Use -Wno-error to avoid turning warnings into errors
+NEW_CMD="\n\n\
+KBUILD_USERCFLAGS += -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER\nKBUILD_CFLAGS += -Wno-error -fno-inline -g -Xclang -no-opaque-pointers -Xclang -flegacy-pass-manager -Xclang -load -Xclang $IRDUMPER"
+
+
+
+if [ ! -f "$KERNEL_SRC/Makefile.bak" ]; then
+	# Back up Linux Makefile
+	cp $KERNEL_SRC/Makefile $KERNEL_SRC/Makefile.bak
+fi
+
+# The new flags better follow "# Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments"
+echo -e $NEW_CMD >$KERNEL_SRC/IRDumper.cmd
+cat $KERNEL_SRC/Makefile.bak $KERNEL_SRC/IRDumper.cmd >$KERNEL_SRC/Makefile
+
+cd $KERNEL_SRC && make $CONFIG
+echo $CLANG
+echo $NEW_CMD
+make CC=$CLANG -j`nproc` -k -i
 
 ## 生成.txt
 generate_txt_file="scripts/generate_txts.py"
@@ -28,6 +70,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "generate txts exit :$txt_path"
+
 
 ## 生成.dot
 generate_dot_file="scripts/generate_dots.py"
