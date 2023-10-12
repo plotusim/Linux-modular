@@ -91,11 +91,11 @@ AutoBackend根据中端生成的提取建议自动提取内核模块，目前存
 
 - error:implicit declaration of function
 
-  将相关函数定义添加到unexport_symbol.hwen宏EXPORT_FUNC(func,ret,...)中,并将内核模块代码中相应的函数名func改为_func
+  将相关函数定义添加到unexport_symbol.h的宏EXPORT_FUNC(func,ret,...)中，并将内核模块代码中相应的函数名func改为_func
 
 - error:'var_name’ undeclared (first use in this function)
 
-  将导出符号在模块中的名称修改为_var_name,这是由于为避免与内核代码冲突，将导出符号进行了重命名添加了' _ '前缀。
+  将未导出符号在模块中的名称修改为_var_name，这是由于为避免与内核代码冲突，将未导出符号进行了重命名添加了' _ '前缀。在.c中进行全局替换即可。
 
 - error:passing argument  of ‘func’ from incompatible pointer type
 
@@ -103,7 +103,7 @@ AutoBackend根据中端生成的提取建议自动提取内核模块，目前存
 
   - 一般情况下是未导出符号var通过宏导出后，模块内的函数将符号作为参数使用时添加了&，例如func(a,b,&var)，将&删除即可;
 
-  - 第二种情况为func(a,b,var),此时需要修改为func(a,b,*var)
+  - 第二种情况为func(a,b,var)，此时需要修改为func(a,b,*var)
 
 #### 编译Busybox:
 
