@@ -23,6 +23,8 @@ linux内核自动模块化工具。
 
 ## Frontend
 
+前端函数分析过程集成到run_frontend.sh，步骤存在前后依赖，但是中间文件都会保存，故可以拆开单步执行。
+
 ```shell
 cd Frontend
 bash run_frontend.sh
