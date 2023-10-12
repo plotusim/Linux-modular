@@ -10,8 +10,7 @@ module_name = "name_module"
 res_graph_dot_path = "/home/plot/Linux-modular/cjh/Linux-modular/result/net/netfilter/res.dot"
 
 # 要修改的源代码的根目录
-kernel_source_root_path = "/home/plot/Linux-modular/cjh/Linux-modular/linux-name"
-
+kernel_source_root_path = "../modify_kernel"
 
 # 包含源代码编译出的LLVM BC文件的根目录
 kernel_bc_file_root_path = "../../Frontend/Kernel_src"
@@ -23,7 +22,7 @@ module_template_files_dir = "../sys_module"
 drivers_dir_path = os.path.join(kernel_source_root_path, "drivers")
 
 # 导出符号文件
-export_symbols_list_file = '/home/plot/build/funcs_analyze_5_10_176/export_symbols.txt'
+export_symbols_list_file = '../../Data/func_list/export_symbols.txt'
 
 # 当前文件的地址
 current_file_path = os.path.abspath(__file__)

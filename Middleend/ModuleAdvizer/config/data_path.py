@@ -1,8 +1,14 @@
-import os.path
+import os
+
+current_file_path = os.path.abspath(__file__)
+current_directory = os.path.dirname(current_file_path)
+parent_directory = os.path.dirname(current_directory)
+parent_directory = os.path.dirname(parent_directory)
+base_directory = os.path.dirname(parent_directory)
 
 # Frontend data path
-func_list_files_dir = '/home/plot/lls_test_frontend/Data/func_list_pa/'
-dots_root_folder = '/home/plot/lls_test_frontend/Data/merged_dots'
+func_list_files_dir = os.path.join(base_directory, "Data", "func_list")
+dots_root_folder = os.path.join(base_directory, "Data", "dots_merge")
 
 # Funcs list file name 
 init_funcs_list_file = os.path.join(func_list_files_dir, 'init_funcs.txt')
@@ -10,7 +16,6 @@ init_reach_funcs_list_file = os.path.join(func_list_files_dir, 'init_reach_funcs
 export_funcs_list_file = os.path.join(func_list_files_dir, 'export_symbols.txt')
 trace_funcs_list_file = os.path.join(func_list_files_dir, 'trace_funcs.txt')
 modular_funcs_list_file = os.path.join(func_list_files_dir, 'modular_funcs.txt')
-# virtual_structs_reach_funcs_list_file = os.path.join(func_list_files_dir, 'virtual_structs_reach_funcs.txt')
 virtual_structs_list_file = os.path.join(func_list_files_dir, 'virtual_structs.txt')
 virtual_structs_top_funcs_list_file = os.path.join(func_list_files_dir, 'virtual_structs_top_funcs.txt')
 syscall_funcs_list_file = os.path.join(func_list_files_dir, 'syscall_funcs.txt')

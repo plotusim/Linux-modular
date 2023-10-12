@@ -8,7 +8,7 @@
 - module_name为模块名
 - kernel_source_root_path为要修改的Linux源代码的路径
 - kernel_bc_file_root_path为编译生成过bc文件的源代码路径
-- module_template_files_dir为模版文件路径，即为本目录BACKEND下的sys_module文件夹
+- module_template_files_dir为模版文件路径，即为Backend/sys_module文件夹
 
 ### 运行main.py:
 
@@ -19,18 +19,46 @@
 
 ### 编译内核：
 
-- 1.进入linux内核目录
-- 2.make menuconfig defconfig
-- 3.选择Processor type and features ----> [] Randomize the address of the kernel image (KASLR),将值设为"N"。
-- 4.make -j32
+- 进入linux内核目录
+
+- ```shell
+  make menuconfig defconfig
+  ```
+  
+- 将KASLR选项设置为"N"
+  ```shell
+  Processor type and features ----> 
+  		[] Randomize the address of the kernel image (KASLR)
+  ```
+
+- ```shell
+  make -j32
+  ```
+
+### 手动调试：
+
+- 
 
 ### 编译Busybox:
 
-- 1.进入目录Busybox
-- 2.make menuconfig
-- 3.选择setting ----> Build static binary,将值设为"Y"。
-- 4.sudo make -j32
-- 5.make install
+- 进入目录Busybox
+
+- ```shell
+  make menuconfig
+  ```
+
+- 将Build static binary选项设置为"Y"
+
+  ```
+  setting ----> Build static binary
+  ```
+
+- ```shell
+  sudo make -j32
+  make install
+  ```
+
+  
 
 ### 修改make.sh：
 
