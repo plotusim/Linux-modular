@@ -1,15 +1,18 @@
+from collections import defaultdict
+
 from utils.graph_utils import get_res
+from utils.func_utils import extract_func_used_func
 from config import res_graph_dot_path, module_name
 from handle.init_module_dir import init_module_dir
-from handle.add_includes import add_includes, add_header_file_include_linux_module
-from utils.func_utils import extract_func_used_global_variable
+from handle.add_includes import add_includes, add_header_file_include_linux_module, \
+    add_includes_to_jump_interface, add_unexport_symbol_header
 from handle.interface import handle_interface_func
 from handle.delete import handle_delete_funcs
 from handle.normal import handle_normal_funcs
 from handle.modify_makefile import modify_makefile
 from handle.modify_Kconfig import modify_kconfig
 from handle.add_export_kallsyms_look_up_macro import add_export_kallsyms_look_up_macro
-from handle.add_unexport_var_macro import add_unexport_var_macro
+from handle.add_unexport_func_macro import add_unexport_func_macro
 
 
 # 自动化模块化的主函数
@@ -22,9 +25,6 @@ def modular(module_name, dot_path=res_graph_dot_path):
     res = get_res(dot_path)
 
     files_name = []
-
-    # 用来存储该模块中所有函数遇到的未导出符号
-    unexport_vars = set()
 
     # 需要按照函数开始行从大到小排序，因为修改某函数之前的函数可能会影响到该函数的开始位置，所以我们需要从后往前修改
     print("Sorting")
@@ -41,13 +41,38 @@ def modular(module_name, dot_path=res_graph_dot_path):
     for i in res.values():
         for j in i:
             file_attribute = j.file_attribute
-
             if j.handle_way in {"NORMAL", "INTERFACE"}:
                 need_add_includes_file_set.add(file_attribute)
 
+    # 所有要添加的include
+    angle_includes_set = set()
+    quote_includes_pairs_dict = defaultdict(set)
     # 给need_add_includes_file_set里的文件添加includes语句
     for code_file in need_add_includes_file_set:
-        add_includes(code_file, module_dir_path)
+        angle_includes, quote_includes_pairs = add_includes(code_file, module_dir_path)
+        angle_includes_set = angle_includes_set.union(angle_includes)
+        for key, value in quote_includes_pairs.items():
+            quote_includes_pairs_dict[key] = quote_includes_pairs_dict[key].union(value)
+    # 给jmp_interface.h添加include
+    add_includes_to_jump_interface(angle_includes_set, quote_includes_pairs_dict, module_dir_path)
+    # 给unexport_symbol.h添加include
+    add_unexport_symbol_header(angle_includes_set, quote_includes_pairs_dict, module_dir_path)
+
+    # 首先找到未导出函数，然后提取出函数签名然后加入unexport_symbol.h
+    # 用来存储该模块中所有函数遇到的未导出函数
+    unexport_funcs = set()
+    for real_file, i in res.items():
+        # 遍历该文件中的需要处理的函数列表
+        for j in i:
+            file_attribute = j.file_attribute
+            handle_way = j.handle_way
+            func_name = j.func_name
+            if handle_way == "NORMAL" or handle_way == "INTERFACE":
+                unexport_funcs = unexport_funcs.union(extract_func_used_func(file_attribute, func_name))
+    # 给所有未导出函数在unexport_symbol.h文件里添加宏
+    print("unexport_funcs:\n")
+    print(unexport_funcs)
+    add_unexport_func_macro(module_dir=module_dir_path, unexport_funcs=unexport_funcs)
 
     # 依次处理res中的函数
     for real_file, i in res.items():
@@ -62,13 +87,13 @@ def modular(module_name, dot_path=res_graph_dot_path):
             func_name = j.func_name
             real_file = j.real_file
             # files_name.append(file_attribute.split('/')[-1] + "_code") 原代码
-            #修改后的files_name处理
+            # 修改后的files_name处理
             new_file_name = file_attribute.split('/')[-1] + "_code"
             if new_file_name not in files_name:
                 if handle_way == "NORMAL" or handle_way == "INTERFACE":
                     files_name.append(new_file_name)
             else:
-            # 如果字符串已存在于列表中，则忽略它。
+                # 如果字符串已存在于列表中，则忽略它。
                 pass
 
             if handle_way == "DELETE":
@@ -76,14 +101,13 @@ def modular(module_name, dot_path=res_graph_dot_path):
 
             elif handle_way == "NORMAL":
                 handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
-                unexport_vars = extract_func_used_global_variable(file_attribute=file_attribute, func_name=func_name,
-                                                                  unexport_vars=unexport_vars)
+                unexport_funcs.union(extract_func_used_func(file_attribute, func_name))
+
             elif handle_way == "INTERFACE":
                 if real_file.endswith(".h"):
                     need_add_include_header_file_set.add(real_file)
                 handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
-                unexport_vars = extract_func_used_global_variable(file_attribute=file_attribute, func_name=func_name,
-                                                                  unexport_vars=unexport_vars)
+                unexport_funcs.union(extract_func_used_func(file_attribute, func_name))
                 pass
 
     # 处理需要添加宏的原头文件
@@ -92,9 +116,6 @@ def modular(module_name, dot_path=res_graph_dot_path):
 
     # 给kallsyms_lookup函数添加EXPORT宏
     add_export_kallsyms_look_up_macro()
-
-    # 给所有未导出符号在模块源文件里添加宏
-    add_unexport_var_macro(module_dir_path, unexport_vars)
 
     # 修改drivers下的和模块目录下的makefile
     modify_makefile(module_name, files_name, module_dir_path)

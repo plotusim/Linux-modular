@@ -1,5 +1,5 @@
 import os
-
+import re
 from utils.file_utils import append_string_to_file
 
 
@@ -12,7 +12,7 @@ def add_interface_macro_to_interface_header(module_dir, func_name, return_type, 
     macro = macro[:-1]
     macro += ")"
 
-    macro = macro.replace('\n', ' ')
+    macro = re.sub(r'\n\s*', ' ', macro)
     macro = "\n" + macro + "\n"
 
     interface_header_file_path = os.path.join(module_dir, "interface.h")

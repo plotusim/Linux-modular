@@ -1,7 +1,8 @@
+import os.path
 import re
 import subprocess
 
-from config import kernel_source_root_path, kernel_bc_file_root_path, ExtractGlobalVarExe, export_symbols_set
+from config import kernel_source_root_path, kernel_bc_file_root_path, current_project_dir, export_symbols_set
 from utils.file_utils import extract_lines
 from utils.bc_utils import parse_bc_file, parse_dbinfo, get_func_defined_file_and_start
 
@@ -27,6 +28,7 @@ def extract_source_location(file_attribute, function_name):
 
     if file_info is None:
         raise RuntimeError("Not Found File Info: " + file_attribute + " " + function_name)
+
     src_file_path = kernel_source_root_path + file_info
 
     with open(src_file_path, 'r') as f:
@@ -159,11 +161,9 @@ def remove_comments(code):
 #
 #     return return_type, params, body
 
-
 # 提取函数的返回值，参数列表和函数体
 def extract_function_info(function_code):
-    # 首先去掉注释
-    function_code = remove_comments(function_code)
+    function_code = remove_comments(function_code) # 首先去掉注释
 
     # 找到函数体
     start_index = function_code.find('{')
@@ -196,10 +196,11 @@ def extract_function_info(function_code):
     return return_type, param_string, body
 
 
-# 调用C++程序提取函数使用到的未导出符号
-def extract_global_var_from_ir(ir_file_path, function_name):
+# 调用C++程序提取函数使用到的未导出函数
+def extract_func_used_from_ir(ir_file_path, function_name):
+    ExtractFuncSym = os.path.join(current_project_dir, "cpp", "ExtractFuncSym")
     # 构建命令行参数
-    cmd = [ExtractGlobalVarExe, ir_file_path, function_name]
+    cmd = [ExtractFuncSym, ir_file_path, function_name]
     # 使用subprocess来执行命令并捕获输出
     result = subprocess.run(cmd, capture_output=True, text=True)
 
@@ -207,38 +208,28 @@ def extract_global_var_from_ir(ir_file_path, function_name):
     if result.returncode != 0:
         print(f"Error executing ExtractGlobalSymbol:\n{result.stderr}")
         return None
-
     # 返回标准输出的内容
-    return result.stderr
+    return result.stdout
 
 
 # 解析寻找未导出符号的输出
-def parse_unexport_var_res(unexport_vars, res: str):
+def parse_unexport_func_res(res: str):
     res = res.split("\n")
-    for i in res:
-        words = i.split("\t")
-        is_const = False
-        if "Const" in words:
-            is_const = True
-            words.remove("Const")
-        name = words[0]
-        if name in export_symbols_set or name in unexport_vars:
-            continue
-        type = words[1]
-        type = type[:-1] if type.endswith('*') else type
-        type.replace("*", "")
-        if "struct" in type:
-            type_str = " ".join(type.split("."))
-        else:
-            type_str = type
+    unexport_func = set()
+    for line in res:
+        func_name = line.split(":")[0]
+        if func_name not in export_symbols_set:
+            if len(func_name.strip()):
+                unexport_func.add(func_name)
 
-        if is_const:
-            type_str = "const " + type_str
-        unexport_vars.add((name, type_str))
-
-    return unexport_vars
+    return unexport_func
 
 
-def extract_func_used_global_variable(file_attribute, func_name, unexport_vars):
+def extract_func_used_func(file_attribute, func_name):
     bc_file = kernel_bc_file_root_path + file_attribute + ".bc"
-    return parse_unexport_var_res(unexport_vars, extract_global_var_from_ir(bc_file, func_name))
+    return parse_unexport_func_res(extract_func_used_from_ir(bc_file, func_name))
+
+
+if __name__ == '__main__':
+    print(extract_func_used_from_ir(
+        "/home/plot/clang-linux-5.10.176/linux-5.10.176/net/netfilter/nf_conntrack_netlink.bc", "ctnetlink_parse_help"))

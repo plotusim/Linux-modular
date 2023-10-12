@@ -56,7 +56,7 @@ def get_func_defined_file_and_start(lines, db_info, function_name):
 
                 if file_info_line and location_info:
                     file_info_num = file_info_line.group(1)
-                    file_info = find_file_debug_info(lines, db_info, file_info_num)[len(kernel_bc_file_root_path):]
+                    file_info = find_file_debug_info(lines, db_info, file_info_num).rsplit("Kernel_src", 1)[1]
                     start_loc = location_info.group(1)
                     return file_info, int(start_loc)
 
