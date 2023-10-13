@@ -55,7 +55,9 @@ def add_includes(file, module_dir):
     print("Add includes to " + file)
     source_file = kernel_source_root_path + file + '.c'
     file_name = file.split('/')[-1]
-    source_dir = os.path.dirname(file)
+    source_dir = ""
+    for i in file.split('/')[:-1]:
+        source_dir = os.path.join(source_dir, i)
 
     dest_file = os.path.join(module_dir, file_name + "_code.c")
     return add_includes_from_src_to_dest(source_file, dest_file, source_dir)

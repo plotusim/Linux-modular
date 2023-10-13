@@ -163,7 +163,7 @@ def remove_comments(code):
 
 # 提取函数的返回值，参数列表和函数体
 def extract_function_info(function_code):
-    function_code = remove_comments(function_code) # 首先去掉注释
+    function_code = remove_comments(function_code)  # 首先去掉注释
 
     # 找到函数体
     start_index = function_code.find('{')
@@ -228,6 +228,37 @@ def parse_unexport_func_res(res: str):
 def extract_func_used_func(file_attribute, func_name):
     bc_file = kernel_bc_file_root_path + file_attribute + ".bc"
     return parse_unexport_func_res(extract_func_used_from_ir(bc_file, func_name))
+
+
+def extract_func_used_gv(file_attribute, func_name):
+    bc_file = kernel_bc_file_root_path + file_attribute + ".bc"
+    return extract_used_gv_from_ir(bc_file, func_name).difference(export_symbols_set)
+
+
+def extract_used_gv_from_ir(ir_file_path, function_name):
+    ExtractGlobalVar = os.path.join(current_project_dir, "cpp", "ExtractGlobalVar")
+    # 构建命令行参数
+    cmd = [ExtractGlobalVar, ir_file_path, function_name]
+    # 使用subprocess来执行命令并捕获输出
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    # 如果进程返回了非零退出代码，可能是因为有错误
+    if result.returncode != 0:
+        print(f"Error executing ExtractGlobalSymbol:\n{result.stderr}")
+        return None
+    # 标准输出的内容
+    res = result.stdout
+    unexport_var = set()
+    for line in res.split("\n"):
+        splits = line.split(":")
+        name = splits[0]
+        if len(splits) > 1:
+            type_str = splits[1]
+        else:
+            type_str = ""
+        if name not in export_symbols_set:
+            unexport_var.add((name, type_str))
+    return unexport_var
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ def add_macro_to_unexport_func_header(name, type_str, para_str, module_dir):
     macro = f" UNEXPORT_FUNC({name},{type_str},{para_str})\n"
     macro = re.sub(r'\n\s*', ' ', macro)
     print("Add macro:\t" + macro + "\t to unexport_symbol.h")
-    append_string_to_file(os.path.join(module_dir, "unexport_symbol.h"),"\n"+ macro + "\n")
+    append_string_to_file(os.path.join(module_dir, "unexport_symbol.h"), "\n" + macro + "\n")
 
 
 def add_unexport_func_macro(module_dir, unexport_funcs):
@@ -20,3 +20,9 @@ def add_unexport_func_macro(module_dir, unexport_funcs):
         return_type, param_string, _ = extract_function_info(
             "".join(extract_funcs(file_attribute=file_attr, func_name=i)))
         add_macro_to_unexport_func_header(i, return_type, param_string, module_dir)
+
+
+def add_macro_to_unexport_var_header(name, type_str, module_dir):
+    macro = f"\nUNEXPORT_VAR({name},{type_str})\n"
+    print("Add macro:\t" + macro + "\t to unexport_symbol.h")
+    append_string_to_file(os.path.join(module_dir, "unexport_symbol.h"), macro)

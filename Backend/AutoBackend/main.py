@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from utils.graph_utils import get_res
-from utils.func_utils import extract_func_used_func
+from utils.func_utils import extract_func_used_func, extract_func_used_gv
 from config import res_graph_dot_path, module_name
 from handle.init_module_dir import init_module_dir
 from handle.add_includes import add_includes, add_header_file_include_linux_module, \
@@ -12,7 +12,7 @@ from handle.normal import handle_normal_funcs
 from handle.modify_makefile import modify_makefile
 from handle.modify_Kconfig import modify_kconfig
 from handle.add_export_kallsyms_look_up_macro import add_export_kallsyms_look_up_macro
-from handle.add_unexport_func_macro import add_unexport_func_macro
+from handle.add_unexport_symbol_macro import add_unexport_func_macro, add_macro_to_unexport_var_header
 
 
 # 自动化模块化的主函数
@@ -61,6 +61,8 @@ def modular(module_name, dot_path=res_graph_dot_path):
     # 首先找到未导出函数，然后提取出函数签名然后加入unexport_symbol.h
     # 用来存储该模块中所有函数遇到的未导出函数
     unexport_funcs = set()
+    unexport_var = set()
+    export_funcs = set()
     for real_file, i in res.items():
         # 遍历该文件中的需要处理的函数列表
         for j in i:
@@ -68,11 +70,22 @@ def modular(module_name, dot_path=res_graph_dot_path):
             handle_way = j.handle_way
             func_name = j.func_name
             if handle_way == "NORMAL" or handle_way == "INTERFACE":
+                export_funcs.add(func_name)
+                unexport_var = unexport_var.union(
+                    extract_func_used_gv(file_attribute=file_attribute, func_name=func_name))
                 unexport_funcs = unexport_funcs.union(extract_func_used_func(file_attribute, func_name))
     # 给所有未导出函数在unexport_symbol.h文件里添加宏
     print("unexport_funcs:\n")
+    unexport_funcs = unexport_funcs.difference(export_funcs)
     print(unexport_funcs)
     add_unexport_func_macro(module_dir=module_dir_path, unexport_funcs=unexport_funcs)
+
+    not_handled_vars = set()
+    for i in unexport_var:
+        if "." not in i[0] and "." not in i[1] and len(i[1]):
+            add_macro_to_unexport_var_header(i[0], i[1], module_dir_path)
+        else:
+            not_handled_vars.add(i[0])
 
     # 依次处理res中的函数
     for real_file, i in res.items():
@@ -119,6 +132,9 @@ def modular(module_name, dot_path=res_graph_dot_path):
 
     # 修改drivers下的和模块目录下的makefile
     modify_makefile(module_name, files_name, module_dir_path)
+
+    print("Found global vars but not handled:")
+    print(not_handled_vars)
 
 
 if __name__ == '__main__':
