@@ -67,3 +67,19 @@
    arch/x86_64/boot/bzImage -nographic -drive file=rootfs_ext4.img,format=raw -\
    append "root=/dev/sda noinitrd console=ttyS0"\
    ```
+# 测试结果
+
+
+
+   
+
+|                           | INTERFACE | NORMAL | DELETE | bzImage  |       | vmlinux  |       |
+| ------------------------- | --------- | ------ | ------ | -------- | ----- | -------- | ----- |
+| linux-drivers-connector   | 5         | 2      | 0      | 10315584 | 1184  | 67891256 | -1952 |
+| linux-fs-exportfs         | 4         | 3      | 0      | 10315456 | 1056  | 67891720 | -1488 |
+| linux-fs-nfs_common       | 4         | 1      | 1      | 10314272 | -128  | 67893408 | 200   |
+| linux-fs-nls              | 4         | 0      | 0      | 10314240 | -160  | 67893832 | 624   |
+| linux-hw_random           | 9         | 1      | 0      | 10313056 | -1344 | 67892112 | -1096 |
+| linux-net-sunrpc-auth_gss | 6         | 1      | 0      | 10314752 | 352   | 67894200 | 992   |
+| linux-5.10.176            | \         | \      | \      | 10314400 | 0     | 67893208 | 0     |
+
