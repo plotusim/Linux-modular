@@ -1,7 +1,4 @@
-LLVM_PATH := /home/plot/build/Frontend_test_v2/Frontend/llvm-project/prefix
-
-
-LLVM_HOME = /home/plot/build/Frontend_test_v2/Frontend/llvm-project/prefix
+LLVM_HOME = ../../Frontend_test_v2/Frontend/llvm-project/prefix
 LLVM_INCLUDE = $(LLVM_HOME)/include
 LLVM_LIB = $(LLVM_HOME)/lib
 CXX = clang++
