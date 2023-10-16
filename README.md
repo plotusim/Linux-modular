@@ -23,8 +23,10 @@ linux内核自动模块化工具。
 
 ## Frontend
 
-首先将分析的内核放在顶层的Kernel目录中。
+
 前端函数分析过程集成到run_frontend.sh，步骤存在前后依赖，但是中间文件都会保存，故可以拆开单步执行。注意，前端分析时间较长。
+
+执行sh前需将分析的内核放在顶层的Kernel目录中，并修改sh中的CONFIG变量。
 
 ```shell
 cd Frontend
