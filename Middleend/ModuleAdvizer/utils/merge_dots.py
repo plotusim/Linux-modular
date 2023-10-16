@@ -53,7 +53,7 @@ def _combine_dots_from_folder(folder_path: str):
         second_merge_to_first(merged_graph, nodes_dict, sub_dir_graph)
 
     for filename in files:
-        if filename.endswith(".dot") and not filename.endswith("mod.dot"):
+        if filename.endswith(".dot") and not filename.endswith("mod.dot") and not filename.startswith("all.dot"):
             # 解析 .dot 文件并获取 Dot 对象
             file_path = os.path.join(folder_path, filename)
             dot_graph = pydot.graph_from_dot_file(file_path)[0]
@@ -107,23 +107,24 @@ def _combine_dots_from_folder_with_locations(folder_path: str):
             files.append(item)
 
     for filename in files:
-        file_path = os.path.join(folder_path, filename)
-        dot_graph = pydot.graph_from_dot_file(file_path)[0]
+        if filename.endswith(".dot") and not filename.endswith("mod.dot") and not filename.startswith("all.dot"):
+            file_path = os.path.join(folder_path, filename)
+            dot_graph = pydot.graph_from_dot_file(file_path)[0]
 
-        # 遍历节点并添加到新的 Dot 对象中
-        for node in dot_graph.get_nodes():
-            if node.get_name() != "\"\\n\"":
-                if node.get_name() not in nodes_dict:
-                    # 设置file属性
-                    node.set('file', file_path[file_name_start_index:-4])
-                    # 如果节点名称不存在，则添加到字典和新的 Dot 对象中
-                    nodes_dict[node.get_name()] = node
-                    merged_graph.add_node(node)
-                else:
-                    # 如果节点名称已存在，则合并节点属性
-                    existing_node = nodes_dict[node.get_name()]
-                    for attr, value in node.get_attributes().items():
-                        existing_node.set(attr, value)
+            # 遍历节点并添加到新的 Dot 对象中
+            for node in dot_graph.get_nodes():
+                if node.get_name() != "\"\\n\"":
+                    if node.get_name() not in nodes_dict:
+                        # 设置file属性
+                        node.set('file', file_path[file_name_start_index:-4])
+                        # 如果节点名称不存在，则添加到字典和新的 Dot 对象中
+                        nodes_dict[node.get_name()] = node
+                        merged_graph.add_node(node)
+                    else:
+                        # 如果节点名称已存在，则合并节点属性
+                        existing_node = nodes_dict[node.get_name()]
+                        for attr, value in node.get_attributes().items():
+                            existing_node.set(attr, value)
 
     for subdirectory in subdirectories:
         sub_dir_graph = combine_dots_from_folder_with_locations(os.path.join(folder_path, subdirectory))
@@ -132,7 +133,7 @@ def _combine_dots_from_folder_with_locations(folder_path: str):
     # 遍历边并添加到新的 Dot 对象中
     for root, dirs, files in os.walk(folder_path):
         for filename in files:
-            if filename.endswith(".dot") and not filename.endswith("mod.dot"):
+            if filename.endswith(".dot") and not filename.endswith("mod.dot") and not filename.startswith("all.dot"):
                 # 解析 .dot 文件并获取 Dot 对象
                 file_path = os.path.join(root, filename)
                 dot_graph = pydot.graph_from_dot_file(file_path)[0]
