@@ -54,6 +54,13 @@ AutoBackend根据中端生成的提取建议自动提取内核模块，目前存
 
 ### 提取内核模块：
 
+#### 编译提取工具
+
+- ```shell
+  cd Backend/AutoBackend/cpp
+  make
+  ```
+
 #### 修改config.py:
 
 - res_graph_dot_path为要提取的模块的res.dot的路径
