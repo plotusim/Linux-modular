@@ -12,7 +12,8 @@ from handle.normal import handle_normal_funcs
 from handle.modify_makefile import modify_makefile
 from handle.modify_Kconfig import modify_kconfig
 from handle.add_export_kallsyms_look_up_macro import add_export_kallsyms_look_up_macro
-from handle.add_unexport_symbol_macro import add_unexport_func_macro, add_macro_to_unexport_var_header
+from handle.add_unexport_symbol_macro import add_unexport_func_macro, add_macro_to_unexport_var_header, \
+    modify_unexport_var_symbol_in_mod_func
 
 
 # 自动化模块化的主函数
@@ -81,9 +82,11 @@ def modular(module_name, dot_path=res_graph_dot_path):
     add_unexport_func_macro(module_dir=module_dir_path, unexport_funcs=unexport_funcs)
 
     not_handled_vars = set()
+    handled_unexport_vars = set()
     for i in unexport_var:
         if "." not in i[0] and "." not in i[1] and len(i[1]):
             add_macro_to_unexport_var_header(i[0], i[1], module_dir_path)
+            handled_unexport_vars.add(i[0])
         else:
             not_handled_vars.add(i[0])
 
@@ -129,6 +132,10 @@ def modular(module_name, dot_path=res_graph_dot_path):
 
     # 给kallsyms_lookup函数添加EXPORT宏
     add_export_kallsyms_look_up_macro()
+
+    # 修改模块函数对未导出符号的引用
+    for i in handled_unexport_vars:
+        modify_unexport_var_symbol_in_mod_func(i, module_dir_path)
 
     # 修改drivers下的和模块目录下的makefile
     modify_makefile(module_name, files_name, module_dir_path)

@@ -1,19 +1,19 @@
 import os
 import re
 
-# 是否把不同联通量合并成一个模块，现在默认为true，因为多模块没有写
+# 是否把不同联通量合并成一个模块，现在默认为true
 merge = True
 
 # 设置模块的名字,注意后面最好跟上_module后缀
 # module_name = "auth_gss"
-module_name = "netfilter"
+module_name = "printk_module"
 
 # 前端输出的总dot文件
 whole_kernel_dot_file = "../../Data/dots_merge/all.dot"
 
 # 终端输出的包含模块化建议的dot文件
 # res_graph_dot_path = "/home/plot/hn_working_dir/Linux-modular/Graph/result_pa_new/net/sunrpc/auth_gss/res.dot"
-res_graph_dot_path = "/home/plot/build/Frontend_test_v2/Middleend/result/net/netfilter/res.dot"
+res_graph_dot_path = "/home/plot/build/Frontend_test_v2/Middleend/result/kernel/printk/res.dot"
 
 # 要修改的源代码的根目录
 # kernel_source_root_path = "../modify_kernel_auth_gss"

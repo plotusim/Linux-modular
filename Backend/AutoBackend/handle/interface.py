@@ -10,8 +10,9 @@ from handle.delete import del_funcs
 
 # 生成替换的函数体
 def generate_find_module_code(func_name, return_type, params, module_name: str):
+    return_type = return_type.strip()
     # void返回类型的函数不能返回-1
-    if return_type.strip() == "void":
+    if "void" in return_type and "*" not in return_type:
         code = "\nnoinline " + return_type + " " + func_name + "(" + params + ")\n{\n" + "\tif(!find_module(\"" + module_name + "\")){\n\t\trequest_module(\"" + module_name + "\");\n\t}\n\treturn;\n}"
     else:
         code = "\nnoinline " + return_type + " " + func_name + "(" + params + ")\n{\n" + "\tif(!find_module(\"" + module_name + "\")){\n\t\trequest_module(\"" + module_name + "\");\n\t}\n\treturn -1;\n}"
