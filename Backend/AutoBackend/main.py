@@ -13,7 +13,7 @@ from handle.modify_makefile import modify_makefile
 from handle.modify_Kconfig import modify_kconfig
 from handle.add_export_kallsyms_look_up_macro import add_export_kallsyms_look_up_macro
 from handle.add_unexport_symbol_macro import add_unexport_func_macro, add_macro_to_unexport_var_header, \
-    modify_unexport_var_symbol_in_mod_func
+    modify_unexport_symbol_in_mod_func
 
 
 # 自动化模块化的主函数
@@ -122,13 +122,11 @@ def modular(module_name, dot_path=res_graph_dot_path):
 
             elif handle_way == "NORMAL":
                 handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
-                unexport_funcs.union(extract_func_used_func(file_attribute, func_name))
 
             elif handle_way == "INTERFACE":
                 if real_file.endswith(".h"):
                     need_add_include_header_file_set.add(real_file)
                 handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
-                unexport_funcs.union(extract_func_used_func(file_attribute, func_name))
                 pass
 
     # 处理需要添加宏的原头文件
@@ -140,7 +138,10 @@ def modular(module_name, dot_path=res_graph_dot_path):
 
     # 修改模块函数对未导出符号的引用
     for i in handled_unexport_vars:
-        modify_unexport_var_symbol_in_mod_func(i, module_dir_path)
+        modify_unexport_symbol_in_mod_func(i, module_dir_path)
+
+    for i in unexport_funcs:
+        modify_unexport_symbol_in_mod_func(i, module_dir_path)
 
     # 修改drivers下的和模块目录下的makefile
     modify_makefile(module_name, files_name, module_dir_path)

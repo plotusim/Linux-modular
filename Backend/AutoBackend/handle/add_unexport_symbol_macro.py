@@ -86,7 +86,7 @@ def add_macro_to_unexport_var_header(name, type_str, module_dir):
     append_string_to_file(os.path.join(module_dir, "unexport_symbol.h"), macro)
 
 
-def modify_unexport_var_symbol_in_mod_func(origin_name, mod_dir_path):
+def modify_unexport_symbol_in_mod_func(origin_name, mod_dir_path):
     mod_name = "_" + origin_name
     # 定义正则表达式，查找不以"mod_"开头的target_str
     for root, dirs, files in os.walk(mod_dir_path):
