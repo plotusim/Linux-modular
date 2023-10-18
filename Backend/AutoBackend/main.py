@@ -46,18 +46,22 @@ def modular(module_name, dot_path=res_graph_dot_path):
                 need_add_includes_file_set.add(file_attribute)
 
     # 所有要添加的include
-    angle_includes_set = set()
-    quote_includes_pairs_dict = defaultdict(set)
+    angle_includes_list = []
+    quote_includes_pairs_dict = defaultdict(list)
     # 给need_add_includes_file_set里的文件添加includes语句
     for code_file in need_add_includes_file_set:
         angle_includes, quote_includes_pairs = add_includes(code_file, module_dir_path)
-        angle_includes_set = angle_includes_set.union(angle_includes)
+        for i in angle_includes:
+            if i not in angle_includes_list:
+                angle_includes_list.append(angle_includes)
         for key, value in quote_includes_pairs.items():
-            quote_includes_pairs_dict[key] = quote_includes_pairs_dict[key].union(value)
+            for func in value:
+                if func not in quote_includes_pairs_dict[key]:
+                    quote_includes_pairs_dict[key].append(func)
     # 给jmp_interface.h添加include
-    add_includes_to_jump_interface(angle_includes_set, quote_includes_pairs_dict, module_dir_path)
+    add_includes_to_jump_interface(angle_includes_list, quote_includes_pairs_dict, module_dir_path)
     # 给unexport_symbol.h添加include
-    add_unexport_symbol_header(angle_includes_set, quote_includes_pairs_dict, module_dir_path)
+    add_unexport_symbol_header(angle_includes_list, quote_includes_pairs_dict, module_dir_path)
 
     # 首先找到未导出函数，然后提取出函数签名然后加入unexport_symbol.h
     # 用来存储该模块中所有函数遇到的未导出函数

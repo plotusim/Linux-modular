@@ -10,8 +10,8 @@ def extract_includes(filename):
     angle_bracket_pattern = re.compile(r'#include <(.*?)>')
     quote_pattern = re.compile(r'#include "(.*?)"')
 
-    angle_bracket_includes = set()
-    quote_includes = set()
+    angle_bracket_includes = []
+    quote_includes = []
 
     with open(filename, 'r') as f:
         for line in f:
@@ -19,9 +19,11 @@ def extract_includes(filename):
             quote_match = quote_pattern.match(line.strip())
 
             if angle_match:
-                angle_bracket_includes.add(angle_match.group(1))
+                if angle_match.group(1) not in angle_bracket_includes:
+                    angle_bracket_includes.append(angle_match.group(1))
             elif quote_match:
-                quote_includes.add(quote_match.group(1))
+                if quote_match.group(1) not in quote_includes:
+                    quote_includes.append(quote_match.group(1))
 
     return angle_bracket_includes, quote_includes
 

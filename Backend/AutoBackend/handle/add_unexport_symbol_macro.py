@@ -5,6 +5,21 @@ from utils.func_utils import extract_function_info, extract_funcs
 from config import func_file_attribute_pairs
 
 
+def is_static_inline_func(func_name):
+
+    pass
+    return False
+
+
+def get_children_funcs(func_name):
+    pass
+    return set()
+
+
+def copy_static_inline_func(func_name):
+    pass
+
+
 # 向unexport_symbol.h里面添加UNEXPORT_VAR宏
 def add_macro_to_unexport_func_header(name, type_str, para_str, module_dir):
     macro = f" UNEXPORT_FUNC({name},{type_str},{para_str})\n"
@@ -14,6 +29,22 @@ def add_macro_to_unexport_func_header(name, type_str, para_str, module_dir):
 
 
 def add_unexport_func_macro(module_dir, unexport_funcs):
+    work_set = set()
+    temp_set = unexport_funcs.copy()
+
+    while not (work_set.issubset(temp_set) and work_set.issuperset(temp_set)):
+        work_set = temp_set.copy()
+        temp_set.clear()
+        for i in work_set:
+            if is_static_inline_func(i):
+                copy_static_inline_func(i)
+                for next_func in get_children_funcs(i):
+                    temp_set.add(next_func)
+            else:
+                temp_set.add(i)
+
+    unexport_funcs = work_set.copy()
+
     for i in unexport_funcs:
         file_attr = func_file_attribute_pairs[i]
         print(f"Add unexport_func_macro for {i} at Loc {file_attr}")
