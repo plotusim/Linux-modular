@@ -2,21 +2,40 @@ import os.path
 import re
 from utils.file_utils import append_string_to_file
 from utils.func_utils import extract_function_info, extract_funcs
-from config import func_file_attribute_pairs
+from config import func_file_attribute_pairs, func_children, export_symbols_set
 
 
-def is_static_inline_func(func_name):
+def contains_inline(s):
+    # 使用正则表达式搜索'inline'单词，\b表示单词边界
+    pattern = r'\binline\b'
 
-    pass
-    return False
+    # 搜索整个字符串，看是否有匹配
+    if re.search(pattern, s):
+        return True
+    else:
+        return False
+
+
+def is_inline_func(func_name):
+    file_attr = func_file_attribute_pairs[func_name]
+    lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
+    return contains_inline(" ".join(lines))
 
 
 def get_children_funcs(func_name):
-    pass
-    return set()
+    print(func_children[func_name])
+    return func_children[func_name]
 
 
-def copy_static_inline_func(func_name):
+def copy_static_inline_func(func_name, module_dir):
+    file_attr = func_file_attribute_pairs[func_name]
+    lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
+    unexport_symbol_dec_path = os.path.join(module_dir, "unexport_symbol_dec.h")
+    print(f"Add func {func_name} to unexport_symbol_dec.h")
+    append_string_to_file(unexport_symbol_dec_path, "\n")
+
+    for i in lines:
+        append_string_to_file(unexport_symbol_dec_path, i)
     pass
 
 
@@ -36,10 +55,11 @@ def add_unexport_func_macro(module_dir, unexport_funcs):
         work_set = temp_set.copy()
         temp_set.clear()
         for i in work_set:
-            if is_static_inline_func(i):
-                copy_static_inline_func(i)
+            if is_inline_func(i):
+                copy_static_inline_func(i, module_dir)
                 for next_func in get_children_funcs(i):
-                    temp_set.add(next_func)
+                    if next_func not in export_symbols_set:
+                        temp_set.add(next_func)
             else:
                 temp_set.add(i)
 
@@ -51,6 +71,7 @@ def add_unexport_func_macro(module_dir, unexport_funcs):
         return_type, param_string, _ = extract_function_info(
             "".join(extract_funcs(file_attribute=file_attr, func_name=i)))
         add_macro_to_unexport_func_header(i, return_type, param_string, module_dir)
+    return unexport_funcs
 
 
 def add_macro_to_unexport_var_header(name, type_str, module_dir):

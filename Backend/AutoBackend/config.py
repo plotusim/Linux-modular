@@ -1,5 +1,6 @@
 import os
 import re
+from collections import defaultdict
 
 # 是否把不同联通量合并成一个模块，现在默认为true
 merge = True
@@ -36,7 +37,6 @@ export_symbols_list_file = '../../Data/func_list/export_symbols.txt'
 current_file_path = os.path.abspath(__file__)
 current_project_dir = os.path.dirname(current_file_path)
 
-
 # 初始化项目会用到的其他全局变量
 # 读取导出符号
 print("Read export symbols set")
@@ -48,7 +48,21 @@ with open(export_symbols_list_file, 'r') as file:
 # 读取all.dot
 print("Read func-file pairs")
 func_file_attribute_pairs = {}
-pattern = r'(.*?)\s*\[file=\"(.*?)\"(.*?)\]'
+pattern2 = r'(.*?)\s*\[file=\"(.*?)\"(.*?)\]'
+
+with open(whole_kernel_dot_file, 'r') as file:
+    for line in file:
+        match = re.search(pattern2, line)
+        if match:
+            part1 = match.group(1)
+            part2 = match.group(2)
+            func_file_attribute_pairs[part1] = part2
+
+print("Read func->func pairs")
+
+func_children = defaultdict(set)
+
+pattern = r'\"?\b([a-zA-Z_]\w*)\b\"?\s*->\s*\"?\b([a-zA-Z_]\w*)\b\"?'
 
 with open(whole_kernel_dot_file, 'r') as file:
     for line in file:
@@ -56,4 +70,4 @@ with open(whole_kernel_dot_file, 'r') as file:
         if match:
             part1 = match.group(1)
             part2 = match.group(2)
-            func_file_attribute_pairs[part1] = part2
+            func_children[part1].add(part2)

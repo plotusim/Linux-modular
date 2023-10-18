@@ -83,8 +83,9 @@ def modular(module_name, dot_path=res_graph_dot_path):
     print("unexport_funcs:\n")
     unexport_funcs = unexport_funcs.difference(export_funcs)
     print(unexport_funcs)
-    add_unexport_func_macro(module_dir=module_dir_path, unexport_funcs=unexport_funcs)
-
+    unexport_funcs = add_unexport_func_macro(module_dir=module_dir_path, unexport_funcs=unexport_funcs)
+    print("unexport_funcs:\n")
+    print(unexport_funcs)
     not_handled_vars = set()
     handled_unexport_vars = set()
     for i in unexport_var:
