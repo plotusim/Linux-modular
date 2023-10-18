@@ -23,13 +23,14 @@ def is_inline_func(func_name):
 
 
 def get_children_funcs(func_name):
-    print(func_children[func_name])
+    # print(func_children[func_name])
     return func_children[func_name]
 
 
 def copy_static_inline_func(func_name, module_dir):
     file_attr = func_file_attribute_pairs[func_name]
     lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
+    print("".join(lines))
     unexport_symbol_dec_path = os.path.join(module_dir, "unexport_symbol_dec.h")
     print(f"Add func {func_name} to unexport_symbol_dec.h")
     append_string_to_file(unexport_symbol_dec_path, "\n")
@@ -56,6 +57,7 @@ def add_unexport_func_macro(module_dir, unexport_funcs):
         temp_set.clear()
         for i in work_set:
             if is_inline_func(i):
+                print(f"Found inline func {i}")
                 copy_static_inline_func(i, module_dir)
                 for next_func in get_children_funcs(i):
                     if next_func not in export_symbols_set:

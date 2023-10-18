@@ -53,7 +53,7 @@ def modular(module_name, dot_path=res_graph_dot_path):
         angle_includes, quote_includes_pairs = add_includes(code_file, module_dir_path)
         for i in angle_includes:
             if i not in angle_includes_list:
-                angle_includes_list.append(angle_includes)
+                angle_includes_list.append(i)
         for key, value in quote_includes_pairs.items():
             for func in value:
                 if func not in quote_includes_pairs_dict[key]:
