@@ -5,33 +5,35 @@ from collections import defaultdict
 # 是否把不同联通量合并成一个模块，现在默认为true
 merge = True
 
+# project_base_path = "../../"
+project_base_path = "/home/plot/build/Frontend_test_v2"
+
 # 设置模块的名字,注意后面最好跟上_module后缀
 # module_name = "auth_gss"
-module_name = "printk_module"
+module_name = "dnotify_module"
+
+llvm_bin_path_prefix = os.path.join(project_base_path, "Frontend/llvm-project/prefix/bin")
 
 # 前端输出的总dot文件
-whole_kernel_dot_file = "../../Data/dots_merge/all.dot"
+whole_kernel_dot_file = os.path.join(project_base_path, "Data/dots_merge/all.dot")
 
 # 终端输出的包含模块化建议的dot文件
-# res_graph_dot_path = "/home/plot/hn_working_dir/Linux-modular/Graph/result_pa_new/net/sunrpc/auth_gss/res.dot"
-res_graph_dot_path = "/home/plot/build/Frontend_test_v2/Middleend/result/kernel/printk/res.dot"
+res_graph_dot_path = os.path.join(project_base_path, "Middleend/result/fs/notify/dnotify/res.dot")
 
 # 要修改的源代码的根目录
-# kernel_source_root_path = "../modify_kernel_auth_gss"
-
-kernel_source_root_path = "/home/plot/build/Frontend_test_v2/Backend/test_hn"
+kernel_source_root_path = os.path.join(project_base_path, "Backend/test_hn")
 
 # 包含源代码编译出的LLVM BC文件的根目录
-kernel_bc_file_root_path = "../../Frontend/Kernel_src"
+kernel_bc_file_root_path = os.path.join(project_base_path, "Frontend/Kernel_src")
 
 # 存放模块化模版文件的目录地址
-module_template_files_dir = "../sys_module"
+module_template_files_dir = os.path.join(project_base_path, "Backend/sys_module")
 
 # 要修改的内核源代码目录下的drivers目录，用于存放我们的模块源代码
 drivers_dir_path = os.path.join(kernel_source_root_path, "drivers")
 
 # 导出符号文件
-export_symbols_list_file = '../../Data/func_list/export_symbols.txt'
+export_symbols_list_file = os.path.join(project_base_path, "Data/func_list/export_symbols.txt")
 
 # 当前文件的地址
 current_file_path = os.path.abspath(__file__)

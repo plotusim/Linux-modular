@@ -2,12 +2,13 @@ import subprocess
 import re
 import os
 
-from config import kernel_source_root_path, kernel_bc_file_root_path
+from config import kernel_source_root_path, kernel_bc_file_root_path, llvm_bin_path_prefix
 
 
 def parse_bc_file(bc_file):
     # 使用llvm-dis将.bc文件转换为.ll字符串
-    process = subprocess.Popen(["llvm-dis", bc_file, "-o", "-"], stdout=subprocess.PIPE)
+    llvm_dis_path = os.path.join(llvm_bin_path_prefix, "llvm-dis")
+    process = subprocess.Popen([llvm_dis_path, bc_file, "-o", "-"], stdout=subprocess.PIPE)
     ll_content, _ = process.communicate()
 
     # 将内容从字节转换为字符串
