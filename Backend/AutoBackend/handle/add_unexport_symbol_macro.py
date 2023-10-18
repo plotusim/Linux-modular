@@ -1,7 +1,7 @@
 import os.path
 import re
 from utils.file_utils import append_string_to_file
-from utils.func_utils import extract_function_info, extract_funcs
+from utils.func_utils import extract_function_info, extract_funcs, extract_source_location
 from config import func_file_attribute_pairs, func_children, export_symbols_set
 
 
@@ -29,14 +29,18 @@ def get_children_funcs(func_name):
 
 def copy_static_inline_func(func_name, module_dir):
     file_attr = func_file_attribute_pairs[func_name]
+    file_info, _, _ = extract_source_location(file_attribute=file_attr, function_name=func_name)
+    if file_info.endswith(".h"):
+        return
     lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
     print("".join(lines))
-    unexport_symbol_dec_path = os.path.join(module_dir, "unexport_symbol_dec.h")
-    print(f"Add func {func_name} to unexport_symbol_dec.h")
-    append_string_to_file(unexport_symbol_dec_path, "\n")
+    file_name = file_attr.split('/')[-1]
+    code_c_path = os.path.join(module_dir, file_name + "_code.c")
+    print(f"Add func {func_name} to {code_c_path}.h")
+    append_string_to_file(code_c_path, "\n")
 
     for i in lines:
-        append_string_to_file(unexport_symbol_dec_path, i)
+        append_string_to_file(code_c_path, i)
     pass
 
 
@@ -91,10 +95,10 @@ def modify_unexport_var_symbol_in_mod_func(origin_name, mod_dir_path):
                 print(f"Modify var_identifier {origin_name}\tin\t{file}")
                 # 获取文件的完整路径
                 full_path = os.path.join(root, file)
-                with open(full_path, 'r') as file:
-                    content = file.read()
+                with open(full_path, 'r') as f:
+                    content = f.read()
 
                 new_content = re.sub(r'\b' + re.escape(origin_name) + r'\b', mod_name, content)
 
-                with open(full_path, 'w') as file:
-                    file.write(new_content)
+                with open(full_path, 'w') as f:
+                    f.write(new_content)
