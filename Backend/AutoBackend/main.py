@@ -1,8 +1,9 @@
-from collections import defaultdict
+import argparse
 
+from collections import defaultdict
 from utils.graph_utils import get_res
 from utils.func_utils import extract_func_used_func, extract_func_used_gv
-from config import res_graph_dot_path, module_name
+from config import config
 from handle.init_module_dir import init_module_dir
 from handle.add_includes import add_includes, add_header_file_include_linux_module, \
     add_includes_to_jump_interface, add_unexport_symbol_header
@@ -17,7 +18,7 @@ from handle.add_unexport_symbol_macro import add_unexport_func_macro, add_macro_
 
 
 # 自动化模块化的主函数
-def modular(module_name, dot_path=res_graph_dot_path):
+def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
     # 初始化模块源代码目录，包括了创建目录，复制模版文件
     module_dir_path = init_module_dir(module_name)
     # 修改模块目录下的kconfig
@@ -150,5 +151,18 @@ def modular(module_name, dot_path=res_graph_dot_path):
     print(not_handled_vars)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Automatically modularize kernel.")
+    parser.add_argument('--project_base_path', type=str, help='Base path for the project', default="../../")
+    parser.add_argument('--module_name', type=str, help='Set the module name')
+    parser.add_argument('--kernel_source_root_path', type=str, help='The source files to modify')
+    parser.add_argument('--res_graph_dot_path', type=str, help='The middleend result path')
+
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
-    modular(module_name, res_graph_dot_path)
+    args = parse_args()
+    config.read_args_and_modify(args)
+    print(str(config))
+    # modular()

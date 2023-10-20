@@ -1,5 +1,5 @@
 import os
-from config import drivers_dir_path, module_template_files_dir
+from config import config
 import shutil
 
 
@@ -34,11 +34,11 @@ def create_directory(path, dir_name):
 
 
 def create_module_dir(module_name):
-    return create_directory(drivers_dir_path, module_name)
+    return create_directory(config.drivers_dir_path, module_name)
 
 
 def add_template_files(module_dir):
-    copy_files_from_src_to_dest(module_template_files_dir, module_dir)
+    copy_files_from_src_to_dest(config.module_template_files_dir, module_dir)
 
 
 def init_module_dir(module_name):

@@ -1,5 +1,5 @@
 import pydot
-from config import res_graph_dot_path, merge
+from config import config
 from utils.func_utils import extract_source_location
 
 
@@ -11,10 +11,10 @@ class Function:
         self.real_file, self.start_loc, self.end_loc = extract_source_location(file_attribute, func_name)
 
 
-def read_res_graph(path=res_graph_dot_path):
+def read_res_graph(path=config.res_graph_dot_path):
     graph = pydot.graph_from_dot_file(path)[0]
     final_graph = pydot.Graph()
-    if merge:
+    if config.merge:
         for i in graph.get_subgraphs():
             for node in i.get_nodes():
                 final_graph.add_node(node)

@@ -2,7 +2,7 @@ import os.path
 import re
 import subprocess
 
-from config import kernel_source_root_path, kernel_bc_file_root_path, current_project_dir, export_symbols_set
+from config import config
 from utils.file_utils import extract_lines
 from utils.bc_utils import parse_bc_file, parse_dbinfo, get_func_defined_file_and_start
 
@@ -10,14 +10,14 @@ from utils.bc_utils import parse_bc_file, parse_dbinfo, get_func_defined_file_an
 # 返回函数的定义
 def extract_funcs(file_attribute, func_name):
     file, start_loc, end_loc = extract_source_location(file_attribute, func_name)
-    src_file_path = kernel_source_root_path + file
+    src_file_path = config.kernel_source_root_path + file
     lines = extract_lines(src_file_path, start_loc, end_loc)
     return lines
 
 
 # 获得函数在源代码中定义的具体位置
 def extract_source_location(file_attribute, function_name):
-    bc_file_path = kernel_bc_file_root_path + file_attribute + ".bc"
+    bc_file_path = config.kernel_bc_file_root_path + file_attribute + ".bc"
     # 使用llvm-dis将.bc文件转换为.ll文件
     ll_content = parse_bc_file(bc_file_path)
     # 解析.ll文件以查找函数的源位置
@@ -29,7 +29,7 @@ def extract_source_location(file_attribute, function_name):
     if file_info is None:
         raise RuntimeError("Not Found File Info: " + file_attribute + " " + function_name)
 
-    src_file_path = kernel_source_root_path + file_info
+    src_file_path = config.kernel_source_root_path + file_info
 
     with open(src_file_path, 'r') as f:
         lines = f.readlines()
@@ -136,7 +136,7 @@ def remove_comments(code):
 #     # pattern = r'(\w+(\s*\*+)?\s+)\s*(\w+)\s*\(([^)]*)\).*\{.*\}'
 #     # pattern = r'(?:static\s+|inline\s+)?(?:static\s+|inline\s+)?\s*(\w+(\s*\*+\s*)?)\s+(\w+)\s*\(([^)]*)\)\s*'
 #     # pattern = r'\s*(?:static\s+|inline\s+)?(?:static\s+|inline\s+)?\s*(\w+(\s*\*+\s*)?)\s+(\w+)\s*\(([^)]*)\)'
-#     pattern = r'\s*(?:static\s+|inline\s+)?(?:static\s+|inline\s+)?\s*(\w+\s+\w+|\w+(\s*\*+\s*)?)\s+(\w+)\s*\(([^)]*)\)'
+# pattern = r'\s*(?:static\s+|inline\s+)?(?:static\s+|inline\s+)?\s*(\w+\s+\w+|\w+(\s*\*+\s*)?)\s+(\w+)\s*\(([^)]*)\)'
 #     function_code = remove_comments(function_code)
 #
 #     match = re.match(pattern, function_code)
@@ -198,7 +198,7 @@ def extract_function_info(function_code):
 
 # 调用C++程序提取函数使用到的未导出函数
 def extract_func_used_from_ir(ir_file_path, function_name):
-    ExtractFuncSym = os.path.join(current_project_dir, "cpp", "ExtractFuncSym")
+    ExtractFuncSym = os.path.join(config.current_project_dir, "cpp", "ExtractFuncSym")
     # 构建命令行参数
     cmd = [ExtractFuncSym, ir_file_path, function_name]
     # 使用subprocess来执行命令并捕获输出
@@ -218,7 +218,7 @@ def parse_unexport_func_res(res: str):
     unexport_func = set()
     for line in res:
         func_name = line.split(":")[0]
-        if func_name not in export_symbols_set:
+        if func_name not in config.export_symbols_set:
             if len(func_name.strip()):
                 unexport_func.add(func_name)
 
@@ -226,17 +226,17 @@ def parse_unexport_func_res(res: str):
 
 
 def extract_func_used_func(file_attribute, func_name):
-    bc_file = kernel_bc_file_root_path + file_attribute + ".bc"
+    bc_file = config.kernel_bc_file_root_path + file_attribute + ".bc"
     return parse_unexport_func_res(extract_func_used_from_ir(bc_file, func_name))
 
 
 def extract_func_used_gv(file_attribute, func_name):
-    bc_file = kernel_bc_file_root_path + file_attribute + ".bc"
-    return extract_used_gv_from_ir(bc_file, func_name).difference(export_symbols_set)
+    bc_file = config.kernel_bc_file_root_path + file_attribute + ".bc"
+    return extract_used_gv_from_ir(bc_file, func_name).difference(config.export_symbols_set)
 
 
 def extract_used_gv_from_ir(ir_file_path, function_name):
-    ExtractGlobalVar = os.path.join(current_project_dir, "cpp", "ExtractGlobalVar")
+    ExtractGlobalVar = os.path.join(config.current_project_dir, "cpp", "ExtractGlobalVar")
     # 构建命令行参数
     cmd = [ExtractGlobalVar, ir_file_path, function_name]
     # 使用subprocess来执行命令并捕获输出
@@ -256,7 +256,7 @@ def extract_used_gv_from_ir(ir_file_path, function_name):
             type_str = splits[1]
         else:
             type_str = ""
-        if name not in export_symbols_set:
+        if name not in config.export_symbols_set:
             unexport_var.add((name, type_str))
     return unexport_var
 

@@ -2,7 +2,7 @@ import os
 import re
 
 from utils.file_utils import append_string_to_file, insert_before_keyword
-from config import kernel_source_root_path
+from config import config
 
 
 # 使用正则表达式识别2种#include语句
@@ -55,7 +55,7 @@ def add_quote_includes(quote_includes, source_dir, dest_file):
 # 给*_code.c文件添加include宏的入口函数,返回加入的angle_includes与quote_includes
 def add_includes(file, module_dir):
     print("Add includes to " + file)
-    source_file = kernel_source_root_path + file + '.c'
+    source_file = config.kernel_source_root_path + file + '.c'
     file_name = file.split('/')[-1]
     source_dir = ""
     for i in file.split('/')[:-1]:
@@ -68,7 +68,7 @@ def add_includes(file, module_dir):
 # 给头文件添加#include <linux/module.h>的函数
 def add_header_file_include_linux_module(header_file_path):
     print("Add includes to " + header_file_path)
-    header_path = kernel_source_root_path + header_file_path
+    header_path = config.kernel_source_root_path + header_file_path
     insert_before_keyword(filename=header_path, keyword="#include", content_to_insert="#include <linux/module.h>")
 
 

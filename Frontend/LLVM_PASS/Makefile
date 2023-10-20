@@ -1,6 +1,6 @@
 LLVM_PATH := ../llvm-project/prefix
 
-CXX := clang++
+CXX := ../llvm-project/prefix/bin/clang++
 CXXFLAGS := $(shell $(LLVM_PATH)/bin/llvm-config --cxxflags)
 LDFLAGS := $(shell $(LLVM_PATH)/bin/llvm-config --ldflags)
 

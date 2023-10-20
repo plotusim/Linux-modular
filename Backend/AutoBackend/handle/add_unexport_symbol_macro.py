@@ -2,7 +2,7 @@ import os.path
 import re
 from utils.file_utils import append_string_to_file
 from utils.func_utils import extract_function_info, extract_funcs, extract_source_location
-from config import func_file_attribute_pairs, func_children, export_symbols_set
+from config import config
 
 
 def contains_inline(s):
@@ -17,18 +17,18 @@ def contains_inline(s):
 
 
 def is_inline_func(func_name):
-    file_attr = func_file_attribute_pairs[func_name]
+    file_attr = config.func_file_attribute_pairs[func_name]
     lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
     return contains_inline(" ".join(lines))
 
 
 def get_children_funcs(func_name):
     # print(func_children[func_name])
-    return func_children[func_name]
+    return config.func_children[func_name]
 
 
 def copy_static_inline_func(func_name, module_dir):
-    file_attr = func_file_attribute_pairs[func_name]
+    file_attr = config.func_file_attribute_pairs[func_name]
     file_info, _, _ = extract_source_location(file_attribute=file_attr, function_name=func_name)
     if file_info.endswith(".h"):
         return
@@ -64,7 +64,7 @@ def add_unexport_func_macro(module_dir, unexport_funcs):
                 print(f"Found inline func {i}")
                 copy_static_inline_func(i, module_dir)
                 for next_func in get_children_funcs(i):
-                    if next_func not in export_symbols_set:
+                    if next_func not in config.export_symbols_set:
                         temp_set.add(next_func)
             else:
                 temp_set.add(i)
@@ -72,7 +72,7 @@ def add_unexport_func_macro(module_dir, unexport_funcs):
     unexport_funcs = work_set.copy()
 
     for i in unexport_funcs:
-        file_attr = func_file_attribute_pairs[i]
+        file_attr = config.func_file_attribute_pairs[i]
         print(f"Add unexport_func_macro for {i} at Loc {file_attr}")
         return_type, param_string, _ = extract_function_info(
             "".join(extract_funcs(file_attribute=file_attr, func_name=i)))

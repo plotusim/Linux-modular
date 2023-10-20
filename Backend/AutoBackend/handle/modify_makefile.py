@@ -1,11 +1,11 @@
 import os
-from config import kernel_source_root_path
+from config import config
 from utils.file_utils import append_string_to_file
 
 
 def modify_drivers_makefile(module_name):
     print("Modify Drivers Makefile")
-    drivers_makefile_path = os.path.join(kernel_source_root_path, "drivers", "Makefile")
+    drivers_makefile_path = os.path.join(config.kernel_source_root_path, "drivers", "Makefile")
     append_string_to_file(drivers_makefile_path, f"\nobj-$(CONFIG_{module_name.upper()})		+= {module_name}/\n")
 
 
