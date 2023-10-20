@@ -1,5 +1,3 @@
-import argparse
-
 from collections import defaultdict
 from utils.graph_utils import get_res
 from utils.func_utils import extract_func_used_func, extract_func_used_gv
@@ -151,18 +149,7 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
     print(not_handled_vars)
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Automatically modularize kernel.")
-    parser.add_argument('--project_base_path', type=str, help='Base path for the project', default="../../")
-    parser.add_argument('--module_name', type=str, help='Set the module name')
-    parser.add_argument('--kernel_source_root_path', type=str, help='The source files to modify')
-    parser.add_argument('--res_graph_dot_path', type=str, help='The middleend result path')
-
-    return parser.parse_args()
-
-
 if __name__ == '__main__':
-    args = parse_args()
-    config.read_args_and_modify(args)
+    print("Configuration loaded:")
     print(str(config))
-    # modular()
+    modular()

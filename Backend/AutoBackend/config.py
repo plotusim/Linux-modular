@@ -1,33 +1,57 @@
-import os
 import re
-import inspect
 from collections import defaultdict
+import configparser
+import os
 
 
 class Config:
-    def __init__(self):
-        self.merge = True
-        self.project_base_path = "../../"
-        # self.project_base_path = "/home/plot/build/Frontend_test_v2"
-        self.module_name = "dnotify_module"
-        self.llvm_bin_path_prefix = os.path.join(self.project_base_path, "Frontend/llvm-project/prefix/bin")
-        self.whole_kernel_dot_file = os.path.join(self.project_base_path, "Data/dots_merge/all.dot")
-        self.res_graph_dot_path = os.path.join(self.project_base_path, "Middleend/result/fs/notify/dnotify/res.dot")
-        self.kernel_source_root_path = os.path.join(self.project_base_path, "Backend/test_hn")
-        self.kernel_bc_file_root_path = os.path.join(self.project_base_path, "Frontend/Kernel_src")
-        self.module_template_files_dir = os.path.join(self.project_base_path, "Backend/sys_module")
-        self.drivers_dir_path = os.path.join(self.kernel_source_root_path, "drivers")
-        self.export_symbols_list_file = os.path.join(self.project_base_path, "Data/func_list/export_symbols.txt")
-        self.current_file_path = os.path.abspath(__file__)
-        self.current_project_dir = os.path.dirname(self.current_file_path)
+    def __init__(self, config_file='config.ini'):
+        # 加载和解析配置文件
+        self.config = configparser.ConfigParser()
+        self.config.read(config_file)
 
-        # 这些变量将在调用相应的方法时被初始化
+        # 从配置文件初始化属性
+        self.merge = self.config.getboolean('DEFAULT', 'Merge')
+        self.project_base_path = self.config.get('DEFAULT', 'ProjectBasePath')
+        self.module_name = self.config.get('MODULE', 'ModuleName')
+
+        # 以下路径依赖于project_base_path, 之后会更新它们
+        self.llvm_bin_path_prefix = ''
+        self.whole_kernel_dot_file = ''
+        self.res_graph_dot_path = ''
+        self.kernel_source_root_path = ''
+        self.kernel_bc_file_root_path = ''
+        self.module_template_files_dir = ''
+        self.drivers_dir_path = ''
+        self.export_symbols_list_file = ''
         self.export_symbols_set = set()
         self.func_file_attribute_pairs = {}
         self.func_children = defaultdict(set)
+        # 初始化路径
+        self.update_paths_based_on_base()
+        self.current_file_path = os.path.abspath(__file__)
+        self.current_project_dir = os.path.dirname(self.current_file_path)
+
         self.read_export_symbols()
         self.read_func_file_pairs()
         self.read_func_children_pairs()
+
+    def update_paths_based_on_base(self):
+        """基于基础路径更新其他路径"""
+        self.llvm_bin_path_prefix = os.path.join(self.project_base_path,
+                                                 self.config.get('DEFAULT', 'LLVMBinPathPrefix'))
+        self.whole_kernel_dot_file = os.path.join(self.project_base_path,
+                                                  self.config.get('DEFAULT', 'WholeKernelDotFile'))
+        self.res_graph_dot_path = os.path.join(self.project_base_path, self.config.get('MODULE', 'ResGraphDotPath'))
+        self.kernel_source_root_path = os.path.join(self.project_base_path,
+                                                    self.config.get('MODULE', 'KernelSourceRootPath'))
+        self.kernel_bc_file_root_path = os.path.join(self.project_base_path,
+                                                     self.config.get('DEFAULT', 'KernelBCFileRootPath'))
+        self.module_template_files_dir = os.path.join(self.project_base_path,
+                                                      self.config.get('DEFAULT', 'ModuleTemplateFilesDir'))
+        self.drivers_dir_path = os.path.join(self.kernel_source_root_path, "drivers")  # 这个是基于另一个路径的
+        self.export_symbols_list_file = os.path.join(self.project_base_path,
+                                                     self.config.get('DEFAULT', 'ExportSymbolsListFile'))
 
     def read_export_symbols(self):
         print("Read export symbols set")
@@ -56,18 +80,6 @@ class Config:
                     part1 = match.group(1)
                     part2 = match.group(2)
                     self.func_children[part1].add(part2)
-
-    def read_args_and_modify(self, args):
-        # 获取当前所有用户自定义的属性
-        attributes = inspect.getmembers(self, lambda a: not (inspect.isroutine(a)))
-        custom_attributes = [a for a in attributes if not (a[0].startswith('__') and a[0].endswith('__'))]
-
-        for attr_name, _ in custom_attributes:
-            # 如果args中存在同名的属性，则更新当前对象的属性
-            if args and hasattr(args, attr_name):
-                value = getattr(args, attr_name)
-                if value is not None:  # 如果参数被明确地传递了，则更新属性
-                    setattr(self, attr_name, value)
 
     def __str__(self):
 
