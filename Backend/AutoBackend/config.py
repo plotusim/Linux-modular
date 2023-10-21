@@ -4,6 +4,41 @@ import configparser
 import os
 
 
+def update_config(file_path, section, key_value_pairs):
+    """
+    更新config.ini文件的函数。
+
+    :param file_path: 配置文件的路径。
+    :param section: 要更新的配置文件的部分。
+    :param key_value_pairs: 键值对字典，包含要更新的设置。
+    """
+    # 实例化ConfigParser对象
+    config = configparser.ConfigParser()
+
+    # 检查文件是否存在
+    if not os.path.exists(file_path):
+        print(f"Error: The config file does not exist at {file_path}")
+        return
+
+    # 读取配置文件
+    config.read(file_path)
+
+    # 检查部分是否存在于配置文件中
+    if section not in config.sections():
+        print(f"Error: The section {section} does not exist in {file_path}")
+        return
+
+    # 更新键值对
+    for key, value in key_value_pairs.items():
+        config[section][key] = value
+
+    # 写回到文件中
+    with open(file_path, 'w') as configfile:
+        config.write(configfile)
+
+    print(f"Config file at {file_path} updated successfully.")
+
+
 class Config:
     def __init__(self, config_file='config.ini'):
         # 加载和解析配置文件
