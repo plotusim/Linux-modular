@@ -123,7 +123,7 @@ def execute_command(command, cwd, logger):
         logger.error(f"Stderr:\n{e.stderr}")
 
 
-def find_string_in_logs(directory, search_string):
+def find_string_in_logs(directory):
     results = []
     # 遍历指定目录下的所有文件
     for foldername, _, filenames in os.walk(directory):
@@ -140,23 +140,22 @@ def find_string_in_logs(directory, search_string):
                         content = file.read()
 
                         # 搜索特定字符串
-                        if search_string in content:
-                            print(f"'{search_string}' found in {file_path}")
-                            results.append(file_path)
+                        if 'Kernel: arch/x86/boot/bzImage is ready' in content:
+                            if "Found global vars but not handled" in content:
+                                print(f"'Kernel: arch/x86/boot/bzImage is ready' found in {file_path}")
+                                print(f"'Found global vars but not handled'  found in {file_path}")
+                                results.append(file_path)
                 except Exception as e:
                     print(f"An error occurred while reading {file_path}: {str(e)}")
 
-    # 如果循环完成后没有找到，则返回 False
-    print(f"'{search_string}' was not found in any .log files in {directory}")
     return results
 
 
 def result_aggregation():
     # 使用函数
     directory_path = LOG_DIRECTORY
-    specific_string = 'Kernel: arch/x86/boot/bzImage is ready'
 
-    result = find_string_in_logs(directory_path, specific_string)
+    result = find_string_in_logs(directory_path)
     for i in result:
         print(i[4:-4])
 
