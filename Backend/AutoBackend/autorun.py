@@ -3,35 +3,42 @@ import logging
 import os
 from config import update_config
 
-dots_root_folder = "../../Middleend/result/"
+# 配置常量
+DOTS_ROOT_FOLDER = "../../Middleend/result/"
+LOG_DIRECTORY = 'logs'
 
 
 def setup_logger(subsystem):
-    # 创建 logger
+    """
+    配置和获取日志记录器。
+
+    :param subsystem: 子系统的名称，将用于日志文件的命名。
+    :return: 配置后的日志记录器。
+    """
     logger = logging.getLogger(subsystem)
     logger.setLevel(logging.DEBUG)
 
-    # 创建文件处理程序并设置级别为 debug
-    log_directory = 'logs'
-    if not os.path.exists(log_directory):
-        os.makedirs(log_directory)
-    log_file = os.path.join(log_directory, f"{subsystem}.log")
+    if not os.path.exists(LOG_DIRECTORY):
+        os.makedirs(LOG_DIRECTORY)
+
+    log_file = os.path.join(LOG_DIRECTORY, f"{subsystem}.log")
     handler = logging.FileHandler(log_file, 'w')
     handler.setLevel(logging.DEBUG)
 
-    # 创建 formatter
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    # 添加 formatter 到 handler
     handler.setFormatter(formatter)
 
-    # 添加 handler 到 logger
     logger.addHandler(handler)
 
     return logger
 
 
 def dfs(relative_path):
+    """
+    深度优先搜索遍历目录并处理子系统。
+
+    :param relative_path: 相对路径，用于定位要处理的子系统。
+    """
     print("DFS:\t{}".format(relative_path))
 
     if relative_path.endswith("temp"):
@@ -40,7 +47,7 @@ def dfs(relative_path):
     if not os.path.exists(os.path.join("./logs", relative_path)):
         os.mkdir(os.path.join("./logs", relative_path))
 
-    subdirectories = [entry.name for entry in os.scandir(dots_root_folder + relative_path) if
+    subdirectories = [entry.name for entry in os.scandir(DOTS_ROOT_FOLDER + relative_path) if
                       entry.is_dir()]
 
     for i in subdirectories:
@@ -52,100 +59,68 @@ def dfs(relative_path):
 
 
 def clean_kernel_folder(dir_path):
-    completed_process = subprocess.run(
-        ["rm -rf  " + dir_path],
-        cwd=".",
-        stdout=subprocess.PIPE,  # 捕获输出
-        stderr=subprocess.PIPE,  # 捕获错误
-        text=True,  # 让 subprocess 处理字符串而非字节
-        shell=True,
-    )
+    """
+    清理和准备内核文件夹。
 
-    completed_process = subprocess.run(
-        ["cp -r /home/plot/Linux-modular/cjh/test/linux-5.10.176/  " + dir_path],
-        cwd=".",
-        stdout=subprocess.PIPE,  # 捕获输出
-        stderr=subprocess.PIPE,  # 捕获错误
-        text=True,  # 让 subprocess 处理字符串而非字节
-        shell=True,
-    )
+    :param dir_path: 内核文件夹的路径。
+    """
+    subprocess.run(["rm", "-rf", dir_path], check=True)  # 检查命令是否引发异常
+    subprocess.run(["cp", "-r", "/home/plot/Linux-modular/cjh/test/linux-5.10.176/", dir_path], check=True)
 
 
 def run_auto_backend(subsystem):
-    print("Autobackend:\t{}".format(subsystem))
+    """
+    运行后端自动化流程。
+
+    :param subsystem: 要处理的子系统。
+    """
+    print(f"Autobackend:\t{subsystem}")
     logger = setup_logger(subsystem)
 
     dir_path = "../test_hn/"
     clean_kernel_folder(dir_path)
 
-    update_config(file_path="./config.ini", section="MODULE",
-                  key_value_pairs={
-                      "ModuleName": subsystem.replace("/", "_"),
-                      "ResGraphDotPath": "Middleend/result/" + subsystem + "/res.dot",
-                  })
+    # 更新配置
+    update_config(
+        file_path="./config.ini",
+        section="MODULE",
+        key_value_pairs={
+            "ModuleName": subsystem.replace("/", "_"),
+            "ResGraphDotPath": f"Middleend/result/{subsystem}/res.dot",
+        }
+    )
 
+    # 启动后端流程
+    execute_command(["python", "main.py"], ".", logger)
+    execute_command(["make", "defconfig"], dir_path, logger)
+    execute_command(["make", "-j", "32"], dir_path, logger)
+
+
+def execute_command(command, cwd, logger):
+    """
+    执行命令并记录输出。
+
+    :param command: 要执行的命令列表。
+    :param cwd: 命令的工作目录。
+    :param logger: 用于记录输出的日志记录器。
+    """
     try:
         completed_process = subprocess.run(
-            ["python main.py"],
-            cwd=".",
-            input="",  # 传递给 grep 的输入
-            stdout=subprocess.PIPE,  # 捕获输出
-            stderr=subprocess.PIPE,  # 捕获错误
-            text=True,  # 让 subprocess 处理字符串而非字节
-            shell=True,
+            command,
+            cwd=cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True  # 如果命令失败，立即引发异常
         )
 
-        logger.info("Stdout:\n{}".format(completed_process.stdout))
-        logger.info("Stderr:\n {}".format(completed_process.stderr))
-
-
-    except subprocess.CalledProcessError as e:
-        logger.error("Return code:\n  {}".format(e.returncode))
-        logger.error("Output:\n {}".format(e.output))
-        logger.error("Stderr:\n {}".format(e.stderr))
-        return
-
-    try:
-        completed_process = subprocess.run(
-            ["make defconfig"],
-            cwd=dir_path,
-            input="",  # 传递给 grep 的输入
-            stdout=subprocess.PIPE,  # 捕获输出
-            stderr=subprocess.PIPE,  # 捕获错误
-            text=True,  # 让 subprocess 处理字符串而非字节
-            shell=True,
-        )
-
-        logger.info("Stdout:\n{}".format(completed_process.stdout))
-        logger.info("Stderr:\n {}".format(completed_process.stderr))
-
+        logger.info(f"Stdout:\n{completed_process.stdout}")
+        logger.info(f"Stderr:\n{completed_process.stderr}")
 
     except subprocess.CalledProcessError as e:
-        logger.error("Return code:\n  {}".format(e.returncode))
-        logger.error("Output:\n {}".format(e.output))
-        logger.error("Stderr:\n {}".format(e.stderr))
-        return
-
-    try:
-        completed_process = subprocess.run(
-            ["make -j 32"],
-            cwd=dir_path,
-            input="",  # 传递给 grep 的输入
-            stdout=subprocess.PIPE,  # 捕获输出
-            stderr=subprocess.PIPE,  # 捕获错误
-            text=True,  # 让 subprocess 处理字符串而非字节
-            shell=True,
-        )
-
-        logger.info("Stdout:\n{}".format(completed_process.stdout))
-        logger.info("Stderr:\n {}".format(completed_process.stderr))
-
-
-    except subprocess.CalledProcessError as e:
-        logger.error("Return code:\n  {}".format(e.returncode))
-        logger.error("Output:\n {}".format(e.output))
-        logger.error("Stderr:\n {}".format(e.stderr))
-        return
+        logger.error(f"Return code:\n{e.returncode}")
+        logger.error(f"Output:\n{e.output}")
+        logger.error(f"Stderr:\n{e.stderr}")
 
 
 def find_string_in_logs(directory, search_string):
@@ -178,8 +153,8 @@ def find_string_in_logs(directory, search_string):
 
 def result_aggregation():
     # 使用函数
-    directory_path = 'logs'  # 请将此路径替换为你的日志文件所在的目录
-    specific_string = 'Kernel: arch/x86/boot/bzImage is ready'  # 你要搜索的字符串
+    directory_path = LOG_DIRECTORY
+    specific_string = 'Kernel: arch/x86/boot/bzImage is ready'
 
     result = find_string_in_logs(directory_path, specific_string)
     for i in result:
