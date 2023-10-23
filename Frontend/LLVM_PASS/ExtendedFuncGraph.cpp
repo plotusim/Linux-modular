@@ -43,17 +43,20 @@ public:
     void DealingInitializers(Module &M, CallGraph &CG) {
         // deal with initializers
         for (GlobalVariable &GV: M.globals()) {
-
             if (GV.hasInitializer()) {
-
                 Constant *Init = GV.getInitializer();
                 if (Init) {
-                    std::function<void(Value *)> processOperand = [&](Value *V) {
+                    std::function<void(Value *, std::set<Value *>)> processOperand = [&](Value *V,
+                                                                                         std::set<Value *> prevVs) {
                         if (!V) return;
-                        // 处理函数
-                        if (auto *GV = dyn_cast<GlobalVariable>(V)) {
+
+                        if (prevVs.count(V)) {
                             return;
-                        } else if (auto *referencedFunc = dyn_cast<Function>(V)) {
+                        }
+
+                        prevVs.insert(V);
+                        // 处理函数
+                        if (auto *referencedFunc = dyn_cast<Function>(V)) {
                             initFunctions.insert(const_cast<llvm::Function *>(dyn_cast<Function>(referencedFunc)));
                         }
                             // 处理别名
@@ -61,22 +64,22 @@ public:
                             if (auto *Aliasee = GA->getAliasee()) {
                                 // The aliasee can be another global variable, function, or another alias
                                 // Here we recursively process the aliasee, since it's also a 'Value*'
-                                processOperand(Aliasee);
+                                processOperand(Aliasee, prevVs);
                             }
                         }
                             // 处理常量表达式，这可能涉及位转换或其他间接引用
                         else if (auto *CE = dyn_cast<ConstantExpr>(V)) {
                             // 递归处理操作数
                             for (unsigned i = 0, e = CE->getNumOperands(); i != e; ++i) {
-                                processOperand(CE->getOperand(i));
+                                processOperand(CE->getOperand(i), prevVs);
                             }
                         } else if (auto *C = dyn_cast<Constant>(V)) {
                             for (auto &Op: C->operands()) {
-                                processOperand(Op);
+                                processOperand(Op, prevVs);
                             }
                         }
                     };
-                    processOperand(Init);
+                    processOperand(Init, std::set<Value *>());
 
                 }
             }
