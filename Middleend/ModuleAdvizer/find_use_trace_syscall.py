@@ -20,7 +20,6 @@ def find_use_trace_syscall():
     use_trace_syscall_funcs = set()
 
     while len(work_set):
-        work_set = temp_set.copy()
         temp_set.clear()
         for i in work_set:
             print(f"Add func: {i}")
@@ -31,6 +30,7 @@ def find_use_trace_syscall():
                         continue
                     else:
                         temp_set.add(j)
+        work_set = temp_set.copy()
 
     print("Completed finding use_trace_syscall_funcs, writing to file")
     with open(use_syscall_trace_funcs_list_file, 'w') as file:
