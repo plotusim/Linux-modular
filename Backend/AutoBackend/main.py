@@ -41,8 +41,17 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
     for i in res.values():
         for j in i:
             file_attribute = j.file_attribute
-            if j.handle_way in {"NORMAL", "INTERFACE"}:
+            if j.handle_way in {"NORMAL", "INTERFACE", "DELETE"}:
                 need_add_includes_file_set.add(file_attribute)
+
+    func_num = {"NORMAL": 0, "INTERFACE": 0, "DELETE": 0}
+
+    for i in res.values():
+        for j in i:
+            func_num[j.handle_way] += 1
+
+    print("Func Num: \n")
+    print(func_num)
 
     # 所有要添加的include
     angle_includes_list = []
@@ -73,7 +82,7 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
             file_attribute = j.file_attribute
             handle_way = j.handle_way
             func_name = j.func_name
-            if handle_way == "NORMAL" or handle_way == "INTERFACE":
+            if handle_way in {"NORMAL", "INTERFACE", "DELETE"}:
                 export_funcs.add(func_name)
                 unexport_var = unexport_var.union(
                     extract_func_used_gv(file_attribute=file_attribute, func_name=func_name))
@@ -117,7 +126,10 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
                 pass
 
             if handle_way == "DELETE":
-                handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path)
+                # handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path)
+                if real_file.endswith(".h"):
+                    need_add_include_header_file_set.add(real_file)
+                handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
 
             elif handle_way == "NORMAL":
                 handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)

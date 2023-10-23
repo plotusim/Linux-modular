@@ -5,7 +5,7 @@ from config import update_config
 
 # 配置常量
 DOTS_ROOT_FOLDER = "../../Middleend/result/"
-LOG_DIRECTORY = 'logs'
+LOG_DIRECTORY = 'logs2'
 
 
 def setup_logger(subsystem):
@@ -44,8 +44,8 @@ def dfs(relative_path):
     if relative_path.endswith("temp"):
         return
 
-    if not os.path.exists(os.path.join("./logs", relative_path)):
-        os.mkdir(os.path.join("./logs", relative_path))
+    if not os.path.exists(os.path.join(LOG_DIRECTORY, relative_path)):
+        os.mkdir(os.path.join(LOG_DIRECTORY, relative_path))
 
     subdirectories = [entry.name for entry in os.scandir(DOTS_ROOT_FOLDER + relative_path) if
                       entry.is_dir()]
@@ -154,11 +154,13 @@ def find_string_in_logs(directory):
 def result_aggregation():
     # 使用函数
     directory_path = LOG_DIRECTORY
-
     result = find_string_in_logs(directory_path)
     for i in result:
-        print(i[4:-4])
+        print(i[len(LOG_DIRECTORY) + 1:-4])
+
+    print()
 
 
 if __name__ == '__main__':
+    # dfs("")
     result_aggregation()
