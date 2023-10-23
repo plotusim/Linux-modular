@@ -37,3 +37,7 @@ def find_use_trace_syscall():
         # Iterate through the list and write each item to the file, followed by a newline character
         for item in use_trace_syscall_funcs:
             file.write(f"{item}\n")
+
+
+if __name__ == "__main__":
+    find_use_trace_syscall()

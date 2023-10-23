@@ -1,12 +1,13 @@
 import re
 import os
 import subprocess
-
-import pydot
-
+from concurrent.futures import ThreadPoolExecutor
+from threading import Lock
+from utils.load_func_file_pairs import get_func_file_pairs
 from config.data_path import kernel_source_root_path, inline_funcs_list_file, kernel_bc_file_root_path, \
-    llvm_bin_path_prefix, linux_whole_kernel_dot
-from utils.read_file import read_dot
+    llvm_bin_path_prefix, trace_funcs_list_file, syscall_funcs_list_file, init_funcs_list_file, \
+    init_reach_funcs_list_file
+from utils.read_file import read_funcs
 
 
 def parse_bc_file(bc_file):
@@ -78,7 +79,11 @@ def extract_lines(file_path, start, end):
 
 # 返回函数的定义
 def extract_funcs(file_attribute, func_name):
-    file, start_loc, end_loc = extract_source_location(file_attribute, func_name)
+    try:
+        file, start_loc, end_loc = extract_source_location(file_attribute, func_name)
+    except RuntimeError:
+        print(f"Not found function body {file_attribute}, {func_name}")
+        return None
     src_file_path = kernel_source_root_path + file
     lines = extract_lines(src_file_path, start_loc, end_loc)
     return lines
@@ -157,30 +162,49 @@ def contains_inline(s):
 
 def is_inline_func(func_name, file_attr):
     lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
-    return contains_inline(" ".join(lines))
+    if lines and len(lines):
+        return contains_inline(" ".join(lines))
+    else:
+        return True
 
 
 def find_all_inline_func():
     print("Reading file...")
     funcs = {}
-    pattern2 = r'(.*?)\s*\[file=\"(.*?)\"(.*?)\]'
-    with open(linux_whole_kernel_dot, 'r') as file:
-        for line in file:
-            match = re.search(pattern2, line)
-            if match:
-                part1 = match.group(1)
-                part2 = match.group(2)
-                if "__virtual_init" in part1:
-                    continue
-                else:
-                    funcs[part1] = part2
+    init_func_list = read_funcs(init_funcs_list_file)
+    init_reach_list = read_funcs(init_reach_funcs_list_file)
+    trace_func_list = read_funcs(trace_funcs_list_file)
+    syscall_func_list = read_funcs(syscall_funcs_list_file)
 
+    not_considered_set = init_func_list.union(init_reach_list, trace_func_list, syscall_func_list)
+    for func, file in get_func_file_pairs().items():
+        if "__virtual_init" in func or func in not_considered_set:
+            continue
+        else:
+            funcs[func] = file
     inline_funcs = []
 
-    for func, file_attr in funcs.items():
+    # Here we determine the max number of threads. You might want to adjust this number.
+    # A common practice is using the number of CPUs, but since the task is I/O-bound, you can try a higher number.
+    max_threads = 24
+
+    def is_inline(func_file_attr_tuple):
+        func, file_attr = func_file_attr_tuple
         if is_inline_func(func, file_attr):
-            print("Function " + func + " is tagged with inline")
-            inline_funcs.append(func)
+            with inline_funcs_lock:
+                inline_funcs.append(func)
+            return func
+        return None
+
+    inline_funcs_lock = Lock()
+    # We will use a with-statement to create a context in which the threads are managed.
+    # This ensures that all threads are cleaned up promptly when they are no longer needed.
+    with ThreadPoolExecutor(max_workers=max_threads) as executor:
+        # The map method executes the 'is_inline' function in multiple threads, collecting the results.
+        for func in executor.map(is_inline, funcs.items()):
+            if func is not None:  # If function is inline, add to the list.
+                print(f"Function {func} is tagged with inline")
+                inline_funcs.append(func)
 
     print("Completed finding inline functions, writing to file")
     with open(inline_funcs_list_file, 'w') as file:

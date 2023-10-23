@@ -39,3 +39,6 @@ kernel_graph_reverse_adjacency_list_cache = os.path.join(temp_dir, dots_root_fol
 
 kernel_graph_adjacency_list_cache = os.path.join(temp_dir, dots_root_folder.split(os.path.sep)[
     -1] + '_kernel_graph_adjacency_list_cache.pkl')
+
+func_file_pairs_cache = os.path.join(temp_dir, dots_root_folder.split(os.path.sep)[
+    -1] + '_func_file_pairs_cache.pkl')
