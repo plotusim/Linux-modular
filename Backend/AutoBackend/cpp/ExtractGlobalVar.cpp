@@ -11,12 +11,12 @@
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/GlobalVariable.h>
 #include <llvm/IR/DebugInfoMetadata.h>
-#include <llvm/IR/DebugInfo.h>
-#include <set>
+
 #include <llvm/IR/Type.h>
 #include <llvm/IR/DerivedTypes.h>
 #include <string>
 
+using namespace llvm;
 
 bool hasOtherChars(const std::string &str) {
     for (char c: str) {
@@ -165,15 +165,35 @@ void dealFunc(const llvm::Module &module, const llvm::Function &function) {
             // 对于每个指令，检查其使用的值
             for (unsigned i = 0, e = instr.getNumOperands(); i != e; ++i) {
                 llvm::Value *op = instr.getOperand(i);
-                if (auto *GV = llvm::dyn_cast<llvm::GlobalVariable>(op)) {
-                    extractGlobalVar(GV);
-                } else if (auto *constant = llvm::dyn_cast<llvm::Constant>(op)) {
-                    for (auto &U: constant->operands()) {
-                        if (auto *globalVar = llvm::dyn_cast<llvm::GlobalVariable>(U)) {
-                            extractGlobalVar(globalVar);
+                std::function<void(Value *)> processOperand = [&](Value *V) {
+                    if (!V) return;
+                    // 处理全局变量
+                    if (auto *GV = dyn_cast<GlobalVariable>(V)) {
+                        extractGlobalVar(GV);
+                    }
+                        // 处理别名
+                    else if (auto *GA = dyn_cast<GlobalAlias>(V)) {
+                        if (auto *Aliasee = GA->getAliasee()) {
+                            // The aliasee can be another global variable, function, or another alias
+                            // Here we recursively process the aliasee, since it's also a 'Value*'
+                            processOperand(Aliasee);
                         }
                     }
-                }
+                        // 处理常量表达式，这可能涉及位转换或其他间接引用
+                    else if (auto *CE = dyn_cast<ConstantExpr>(V)) {
+                        // 递归处理操作数
+                        for (unsigned i = 0, e = CE->getNumOperands(); i != e; ++i) {
+                            processOperand(CE->getOperand(i));
+                        }
+                    }
+                        // 如果是其他类型的常量，检查其是否包含全局变量
+                    else if (auto *C = dyn_cast<Constant>(V)) {
+                        for (auto &Op: C->operands()) {
+                            processOperand(Op);
+                        }
+                    }
+                };
+                processOperand(op);
             }
         }
     }
