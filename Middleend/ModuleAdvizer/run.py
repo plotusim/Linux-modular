@@ -3,6 +3,8 @@ import argparse
 import os
 from analyze import run_analysis
 from config.data_path import dots_root_folder
+from find_inline import find_all_inline_func
+from find_use_trace_syscall import find_use_trace_syscall
 
 
 def dfs(relative_path, result_folder):
@@ -46,6 +48,13 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--result_folder', help='folder to store result', required=True)
     parser.add_argument('-a', '--all', help='run for all subsystem', action="store_true")
     args = parser.parse_args()
+
+    print("Generate Inline func list")
+    find_all_inline_func()
+
+    print("Generate use_trace_syscall func list")
+    find_use_trace_syscall()
+
     if args.all:
         run_all(args.result_folder)
     else:

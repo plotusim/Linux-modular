@@ -4,7 +4,7 @@ from utils.func_utils import extract_func_used_func, extract_func_used_gv
 from config import config
 from handle.init_module_dir import init_module_dir
 from handle.add_includes import add_includes, add_header_file_include_linux_module, \
-    add_includes_to_jump_interface, add_unexport_symbol_header
+    add_includes_to_jump_interface, add_unexport_symbol_header, extract_includes
 from handle.interface import handle_interface_func
 from handle.delete import handle_delete_funcs
 from handle.normal import handle_normal_funcs
@@ -41,7 +41,7 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
     for i in res.values():
         for j in i:
             file_attribute = j.file_attribute
-            if j.handle_way in {"NORMAL", "INTERFACE", "DELETE"}:
+            if j.handle_way in {"NORMAL", "INTERFACE"}:
                 need_add_includes_file_set.add(file_attribute)
 
     func_num = {"NORMAL": 0, "INTERFACE": 0, "DELETE": 0}
@@ -82,7 +82,7 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
             file_attribute = j.file_attribute
             handle_way = j.handle_way
             func_name = j.func_name
-            if handle_way in {"NORMAL", "INTERFACE", "DELETE"}:
+            if handle_way in {"NORMAL", "INTERFACE"}:
                 export_funcs.add(func_name)
                 unexport_var = unexport_var.union(
                     extract_func_used_gv(file_attribute=file_attribute, func_name=func_name))
@@ -126,23 +126,25 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
                 pass
 
             if handle_way == "DELETE":
-                # handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path)
-                if real_file.endswith(".h"):
-                    need_add_include_header_file_set.add(real_file)
-                handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
+                handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path)
+                # if real_file.endswith(".h"):
+                #     need_add_include_header_file_set.add(real_file)
+                # handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
 
             elif handle_way == "NORMAL":
                 handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
 
             elif handle_way == "INTERFACE":
-                if real_file.endswith(".h"):
-                    need_add_include_header_file_set.add(real_file)
+                # if real_file.endswith(".h"):
+                need_add_include_header_file_set.add(real_file)
                 handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
                 pass
 
     # 处理需要添加宏的原头文件
     for i in need_add_include_header_file_set:
-        add_header_file_include_linux_module(i)
+        a, _ = extract_includes(config.kernel_source_root_path + i)
+        if "linux/module.h" not in a:
+            add_header_file_include_linux_module(i)
 
     # 给kallsyms_lookup函数添加EXPORT宏
     add_export_kallsyms_look_up_macro()

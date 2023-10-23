@@ -8,6 +8,8 @@ from graph_ops.transform import set_nodes_type, set_color, set_default_type
 from utils.merge_dots import combine_dots_from_folder_with_locations
 from utils.read_file import read_funcs
 
+from config.data_path import use_syscall_trace_funcs_list_file
+
 
 def init_funcs_graph(graph):
     edges = graph.get_edges()
@@ -22,7 +24,7 @@ def init_funcs_graph(graph):
     syscall_func_list = read_funcs(syscall_funcs_list_file)
     virtual_structs_list = read_funcs(virtual_structs_list_file)
     modular_funcs_list = read_funcs(modular_funcs_list_file)
-
+    use_syscall_trace_funcs_list = read_funcs(use_syscall_trace_funcs_list_file)
     # 设置函数节点的类型
     graph = set_nodes_type(graph, {
         "INIT": init_func_list,
@@ -34,7 +36,8 @@ def init_funcs_graph(graph):
         "TRACE": trace_func_list,
         "EXPORT": export_func_list,
         "MODULAR": modular_funcs_list,
-        "VIRTUAL_STRUCTS": virtual_structs_list
+        "VIRTUAL_STRUCTS": virtual_structs_list,
+        "USE_TRACE_SYSCALL": use_syscall_trace_funcs_list
     })
 
     graph = set_nodes_type(graph, {

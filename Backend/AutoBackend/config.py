@@ -73,20 +73,14 @@ class Config:
 
     def update_paths_based_on_base(self):
         """基于基础路径更新其他路径"""
-        self.llvm_bin_path_prefix = os.path.join(self.project_base_path,
-                                                 self.config.get('DEFAULT', 'LLVMBinPathPrefix'))
-        self.whole_kernel_dot_file = os.path.join(self.project_base_path,
-                                                  self.config.get('DEFAULT', 'WholeKernelDotFile'))
-        self.res_graph_dot_path = os.path.join(self.project_base_path, self.config.get('MODULE', 'ResGraphDotPath'))
-        self.kernel_source_root_path = os.path.join(self.project_base_path,
-                                                    self.config.get('MODULE', 'KernelSourceRootPath'))
-        self.kernel_bc_file_root_path = os.path.join(self.project_base_path,
-                                                     self.config.get('DEFAULT', 'KernelBCFileRootPath'))
-        self.module_template_files_dir = os.path.join(self.project_base_path,
-                                                      self.config.get('DEFAULT', 'ModuleTemplateFilesDir'))
-        self.drivers_dir_path = os.path.join(self.kernel_source_root_path, "drivers")  # 这个是基于另一个路径的
-        self.export_symbols_list_file = os.path.join(self.project_base_path,
-                                                     self.config.get('DEFAULT', 'ExportSymbolsListFile'))
+        self.llvm_bin_path_prefix = self.config.get('LLVM', 'LLVMBinPathPrefix')
+        self.whole_kernel_dot_file = self.config.get('DEFAULT', 'WholeKernelDotFile')
+        self.res_graph_dot_path = self.config.get('MODULE', 'ResGraphDotPath')
+        self.kernel_source_root_path = self.config.get('MODULE', 'KernelSourceRootPath')
+        self.kernel_bc_file_root_path = self.config.get('DEFAULT', 'KernelBCFileRootPath')
+        self.module_template_files_dir = self.config.get('DEFAULT', 'ModuleTemplateFilesDir')
+        self.drivers_dir_path = os.path.join(self.kernel_source_root_path, "drivers")
+        self.export_symbols_list_file = self.config.get('DEFAULT', 'ExportSymbolsListFile')
 
     def read_export_symbols(self):
         print("Read export symbols set")

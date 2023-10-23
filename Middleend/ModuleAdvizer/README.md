@@ -21,6 +21,8 @@ python run.py -a -o ../result_pa_new
 ## 分析特定的子系统
 
 ```
+# please make sure that find_inline.py and find_use_trace_syscall.py run first,
+# which automatically run when you run run.py
 python run.py -i 子系统的相对路径 -o 输出目录
 ```
 

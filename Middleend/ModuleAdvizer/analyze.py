@@ -35,8 +35,8 @@ def run_analysis(dot_file_folder_path, temp_folder="./", verbose=False):
     return graph
 
 
-if __name__ == '__main__':
-    args = parse_args()
-    dot_file_folder = args.dot_file_folder
-    output_folder = args.output_folder
-    run_analysis(dot_file_folder, output_folder, args.verbose).write(os.path.join(output_folder, "res.dot"))
+# if __name__ == '__main__':
+#     args = parse_args()
+#     dot_file_folder = args.dot_file_folder
+#     output_folder = args.output_folder
+#     run_analysis(dot_file_folder, output_folder, args.verbose).write(os.path.join(output_folder, "res.dot"))

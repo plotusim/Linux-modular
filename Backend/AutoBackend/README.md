@@ -9,29 +9,32 @@
 - 修改Module目录下的Makefile文件和修改Kconfig文件
 - 修改drivers目录下的的Makefile文件和Kconfig文件
 
-### 修改config.py:
+### 修改config.ini:
 
-- res_graph_dot_path为要提取的模块的res.dot的路径
-- module_name为模块名
-- kernel_source_root_path为要修改的Linux源代码的路径
-- kernel_bc_file_root_path为编译生成过bc文件的源代码路径，"/home/plot/clang-linux-5.10.176/linux-5.10.176"可用
-- module_template_files_dir为模版文件路径，这里设置的是 "/home/plot/Linux-modular/cjh/test/sys_module"
+```ini
+[MODULE]
+modulename = drivers_ptp
+resgraphdotpath = ../../Middleend/result/drivers/ptp/res.dot
+kernelsourcerootpath = ../../Backend/test_hn
+```
+
+- resgraphdotpath 为要提取的模块的res.dot的路径
+  比如/net/netfilter就是../../Middleend/result/net/netfilter/res.dot
+- modulename 模块的名字，比如/net/filter目录下的模块名可以取为 net_netfilter_module
+- kernelsourcerootpath 就是你要修改的源代码的路径
 
 ### 运行main.py:
 
 - 1.进入目录AutoBackend
 - 2.运行main.py
 
-# 目前未完成
-
-### 寻找未导出符号添加UNEXPORT_VAR宏
-
 # 项目结构
 
 ```
 .
-├── config.py 一些路径的设置
-├── CopyKernelSrc.sh 方便我删除复制新的内核源代码的副本
+├── config.py 配置类
+├── config.ini 配置文件
+├── CopyKernelSrc.sh 方便删除复制新的内核源代码的副本
 ├── cpp 包含提取函数使用到的全局符号的C++代码
 ├── handle 包含具体处理每一个需求的handle
 ├── main.py
