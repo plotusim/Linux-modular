@@ -1,7 +1,7 @@
-LLVM_HOME = ../../Frontend_test_v2/Frontend/llvm-project/prefix
+LLVM_HOME = ../../../Frontend/llvm-project/prefix
 LLVM_INCLUDE = $(LLVM_HOME)/include
 LLVM_LIB = $(LLVM_HOME)/lib
-CXX = clang++
+CXX = $(LLVM_HOME)/bin/clang++
 CXXFLAGS = -I$(LLVM_INCLUDE) -std=c++14 -fno-exceptions -fno-rtti -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wl,-znodelete
 LDFLAGS = -L$(LLVM_LIB) -lLLVMIRReader -lLLVMBitReader -lLLVMAsmParser -lLLVMCore -lLLVMRemarks -lLLVMBitstreamReader -lLLVMBinaryFormat -lLLVMSupport -lLLVMDemangle -ltinfo
 
