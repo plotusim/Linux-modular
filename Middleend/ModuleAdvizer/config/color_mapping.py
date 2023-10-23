@@ -14,7 +14,7 @@ function_color_mapping = {
     "VIRTUAL": "gray",
     "VIRTUAL_STRUCTS": "brown",
     "VIRTUAL_STRUCTS_REACH_TOP": "goldenrod",
-    "VIRTUAL_STRUCTS_REACH": "cyan",
+    "USE_TRACE_SYSCALL": "cyan",
     "TRACE": "darkgreen",
     "SYSCALL": "purple",
     "MODULAR": "orange"

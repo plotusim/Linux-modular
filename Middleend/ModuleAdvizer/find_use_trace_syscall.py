@@ -13,6 +13,7 @@ def find_use_trace_syscall():
     print("Reading initial trace or syscall funcs set")
     work_set = read_funcs(trace_funcs_list_file)
     work_set = work_set.union(read_funcs(syscall_funcs_list_file))
+    origin_set = work_set.copy()
     inline_set = read_funcs(init_funcs_list_file)
 
     temp_set = set()
@@ -22,14 +23,14 @@ def find_use_trace_syscall():
     while len(work_set):
         temp_set.clear()
         for i in work_set:
-            print(f"Add func: {i}")
-            use_trace_syscall_funcs.add(i)
-            if i in inline_set:
-                for j in reverse_adjacency_list[i]:
-                    if j in use_trace_syscall_funcs:
-                        continue
-                    else:
-                        temp_set.add(j)
+            for j in reverse_adjacency_list[i]:
+                if j in use_trace_syscall_funcs or j in origin_set:
+                    continue
+                else:
+                    print(f"Add func: {j}")
+                    use_trace_syscall_funcs.add(j)
+                if j in inline_set:
+                    temp_set.add(j)              
         work_set = temp_set.copy()
 
     print("Completed finding use_trace_syscall_funcs, writing to file")
