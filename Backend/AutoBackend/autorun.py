@@ -4,8 +4,25 @@ import os
 from config import update_config
 
 # 配置常量
-DOTS_ROOT_FOLDER = "../../Middleend/result/"
+DOTS_ROOT_FOLDER = "../../Middleend/new_result/"
 LOG_DIRECTORY = 'logs4'
+ALL_MODULE_FILE = '../../Data/module_list/all_module_list.txt'
+ZEOS_MODULE_FILE = '../../Data/module_list/zero_module_list.txt'
+
+
+def read_files(list_file):
+    res = set()
+    try:
+        with open(list_file, 'r') as file:
+            lines = file.readlines()
+            for i in lines:
+                i = i.strip()
+                if len(i) > 0:
+                    res.add(i)
+    except FileNotFoundError:
+        print(f"File '{list_file}' not found. Returning an empty set.")
+
+    return res
 
 
 def setup_logger(subsystem):
@@ -22,6 +39,9 @@ def setup_logger(subsystem):
         os.makedirs(LOG_DIRECTORY)
 
     log_file = os.path.join(LOG_DIRECTORY, f"{subsystem}.log")
+    if not os.path.exists(os.path.dirname(log_file)):
+        os.makedirs(os.path.dirname(log_file))
+
     handler = logging.FileHandler(log_file, 'w')
     handler.setLevel(logging.DEBUG)
 
@@ -33,29 +53,17 @@ def setup_logger(subsystem):
     return logger
 
 
-def dfs(relative_path):
-    """
-    深度优先搜索遍历目录并处理子系统。
+def run():
+    all_modules = read_files(ALL_MODULE_FILE)
+    zero_modules = read_files(ZEOS_MODULE_FILE)
 
-    :param relative_path: 相对路径，用于定位要处理的子系统。
-    """
-    print("DFS:\t{}".format(relative_path))
+    work_set = all_modules.difference(zero_modules)
+    print("Need TO run the following")
+    for i in work_set:
+        print(i)
 
-    if relative_path.endswith("temp"):
-        return
-
-    if not os.path.exists(os.path.join(LOG_DIRECTORY, relative_path)):
-        os.mkdir(os.path.join(LOG_DIRECTORY, relative_path))
-
-    subdirectories = [entry.name for entry in os.scandir(DOTS_ROOT_FOLDER + relative_path) if
-                      entry.is_dir()]
-
-    for i in subdirectories:
-        dfs(os.path.join(relative_path, i))
-        pass
-
-    if relative_path != "":
-        run_auto_backend(relative_path)
+    for i in work_set:
+        run_auto_backend(i)
 
 
 def clean_kernel_folder(dir_path):
@@ -162,5 +170,5 @@ def result_aggregation():
 
 
 if __name__ == '__main__':
-    dfs("")
+    run()
     result_aggregation()
