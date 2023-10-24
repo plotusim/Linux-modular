@@ -30,7 +30,7 @@ def find_use_trace_syscall():
                     print(f"Add func: {j}")
                     use_trace_syscall_funcs.add(j)
                 if j in inline_set:
-                    temp_set.add(j)              
+                    temp_set.add(j)
         work_set = temp_set.copy()
 
     print("Completed finding use_trace_syscall_funcs, writing to file")

@@ -12,7 +12,12 @@ llvm_bin_path_prefix = os.path.join(base_directory, "Frontend/llvm-project/prefi
 
 # Frontend data path
 func_list_files_dir = os.path.join(base_directory, "Data", "func_list")
+module_list_files_dir = os.path.join(base_directory, "Data", "module_list")
 dots_root_folder = os.path.join(base_directory, "Data", "dots_merge")
+
+# Module_list
+zero_module_list_file = os.path.join(module_list_files_dir, "zero_module_list.txt")
+all_module_list_file = os.path.join(module_list_files_dir, "all_module_list.txt")
 
 # Funcs list file name 
 init_funcs_list_file = os.path.join(func_list_files_dir, 'init_funcs.txt')
