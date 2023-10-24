@@ -5,6 +5,16 @@ from utils.file_utils import append_string_to_file, insert_before_keyword
 from config import config
 
 
+def generate_ifndef_macro(header):
+    # 创建一个合法的宏名称，替换掉非字母数字字符如 . 和 /
+    macro = re.sub(r'[^a-zA-Z0-9]', '_', header).upper()
+    ifndef_string = f"#ifndef MY_MODULE_{macro}\n" \
+                    f"#define MY_MODULE_{macro}\n" \
+                    f"#include <{header}>\n" \
+                    f"#endif\n"
+    return ifndef_string
+
+
 # 使用正则表达式识别2种#include语句
 def extract_includes(filename):
     angle_bracket_pattern = re.compile(r'#include <(.*?)>')
@@ -42,14 +52,14 @@ def add_includes_from_src_to_dest(source_file, dest_file, source_dir):
 
 def add_angle_includes(angle_includes, dest_file):
     for i in angle_includes:
-        append_string_to_file(dest_file, f"#include <{i}>\n")
+        append_string_to_file(dest_file, generate_ifndef_macro(i))
 
 
 def add_quote_includes(quote_includes, source_dir, dest_file):
     # #include "*"宏需要修改路径
     for i in quote_includes:
         path = os.path.join("../", source_dir, i)
-        append_string_to_file(dest_file, f"#include \"{path}\"\n")
+        append_string_to_file(dest_file, generate_ifndef_macro(path))
 
 
 # 给*_code.c文件添加include宏的入口函数,返回加入的angle_includes与quote_includes
@@ -78,13 +88,13 @@ def add_includes_to_jump_interface(angle_includes, quote_includes_pairs, mod_dir
 
     for i in angle_includes:
         insert_before_keyword(filename=jmp_interface_header_file, keyword="#define EXPORT_FUNC(",
-                              content_to_insert=f"#include <{i}>\n")
+                              content_to_insert=generate_ifndef_macro(i))
 
     for source_dir, quote_includes in quote_includes_pairs.items():
         for i in quote_includes:
             path = os.path.join("../", source_dir, i)
             insert_before_keyword(filename=jmp_interface_header_file, keyword="#define EXPORT_FUNC(",
-                                  content_to_insert=f"#include \"{path}\"\n")
+                                  content_to_insert=generate_ifndef_macro(path))
 
 
 def add_unexport_symbol_header(angle_includes, quote_includes_pairs, mod_dir):
@@ -94,6 +104,3 @@ def add_unexport_symbol_header(angle_includes, quote_includes_pairs, mod_dir):
     for source_dir, quote_includes in quote_includes_pairs.items():
         add_quote_includes(quote_includes, source_dir, unexport_symbol_header_file)
 
-# if __name__ == '__main__':
-#     add_includes("/home/plot/hn_working_dir/AutoBackend/Kernel/net/sunrpc/auth_gss/gss_rpc_upcall.c",
-#                  "../test/test_add_includes.c", "net/sunrpc/auth_gss/")

@@ -151,3 +151,27 @@ def replace_line_in_file(filename, line_number, text):
     if not line_replaced:
         with open(filename, 'a') as f:
             f.write('\n' + text.rstrip())
+
+
+def check_string_in_file(file_name, string_to_search):
+    """检查字符串是否在文件中.
+
+    :param file_name: 要搜索的文件的路径
+    :param string_to_search: 搜索的字符串
+    :return: 布尔值，指示文件中是否存在字符串
+    """
+    try:
+        with open(file_name, 'r') as read_obj:
+            # 读取所有文件内容
+            content = read_obj.read()
+            # 检查所需字符串是否存在于文件中
+            if string_to_search in content:
+                return True
+            else:
+                return False
+    except FileNotFoundError:
+        print(f"{file_name} does not exist.")
+        return False
+    except IOError as e:
+        print(f"An error occurred: {e}")
+        return False

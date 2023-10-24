@@ -2,7 +2,7 @@ import os
 import re
 
 from handle.add_interface_macro import add_interface_macro_to_interface_header
-from utils.file_utils import insert_content_to_file, insert_after_last_include, extract_lines,replace_line_in_file
+from utils.file_utils import insert_content_to_file, insert_after_last_include, extract_lines, replace_line_in_file
 from utils.func_utils import extract_source_location, extract_function_info
 from config import config
 from handle.delete import del_funcs
@@ -45,14 +45,20 @@ def modify_call_func_name(filename, identifier):
 
 
 def handle_interface_func(func_name, file_attribute, module_name, module_dir_path):
+    try:
+        real_file_path, start_loc, end_loc, bc_start_loc = extract_source_location(file_attribute, func_name)
+        source_file = config.kernel_source_root_path + real_file_path
+        # 获得最初的函数定义的代码
+        origin_lines = extract_lines(source_file, start_loc, end_loc)
+        file_name = file_attribute.split('/')[-1]
+        # 解析函数的返回类型, 参数列表和函数体
+        return_type, params, body = extract_function_info("".join(origin_lines))
+    except Exception as e:
+        print(e)
+        print("INTERFACE FUNC:\t" + func_name + "Can't be done")
+        return
+
     print("INTERFACE FUNC:\t" + func_name)
-    real_file_path, start_loc, end_loc, bc_start_loc = extract_source_location(file_attribute, func_name)
-    source_file = config.kernel_source_root_path + real_file_path
-    # 获得最初的函数定义的代码
-    origin_lines = extract_lines(source_file, start_loc, end_loc)
-    file_name = file_attribute.split('/')[-1]
-    # 解析函数的返回类型, 参数列表和函数体
-    return_type, params, body = extract_function_info("".join(origin_lines))
     # 添加INTERFACE函数的宏
     add_interface_macro_to_interface_header(module_dir_path, func_name, return_type, [params])
     # 生成mod函数的代码
