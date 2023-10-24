@@ -1,30 +1,9 @@
 import os.path
 import re
 from utils.file_utils import append_string_to_file
-from utils.func_utils import extract_function_info, extract_funcs, extract_source_location
+from utils.func_utils import extract_function_info, extract_funcs, extract_source_location, is_inline_func, \
+    get_children_funcs
 from config import config
-
-
-def contains_inline(s):
-    # 使用正则表达式搜索'inline'单词，\b表示单词边界
-    pattern = r'\binline\b'
-
-    # 搜索整个字符串，看是否有匹配
-    if re.search(pattern, s):
-        return True
-    else:
-        return False
-
-
-def is_inline_func(func_name):
-    file_attr = config.func_file_attribute_pairs[func_name]
-    lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
-    return contains_inline(" ".join(lines))
-
-
-def get_children_funcs(func_name):
-    # print(func_children[func_name])
-    return config.func_children[func_name]
 
 
 def copy_static_inline_func(func_name, module_dir):

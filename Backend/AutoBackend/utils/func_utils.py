@@ -264,3 +264,25 @@ def extract_used_gv_from_ir(ir_file_path, function_name):
 if __name__ == '__main__':
     print(extract_func_used_from_ir(
         "/home/plot/clang-linux-5.10.176/linux-5.10.176/net/netfilter/nf_conntrack_netlink.bc", "ctnetlink_parse_help"))
+
+
+def contains_inline(s):
+    # 使用正则表达式搜索'inline'单词，\b表示单词边界
+    pattern = r'\binline\b'
+
+    # 搜索整个字符串，看是否有匹配
+    if re.search(pattern, s):
+        return True
+    else:
+        return False
+
+
+def is_inline_func(func_name):
+    file_attr = config.func_file_attribute_pairs[func_name]
+    lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
+    return contains_inline(" ".join(lines))
+
+
+def get_children_funcs(func_name):
+    # print(func_children[func_name])
+    return config.func_children[func_name]

@@ -1,6 +1,6 @@
 import os
 from utils.file_utils import insert_after_last_include
-from utils.func_utils import extract_funcs
+from utils.func_utils import extract_funcs, is_inline_func
 from handle.delete import del_funcs
 
 
@@ -11,7 +11,8 @@ def handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
     module_src_file = os.path.join(module_dir_path, file_name + "_code.c")
     code = "".join(lines)
     insert_after_last_include(module_src_file, code)
-    del_funcs(file_attribute, func_name)
+    if not is_inline_func(func_name):
+        del_funcs(file_attribute, func_name)
 
 
 if __name__ == '__main__':
