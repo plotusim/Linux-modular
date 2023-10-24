@@ -9,7 +9,7 @@ from utils.bc_utils import parse_bc_file, parse_dbinfo, get_func_defined_file_an
 
 # 返回函数的定义
 def extract_funcs(file_attribute, func_name):
-    file, start_loc, end_loc = extract_source_location(file_attribute, func_name)
+    file, start_loc, end_loc, _ = extract_source_location(file_attribute, func_name)
     src_file_path = config.kernel_source_root_path + file
     lines = extract_lines(src_file_path, start_loc, end_loc)
     return lines
@@ -58,9 +58,10 @@ def extract_source_location(file_attribute, function_name):
     # 使用正则表达式匹配"(" 前最后一个单词，作为函数的标识符
     last_word_match = re.search(r'(\S+)(?:\s*)$', substring_before_bracket)
     if not last_word_match:
+        print(substring_before_bracket)
         print(str(start_loc) + ":\t" + lines[start_loc - 1])
         print("File:\t" + src_file_path + "\tFunc name:\t" + function_name)
-        raise ValueError("Can't not find a function signature")
+        raise ValueError(f"Can't not find a function signature")
 
     last_word_start_idx = last_word_match.start()
 
@@ -70,9 +71,9 @@ def extract_source_location(file_attribute, function_name):
 
     # 如果函数标识符前没有返回类型，则返回类型在上一行
     if bool(prev_word_match):
-        return file_info, start_loc, end_loc
+        return file_info, start_loc, end_loc, start_loc
     else:
-        return file_info, start_loc - 1, end_loc
+        return file_info, start_loc - 1, end_loc, start_loc
 
 
 def remove_static_inline(s, index):
@@ -128,38 +129,6 @@ def remove_comments(code):
 
     return code
 
-
-# # 老版本使用正则表达式的方式来提取函数体函数名字和函数返回值
-# def extract_function_info(function_code):
-#     # pattern = r'(\w+\s*\*?)\s+(\w+)\s*\(([^)]*)\)'
-#     # pattern = r'(\w+)\s*(\*+)?\s+(\w+)\s*\(([^)]*)\)\s*({.*?})'
-#     # pattern = r'(\w+(\s*\*+)?\s+)\s*(\w+)\s*\(([^)]*)\).*\{.*\}'
-#     # pattern = r'(?:static\s+|inline\s+)?(?:static\s+|inline\s+)?\s*(\w+(\s*\*+\s*)?)\s+(\w+)\s*\(([^)]*)\)\s*'
-#     # pattern = r'\s*(?:static\s+|inline\s+)?(?:static\s+|inline\s+)?\s*(\w+(\s*\*+\s*)?)\s+(\w+)\s*\(([^)]*)\)'
-# pattern = r'\s*(?:static\s+|inline\s+)?(?:static\s+|inline\s+)?\s*(\w+\s+\w+|\w+(\s*\*+\s*)?)\s+(\w+)\s*\(([^)]*)\)'
-#     function_code = remove_comments(function_code)
-#
-#     match = re.match(pattern, function_code)
-#     if not match:
-#         print("Not counted as a function:\n" + function_code)
-#         raise ValueError("Invalid function code")
-#
-#     return_type = match.group(1).strip()
-#     func_name = match.group(3)
-#     param_string = match.group(4)
-#
-#     # Split parameters and extract type
-#     params = [param.strip() for param in param_string.split(",") if param]
-#
-#     start_index = function_code.find('{')
-#     end_index = function_code.rfind('}')
-#
-#     body = ""
-#
-#     if start_index != -1 and end_index != -1 and start_index < end_index:
-#         body = function_code[start_index:end_index + 1].strip()
-#
-#     return return_type, params, body
 
 # 提取函数的返回值，参数列表和函数体
 def extract_function_info(function_code):

@@ -2,7 +2,7 @@ import os
 from utils.read_file import read_dot
 from config.data_path import zero_module_list_file
 
-RES_PATH = "../new_result"
+RES_PATH = "../result"
 ALL_ZERO_MODULE = []
 
 

@@ -1,3 +1,7 @@
+import fileinput
+import sys
+
+
 # 把content添加到filename文件后面
 def append_string_to_file(filename, content):
     with open(filename, 'a') as f:
@@ -109,3 +113,41 @@ def extract_lines(file_path, start, end):
         lines = file.readlines()
 
     return lines[start - 1:end]
+
+
+def replace_line_in_file(filename, line_number, text):
+    # 错误检查，确保行号是正整数
+    if line_number < 1:
+        raise ValueError("Line number must be greater than or equal to 1")
+
+    # 一个标记，用于检查我们是否已修改了行
+    line_replaced = False
+
+    # 用于累积文件的总行数
+    total_lines = 0
+
+    # 先计算文件的总行数
+    with open(filename, 'r') as f:
+        total_lines = sum(1 for _ in f)
+
+    # 如果目标行号超出了文件的长度，我们将在文件末尾添加更多的行
+    with open(filename, 'a') as f:
+        while total_lines < line_number - 1:
+            f.write('\n')
+            total_lines += 1
+
+    # 使用 fileinput.input 以就地修改模式打开文件
+    with fileinput.input(files=filename, inplace=True) as f:
+        for current_line_number, line in enumerate(f, 1):  # 当前行号从1开始
+            if current_line_number == line_number:
+                # 输出新行（替换旧行）
+                print(text.rstrip())  # 使用 rstrip() 避免在行尾添加额外的换行符
+                line_replaced = True
+            else:
+                # 输出当前行内容
+                print(line, end='')  # end='' 避免在每行末尾添加额外的换行符
+
+    # 现在，如果我们之前没有替换行（因为它原本不存在），我们应该添加它
+    if not line_replaced:
+        with open(filename, 'a') as f:
+            f.write('\n' + text.rstrip())

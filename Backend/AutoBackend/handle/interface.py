@@ -2,7 +2,7 @@ import os
 import re
 
 from handle.add_interface_macro import add_interface_macro_to_interface_header
-from utils.file_utils import insert_content_to_file, insert_after_last_include, extract_lines
+from utils.file_utils import insert_content_to_file, insert_after_last_include, extract_lines,replace_line_in_file
 from utils.func_utils import extract_source_location, extract_function_info
 from config import config
 from handle.delete import del_funcs
@@ -13,20 +13,20 @@ def generate_find_module_code(func_name, return_type, params, module_name: str):
     return_type = return_type.strip()
     # void返回类型的函数不能返回-1
     if "void" in return_type and "*" not in return_type:
-        code = "\nnoinline " + return_type + " " + func_name + "(" + params + ")\n{\n" + \
-               "\tif(!find_module(\"" + module_name + "\")){\n\t\trequest_module(\"" + \
-               module_name + "\");\n\t}\n\treturn;\n}"
+        code = "noinline " + return_type + " " + func_name + "(" + params + ") { " + \
+               "\tif(!find_module(\"" + module_name + "\")){ \t\trequest_module(\"" + \
+               module_name + "\"); \t} \treturn; }"
     else:
-        code = "\nnoinline " + return_type + " " + func_name + "(" + params + ")\n{\n" + \
-               "\tif(!find_module(\"" + module_name + "\")){\n\t\trequest_module(\"" + \
-               module_name + "\");\n\t}\n\treturn -1;\n}"
+        code = " noinline " + return_type + " " + func_name + "(" + params + ") { " + \
+               "\tif(!find_module(\"" + module_name + "\")){ \t\trequest_module(\"" + \
+               module_name + "\"); \t} \treturn -1; }"
     return code
 
 
 # 生成提取出来的模块内对应的mod函数的函数定义
 def generate_mod_func(name, body, return_type, params):
     new_func_name = "mod_" + name
-    code = return_type + " " + new_func_name + "(" + params + ")\n" + body + "\n"
+    code = return_type + " " + new_func_name + "(" + params + ") " + body + " "
     return code
 
 
@@ -46,7 +46,7 @@ def modify_call_func_name(filename, identifier):
 
 def handle_interface_func(func_name, file_attribute, module_name, module_dir_path):
     print("INTERFACE FUNC:\t" + func_name)
-    real_file_path, start_loc, end_loc = extract_source_location(file_attribute, func_name)
+    real_file_path, start_loc, end_loc, bc_start_loc = extract_source_location(file_attribute, func_name)
     source_file = config.kernel_source_root_path + real_file_path
     # 获得最初的函数定义的代码
     origin_lines = extract_lines(source_file, start_loc, end_loc)
@@ -65,7 +65,7 @@ def handle_interface_func(func_name, file_attribute, module_name, module_dir_pat
     # 删除原函数的代码
     del_funcs(file_attribute, func_name)
     # 插入接口函数到原位置
-    insert_content_to_file(source_file, start_loc, code)
+    replace_line_in_file(source_file, bc_start_loc, code)
     # 修改先前插入进去的函数对该函数的引用
     modify_call_func_name(file_path, func_name)
 

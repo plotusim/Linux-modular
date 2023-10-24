@@ -4,8 +4,8 @@ import os
 from config import update_config
 
 # 配置常量
-DOTS_ROOT_FOLDER = "../../Middleend/new_result/"
-LOG_DIRECTORY = 'logs4'
+DOTS_ROOT_FOLDER = "../../Middleend/result/"
+LOG_DIRECTORY = 'logs'
 ALL_MODULE_FILE = '../../Data/module_list/all_module_list.txt'
 ZEOS_MODULE_FILE = '../../Data/module_list/zero_module_list.txt'
 
@@ -94,14 +94,14 @@ def run_auto_backend(subsystem):
         section="MODULE",
         key_value_pairs={
             "ModuleName": subsystem.replace("/", "_"),
-            "ResGraphDotPath": f"../../Middleend/result/{subsystem}/res.dot",
+            "ResGraphDotPath": DOTS_ROOT_FOLDER + f"{subsystem}/res.dot",
         }
     )
 
     # 启动后端流程
     execute_command(["python", "main.py"], ".", logger)
     execute_command(["make", "defconfig"], dir_path, logger)
-    execute_command(["make", "-j", "8"], dir_path, logger)
+    execute_command(["make", "-j", "24"], dir_path, logger)
 
 
 def execute_command(command, cwd, logger):

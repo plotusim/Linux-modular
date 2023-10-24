@@ -171,12 +171,12 @@ def is_inline_func(func_name, file_attr):
 def find_all_inline_func():
     print("Reading file...")
     funcs = {}
-    init_func_list = read_funcs(init_funcs_list_file)
-    init_reach_list = read_funcs(init_reach_funcs_list_file)
+    # init_func_list = read_funcs(init_funcs_list_file)
+    # init_reach_list = read_funcs(init_reach_funcs_list_file)
     trace_func_list = read_funcs(trace_funcs_list_file)
     syscall_func_list = read_funcs(syscall_funcs_list_file)
 
-    not_considered_set = init_func_list.union(init_reach_list, trace_func_list, syscall_func_list)
+    not_considered_set = trace_func_list.union(trace_func_list, syscall_func_list)
     for func, file in get_func_file_pairs().items():
         if "__virtual_init" in func or func in not_considered_set:
             continue
@@ -215,3 +215,4 @@ def find_all_inline_func():
 
 if __name__ == '__main__':
     find_all_inline_func()
+    # print(is_inline_func("drv_tdls_cancel_channel_switch", get_func_file_pairs()["drv_tdls_cancel_channel_switch"]))

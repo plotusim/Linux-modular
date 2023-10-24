@@ -6,7 +6,7 @@ from utils.file_utils import replace_with_empty_lines
 # 处理需要删除的函数
 def del_funcs(file, func_name):
     # 提取函数所定义的文件，起始位置、结束位置
-    file, start_loc, end_loc = extract_source_location(file, func_name)
+    file, start_loc, end_loc, _ = extract_source_location(file, func_name)
     src_file_path = config.kernel_source_root_path + file
     # 使用空行替换
     replace_with_empty_lines(src_file_path, start_loc, end_loc)

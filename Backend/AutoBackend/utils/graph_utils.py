@@ -8,7 +8,7 @@ class Function:
         self.file_attribute = file_attribute
         self.handle_way = handle_way
         self.func_name = func_name
-        self.real_file, self.start_loc, self.end_loc = extract_source_location(file_attribute, func_name)
+        self.real_file, self.start_loc, self.end_loc, _ = extract_source_location(file_attribute, func_name)
 
 
 def read_res_graph(path=config.res_graph_dot_path):

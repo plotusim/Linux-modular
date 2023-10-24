@@ -8,7 +8,7 @@ from config import config
 
 def copy_static_inline_func(func_name, module_dir):
     file_attr = config.func_file_attribute_pairs[func_name]
-    file_info, _, _ = extract_source_location(file_attribute=file_attr, function_name=func_name)
+    file_info, _, _, _ = extract_source_location(file_attribute=file_attr, function_name=func_name)
     if file_info.endswith(".h"):
         return
     lines = extract_funcs(file_attribute=file_attr, func_name=func_name)

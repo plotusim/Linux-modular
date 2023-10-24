@@ -2,7 +2,7 @@ from utils.load_adjacency_list import get_whole_linux_kernel_reverse_adjacency_l
 from utils.read_file import read_funcs
 from config.data_path import trace_funcs_list_file
 from config.data_path import syscall_funcs_list_file
-from config.data_path import init_funcs_list_file
+from config.data_path import inline_funcs_list_file
 from config.data_path import use_syscall_trace_funcs_list_file
 
 
@@ -14,7 +14,7 @@ def find_use_trace_syscall():
     work_set = read_funcs(trace_funcs_list_file)
     work_set = work_set.union(read_funcs(syscall_funcs_list_file))
     origin_set = work_set.copy()
-    inline_set = read_funcs(init_funcs_list_file)
+    inline_set = read_funcs(inline_funcs_list_file)
 
     temp_set = set()
 
