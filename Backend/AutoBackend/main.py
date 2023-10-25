@@ -15,6 +15,38 @@ from handle.add_unexport_symbol_macro import add_unexport_func_macro, add_macro_
     modify_unexport_symbol_in_mod_func, add_export_symbol_macro
 from handle.copy_macro import copy_macro_file
 
+import subprocess
+import os
+
+
+def run_make(directory):
+    # 保存当前工作目录
+    current_dir = os.getcwd()
+
+    try:
+        # 更改目录到含有Makefile的目录
+        os.chdir(directory)
+
+        # 执行'make'命令
+        process = subprocess.Popen("make", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+
+        # 检查是否成功执行
+        if process.returncode != 0:
+            print("Make failed")
+            if stderr:
+                print(stderr.decode())  # 显示错误信息
+        else:
+            print("Make succeeded")
+            if stdout:
+                print(stdout.decode())  # 显示输出信息
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        # 返回到原来的工作目录
+        os.chdir(current_dir)
+
 
 # 自动化模块化的主函数
 def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
@@ -174,6 +206,9 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
 
 
 if __name__ == '__main__':
+    print("Compile CPP tools")
+    cpp_dir = "cpp"
+    run_make(cpp_dir)
     print("Configuration loaded:")
     print(str(config))
     modular()
