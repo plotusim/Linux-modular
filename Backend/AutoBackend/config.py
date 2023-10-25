@@ -107,7 +107,7 @@ class Config:
             if os.path.isfile(item_path):
                 files.append(item)
         for i in files:
-            with open(i, 'r') as file:
+            with open(folder_path + i, 'r') as file:
                 for line in file:
                     match = re.search(pattern2, line)
                     if match:
