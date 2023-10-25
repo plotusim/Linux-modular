@@ -74,7 +74,7 @@ std::string llvmTypeToCpp(llvm::Type *type) {
             return llvmTypeToCpp(type->getPointerElementType()) + " *";
         case llvm::Type::ArrayTyID: {
             auto *arrType = llvm::cast<llvm::ArrayType>(type);
-            return llvmTypeToCpp(arrType->getElementType()) + " *";
+            return llvmTypeToCpp(arrType->getElementType()) + " []";
         }
         case llvm::Type::StructTyID: {
             auto *structType = llvm::dyn_cast<llvm::StructType>(type);

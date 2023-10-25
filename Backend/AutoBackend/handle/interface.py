@@ -2,7 +2,7 @@ import os
 import re
 
 from handle.add_interface_macro import add_interface_macro_to_interface_header
-from utils.file_utils import insert_content_to_file, insert_after_last_include, extract_lines, replace_line_in_file
+from utils.file_utils import insert_content_to_file, insert_after_last_keyword_list, extract_lines, replace_line_in_file
 from utils.func_utils import extract_source_location, extract_function_info
 from config import config
 from handle.delete import del_funcs
@@ -65,7 +65,7 @@ def handle_interface_func(func_name, file_attribute, module_name, module_dir_pat
     mod_func_code = generate_mod_func(func_name, body, return_type, params)
     # 插入mod函数到模块源文件
     file_path = os.path.join(module_dir_path, file_name + "_code.c")
-    insert_after_last_include(file_path, mod_func_code)
+    insert_after_last_keyword_list(file_path, ["#include", "#define"], mod_func_code)
     # 生成接口函数体
     code = generate_find_module_code(func_name, return_type, params, module_name)
     # 删除原函数的代码

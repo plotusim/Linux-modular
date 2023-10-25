@@ -75,6 +75,7 @@ class Config:
         """基于基础路径更新其他路径"""
         self.llvm_bin_path_prefix = self.config.get('LLVM', 'LLVMBinPathPrefix')
         self.whole_kernel_dot_file = self.config.get('DEFAULT', 'WholeKernelDotFile')
+        self.whole_kernel_pa_dot_file = self.config.get('DEFAULT', 'wholekernelpadotfile')
         self.res_graph_dot_path = self.config.get('MODULE', 'ResGraphDotPath')
         self.kernel_source_root_path = self.config.get('MODULE', 'KernelSourceRootPath')
         self.kernel_bc_file_root_path = self.config.get('DEFAULT', 'KernelBCFileRootPath')
@@ -91,13 +92,28 @@ class Config:
     def read_func_file_pairs(self):
         print("Read func-file pairs")
         pattern2 = r'(.*?)\s*\[file=\"(.*?)\"(.*?)\]'
-        with open(self.whole_kernel_dot_file, 'r') as file:
+        with open(self.whole_kernel_pa_dot_file, 'r') as file:
             for line in file:
                 match = re.search(pattern2, line)
                 if match:
                     part1 = match.group(1)
                     part2 = match.group(2)
                     self.func_file_attribute_pairs[part1] = part2
+
+        folder_path = self.res_graph_dot_path.replace("res.dot", "temp/")
+        files = []
+        for item in os.listdir(folder_path):
+            item_path = os.path.join(folder_path, item)
+            if os.path.isfile(item_path):
+                files.append(item)
+        for i in files:
+            with open(i, 'r') as file:
+                for line in file:
+                    match = re.search(pattern2, line)
+                    if match:
+                        part1 = match.group(1)
+                        part2 = match.group(2)
+                        self.func_file_attribute_pairs[part1] = part2
 
     def read_func_children_pairs(self):
         print("Read func->func pairs")

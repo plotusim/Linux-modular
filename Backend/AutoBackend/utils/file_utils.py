@@ -89,15 +89,15 @@ def replace_specific_word_with(old, new, file_path):
         file.write(new_content)
 
 
-# 在最后出现“#include”的行后添加content
-def insert_after_last_include(filename, content_to_insert):
+# 在最后出现keyword的行后添加content
+def insert_after_last_keyword_list(filename, keyword, content_to_insert):
     # 打开文件并读取所有行
     with open(filename, 'r') as file:
         lines = file.readlines()
 
     # 反向查找最后一个包含 #include 的行
     for index in reversed(range(len(lines))):
-        if '#include' in lines[index]:
+        if len([i for i in keyword if i in lines[index]]) > 0:
             # 在找到的行之后插入内容
             lines.insert(index + 1, content_to_insert + '\n')
             break

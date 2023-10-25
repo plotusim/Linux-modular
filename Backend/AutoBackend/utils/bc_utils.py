@@ -1,64 +1,98 @@
-import subprocess
-import re
 import os
 
 from config import config
 
-
-def parse_bc_file(bc_file):
-    # 使用llvm-dis将.bc文件转换为.ll字符串
-    llvm_dis_path = os.path.join(config.llvm_bin_path_prefix, "llvm-dis")
-    process = subprocess.Popen([llvm_dis_path, bc_file, "-o", "-"], stdout=subprocess.PIPE)
-    ll_content, _ = process.communicate()
-
-    # 将内容从字节转换为字符串
-    ll_content = ll_content.decode('utf-8')
-
-    return ll_content
+import subprocess
 
 
-# 提取lines里的debug信息，存在字典里
-def parse_dbinfo(lines):
-    dbinfo = {}
-    for line in lines:
-        db_symbol = re.search(r"!(\d+)", line)
-        if db_symbol:
-            db_num = db_symbol.group(1)
-            dbinfo[db_num] = line
-    return dbinfo
+def get_func_debug_info(executable_path, bc_file, function_name):
+    try:
+        # 调用C++程序，并捕获输出
+        result = subprocess.run([executable_path, bc_file, function_name],
+                                capture_output=True, text=True, check=True)
 
+        output = result.stdout.strip()
+        if output:
+            # 解析标准输出来获取文件路径和行号
+            parts = output.split(':')
+            if len(parts) == 2:
+                filepath, line = parts
+                return filepath, int(line)
 
-# 分析debug信息里包含的文件位置的信息
-def find_file_debug_info(lines, db_info, file_di_num):
-    line = db_info[file_di_num]
-    match = re.search(r'filename: "(.*?)", directory: "(.*?)"', line)
-    if match:
-        filename = match.group(1)
-        directory = match.group(2)
-        full_path = os.path.join(directory, filename)
-        return full_path
-    else:
-        print("No match found!")
-        return None
-
-
-# 分析debug信息里包含的函数定义的位置以及函数定义在该文件里开始的行号，注意这是标识符所在的行号，可能会出现返回类型在上一行的情况
-def get_func_defined_file_and_start(lines, db_info, function_name):
-    for line in lines:
-        if re.search(f"define.*?@{function_name}\(", line) and "!dbg" in line:
-
-            dbg_ref = re.search(r"!dbg !(\d+)", line)
-            if dbg_ref:
-                dbg_num = dbg_ref.group(1)
-                line = db_info[dbg_num]
-                # 解析位置信息
-                file_info_line = re.search(r"file: !(\d+),", line)
-                location_info = re.search(r"line: (\d+),", line)
-
-                if file_info_line and location_info:
-                    file_info_num = file_info_line.group(1)
-                    file_info = find_file_debug_info(lines, db_info, file_info_num).rsplit("Kernel_src", 1)[1]
-                    start_loc = location_info.group(1)
-                    return file_info, int(start_loc)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while getting function debug info: {str(e)}")
 
     return None, None
+
+
+def get_func_debug_file_and_start_loc(bc_file, function_name):
+    executable_path = os.path.join(config.current_project_dir, "cpp", "FunctionFileAndStartLine")
+    filepath, line = get_func_debug_info(executable_path, bc_file, function_name)
+    return filepath.rsplit("Kernel_src", 1)[1], line
+
+
+def get_gv_debug_info(executable_path, bc_file):
+    res = {}
+    try:
+        # 调用C++程序，并捕获输出
+        result = subprocess.run([executable_path, bc_file],
+                                capture_output=True, text=True, check=True)
+
+        output = result.stdout.strip()
+        if output:
+            # 解析标准输出来获取文件路径
+            parts = output.split(':')
+            if len(parts) == 2:
+                parts[0] = parts[1]
+
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while getting GV debug info: {str(e)}")
+
+    return res
+
+
+def get_gv_defined_file(file_attr, gv_name):
+    executable_path = os.path.join(config.current_project_dir, "cpp", "GlobalVariableLocation")
+    return get_gv_debug_info(executable_path, bc_file=config.kernel_bc_file_root_path + file_attr + ".bc")[gv_name]
+
+
+def extract_used_gv_from_ir(ir_file_path, function_name):
+    ExtractGlobalVar = os.path.join(config.current_project_dir, "cpp", "ExtractGlobalVar")
+    # 构建命令行参数
+    cmd = [ExtractGlobalVar, ir_file_path, function_name]
+    # 使用subprocess来执行命令并捕获输出
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    # 如果进程返回了非零退出代码，可能是因为有错误
+    if result.returncode != 0:
+        print(f"Error executing ExtractGlobalSymbol:\n{result.stderr}")
+        return None
+    # 标准输出的内容
+    res = result.stdout
+    unexport_var = set()
+    for line in res.split("\n"):
+        splits = line.split(":")
+        name = splits[0]
+        if len(splits) > 1:
+            type_str = splits[1]
+        else:
+            type_str = ""
+        if name not in config.export_symbols_set:
+            unexport_var.add((name, type_str))
+    return unexport_var
+
+
+# 调用C++程序提取函数使用到的未导出函数
+def extract_func_used_from_ir(ir_file_path, function_name):
+    ExtractFuncSym = os.path.join(config.current_project_dir, "cpp", "ExtractFuncSym")
+    # 构建命令行参数
+    cmd = [ExtractFuncSym, ir_file_path, function_name]
+    # 使用subprocess来执行命令并捕获输出
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    # 如果进程返回了非零退出代码，可能是因为有错误
+    if result.returncode != 0:
+        print(f"Error executing ExtractGlobalSymbol:\n{result.stderr}")
+        return None
+    # 返回标准输出的内容
+    return result.stdout

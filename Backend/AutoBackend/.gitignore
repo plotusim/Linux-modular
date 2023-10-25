@@ -1,1 +1,6 @@
 .idea
+/cpp/GlobalVariableLocation
+/cpp/FunctionFileAndStartLine
+/cpp/ExtractGlobalVar
+/cpp/ExtractFuncSym
+/logs/

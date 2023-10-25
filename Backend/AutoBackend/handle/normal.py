@@ -1,5 +1,5 @@
 import os
-from utils.file_utils import insert_after_last_include
+from utils.file_utils import insert_after_last_keyword_list
 from utils.func_utils import extract_funcs
 from handle.delete import del_funcs
 
@@ -16,7 +16,7 @@ def handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
     file_name = file_attribute.split('/')[-1]
     module_src_file = os.path.join(module_dir_path, file_name + "_code.c")
     code = "".join(lines)
-    insert_after_last_include(module_src_file, code)
+    insert_after_last_keyword_list(module_src_file, ["#include", "#define"], code)
     del_funcs(file_attribute, func_name)
 
 

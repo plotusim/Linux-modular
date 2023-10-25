@@ -12,7 +12,8 @@ from handle.modify_makefile import modify_makefile
 from handle.modify_Kconfig import modify_kconfig
 from handle.add_export_kallsyms_look_up_macro import add_export_kallsyms_look_up_macro
 from handle.add_unexport_symbol_macro import add_unexport_func_macro, add_macro_to_unexport_var_header, \
-    modify_unexport_symbol_in_mod_func
+    modify_unexport_symbol_in_mod_func, add_export_symbol_macro
+from handle.copy_macro import copy_macro_file
 
 
 # 自动化模块化的主函数
@@ -36,13 +37,14 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
 
     # 在头文件里面修改的interface函数，需要在原头文件里面添加include语句，这个集合用来存放这些头文件的名字
     need_add_include_header_file_set = set()
-
+    need_add_copy_macro_set = set()
     # 寻找到所有需要添加include的*_code.c文件
     for i in res.values():
         for j in i:
             file_attribute = j.file_attribute
             if j.handle_way in {"NORMAL", "INTERFACE"}:
                 need_add_includes_file_set.add(file_attribute)
+                need_add_copy_macro_set.add(file_attribute)
 
     func_num = {"NORMAL": 0, "INTERFACE": 0, "DELETE": 0}
 
@@ -66,6 +68,10 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
             for func in value:
                 if func not in quote_includes_pairs_dict[key]:
                     quote_includes_pairs_dict[key].append(func)
+
+    for i in need_add_copy_macro_set:
+        copy_macro_file(i, module_dir_path)
+
     # 给jmp_interface.h添加include
     add_includes_to_jump_interface(angle_includes_list, quote_includes_pairs_dict, module_dir_path)
     # 给unexport_symbol.h添加include
@@ -98,8 +104,12 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
     handled_unexport_vars = set()
     for i in unexport_var:
         if "." not in i[0] and "." not in i[1] and len(i[1]):
-            add_macro_to_unexport_var_header(i[0], i[1], module_dir_path)
-            handled_unexport_vars.add(i[0])
+            if "[" in i[1]:
+                print(f"Found Array Type:\t{i[0]}\t{i[1]}")
+                add_export_symbol_macro(i[0])
+            else:
+                add_macro_to_unexport_var_header(i[0], i[1], module_dir_path)
+                handled_unexport_vars.add(i[0])
         else:
             not_handled_vars.add(i[0])
 

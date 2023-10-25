@@ -12,14 +12,26 @@ SRC1 := ExtractFuncSym.cpp
 TARGET2 := ExtractGlobalVar
 SRC2 := ExtractGlobalVar.cpp
 
+TARGET3 := GlobalVariableLocation
+SRC3 := GlobalVariableLocation.cpp
+
+TARGET4 := FunctionFileAndStartLine
+SRC4 := FunctionFileAndStartLine.cpp
+
 .PHONY: all clean
 
-all: $(TARGET1) $(TARGET2)
+all: $(TARGET1) $(TARGET2) $(TARGET3)  $(TARGET4)
 
 $(TARGET1): $(SRC1)
 	$(CXX) $(CXXFLAGS) $(COMMON_FLAGS) $< -o $@ $(LDFLAGS) $(LIBS)
 
 $(TARGET2): $(SRC2)
+	$(CXX) $(CXXFLAGS) $(COMMON_FLAGS) $< -o $@ $(LDFLAGS) $(LIBS)
+
+$(TARGET3): $(SRC3)
+	$(CXX) $(CXXFLAGS) $(COMMON_FLAGS) $< -o $@ $(LDFLAGS) $(LIBS)
+
+$(TARGET4): $(SRC4)
 	$(CXX) $(CXXFLAGS) $(COMMON_FLAGS) $< -o $@ $(LDFLAGS) $(LIBS)
 
 clean:

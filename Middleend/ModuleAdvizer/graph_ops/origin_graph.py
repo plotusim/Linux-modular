@@ -5,7 +5,7 @@ from config.data_path import init_funcs_list_file, init_reach_funcs_list_file, e
     trace_funcs_list_file, virtual_structs_list_file, modular_funcs_list_file, \
     virtual_structs_top_funcs_list_file, syscall_funcs_list_file
 from graph_ops.transform import set_nodes_type, set_color, set_default_type
-from utils.merge_dots import combine_dots_from_folder
+from utils.merge_dots import combine_dots_from_folder, combine_dots_from_folder_with_locations
 from utils.read_file import read_funcs
 
 from config.data_path import use_syscall_trace_funcs_list_file
@@ -61,7 +61,7 @@ def init_funcs_graph(graph):
 
 def get_origin_graph(dot_file_folder):
     print("generate graph")
-    graph: pydot.Graph = combine_dots_from_folder(dot_file_folder)
+    graph: pydot.Graph = combine_dots_from_folder_with_locations(dot_file_folder)
     graph = init_funcs_graph(graph)
     graph = set_color(graph, function_color_mapping, "type")
     return graph
