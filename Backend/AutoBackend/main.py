@@ -101,8 +101,8 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
                 if func not in quote_includes_pairs_dict[key]:
                     quote_includes_pairs_dict[key].append(func)
 
-    for i in need_add_copy_macro_set:
-        copy_macro_file(i, module_dir_path)
+    # for i in need_add_copy_macro_set:
+    #     copy_macro_file(i, module_dir_path)
 
     # 给jmp_interface.h添加include
     add_includes_to_jump_interface(angle_includes_list, quote_includes_pairs_dict, module_dir_path)

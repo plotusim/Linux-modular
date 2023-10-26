@@ -1,6 +1,6 @@
 import os.path
 import re
-from utils.file_utils import append_string_to_file
+from utils.file_utils import append_string_to_file, check_string_in_file
 from utils.func_utils import extract_function_info, extract_funcs, extract_source_location, is_inline_func, \
     get_children_funcs
 
@@ -9,11 +9,13 @@ from config import config
 
 
 def add_export_symbol_macro(gv_name):
-    real_file = get_gv_defined_file(config.func_file_attribute_pairs[gv_name], gv_name)
+    real_file = get_gv_defined_file(config.func_file_attribute_pairs["__virtual__global__" + gv_name], gv_name)
     real_file_path = config.kernel_source_root_path + "/" + real_file
     macro = f"EXPORT_SYMBOL({gv_name});"
-    append_string_to_file(real_file_path, "#include <linux/export.h>")
-    append_string_to_file(real_file_path, macro)
+    if not check_string_in_file(real_file_path, "#include <linux/export.h>"):
+        append_string_to_file(real_file_path, "#include <linux/export.h>")
+    if not check_string_in_file(real_file_path, macro):
+        append_string_to_file(real_file_path, macro)
 
 
 def copy_static_inline_func(func_name, module_dir):

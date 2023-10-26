@@ -17,10 +17,10 @@ def extract_macros(lines):
             inside_macro = True
 
             if stripped_line.endswith("\\"):
-                macro_content += stripped_line[:-1].strip().replace("\\", " ")+ "    "
+                macro_content += stripped_line[:-1].strip().replace("\\", " ") + "    "
             else:
                 inside_macro = False
-                macro_content += stripped_line+ "    "
+                macro_content += stripped_line + "    "
                 macros.append(macro_content)
                 macro_content = ""
             continue

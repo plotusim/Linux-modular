@@ -57,9 +57,9 @@ def get_gv_defined_file(file_attr, gv_name):
 
 
 def extract_used_gv_from_ir(ir_file_path, function_name):
-    ExtractGlobalVar = os.path.join(config.current_project_dir, "cpp", "ExtractGlobalVar")
+    extract_global_var = os.path.join(config.current_project_dir, "cpp", "ExtractGlobalVar")
     # 构建命令行参数
-    cmd = [ExtractGlobalVar, ir_file_path, function_name]
+    cmd = [extract_global_var, ir_file_path, function_name]
     # 使用subprocess来执行命令并捕获输出
     result = subprocess.run(cmd, capture_output=True, text=True)
 
@@ -84,9 +84,9 @@ def extract_used_gv_from_ir(ir_file_path, function_name):
 
 # 调用C++程序提取函数使用到的未导出函数
 def extract_func_used_from_ir(ir_file_path, function_name):
-    ExtractFuncSym = os.path.join(config.current_project_dir, "cpp", "ExtractFuncSym")
+    extract_func_sym = os.path.join(config.current_project_dir, "cpp", "ExtractFuncSym")
     # 构建命令行参数
-    cmd = [ExtractFuncSym, ir_file_path, function_name]
+    cmd = [extract_func_sym, ir_file_path, function_name]
     # 使用subprocess来执行命令并捕获输出
     result = subprocess.run(cmd, capture_output=True, text=True)
 

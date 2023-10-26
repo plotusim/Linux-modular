@@ -2,7 +2,7 @@ import os
 import re
 
 from handle.add_interface_macro import add_interface_macro_to_interface_header
-from utils.file_utils import insert_content_to_file, insert_after_last_keyword_list, extract_lines, replace_line_in_file
+from utils.file_utils import insert_after_last_keyword_list, extract_lines, replace_line_in_file
 from utils.func_utils import extract_source_location, extract_function_info
 from config import config
 from handle.delete import del_funcs
