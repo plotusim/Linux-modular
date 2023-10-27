@@ -10,6 +10,9 @@ linux内核自动模块化工具。
    cd Frontend
    bash build-llvm.sh
    ```
+
+  在Frontend目录下出现llvm-project目录，则说明llvm下载成功。
+
 2. python require packages
 
    ```
@@ -19,19 +22,56 @@ linux内核自动模块化工具。
    pyelftools==0.29
    ```
 
+  自行下载相关python包。
+
 # 使用说明
+
+整个项目分为前端，中端，后端三个部分，其相关代码分别放入Frontend，Middleend和Backend目录下。Data目录用于存放Frontend分析出的数据，而Kernel目录存放内核源代码（需自行放入）。
+
+当前项目的内核配置文件默认使用defconfig，若要使用特定配置的config文件，需进行以下步骤进行配置，以temp_config为例：
+
+1. 将temp_config放入相关的架构目录arch/xxx/configs下。若使用x86架构，则放入arch/x86/configs目录下;
+
+2. 修改Frontend的run_frontend.sh的CONFIG变量，即`CONFIG="temp_config"`;
+
+3. 在Backend提取模块时，编译内核需使用`make temp_config`。（即前后端使用的config保持一致）
+
 
 ## Frontend
 
-
-前端函数分析过程集成到run_frontend.sh，步骤存在前后依赖，但是中间文件都会保存，故可以拆开单步执行。注意，前端分析时间较长。
-
-执行sh前需将分析的内核放在顶层的Kernel目录中，并修改sh中的CONFIG变量。
+前端函数分析的整个流程已集成到run_frontend.sh中，故理想状态下直接执行以下命令：
 
 ```shell
 cd Frontend
 bash run_frontend.sh
 ```
+
+因为前端函数分析在combine阶段及其之后花费时间较长，故建议将run_frontend.sh拆成多步执行。建议拆分步骤如下（sh中有相关备注）：
+
+1. 编译so --> 生成指针分析的dots
+2. combine pa dots
+3. 生成merge dots，combine merge dots
+4. 函数分类
+
+步骤1结束后，在Data/dots和Data/dots_pa目录下会生成dot文件。
+
+步骤2结束后，在Data/dots_pa生成all.dot，在当前测试下，all.dot的大小在30mb左右。（因为combine脚本非多线程实现，故建议在单核强的机器上跑combine阶段，在13th i9-13900k下combine阶段花费10-20分钟）
+
+步骤3结束后，在Data/dots_merge下生成dot文件和all.dot，all.dot的大小在20mb-30mb的范围内，同样建议在单核强的机器上跑。
+
+步骤4结束后，在func_list下生成函数的分类结果：
+
+* export_symbols.txt
+* inline_funcs_list.txt  
+* trace_funcs.txt
+* init_funcs.txt        
+* modular_funcs.txt      
+* virtual_structs_top_funcs.txt
+* init_reach_funcs.txt  
+* syscall_funcs.txt      
+* virtual_structs.txt
+
+可通过以上信息判断各阶段执行情况。
 
 ## Middleend
 
