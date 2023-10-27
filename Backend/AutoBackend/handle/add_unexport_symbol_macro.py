@@ -9,30 +9,36 @@ from config import config
 
 
 def add_export_symbol_macro(gv_name):
-    real_file = get_gv_defined_file(config.func_file_attribute_pairs["__virtual__global__" + gv_name], gv_name)
-    real_file_path = config.kernel_source_root_path + "/" + real_file
-    macro = f"EXPORT_SYMBOL({gv_name});"
-    if not check_string_in_file(real_file_path, "#include <linux/export.h>"):
-        append_string_to_file(real_file_path, "#include <linux/export.h>")
-    if not check_string_in_file(real_file_path, macro):
-        append_string_to_file(real_file_path, macro)
+    try:
+        real_file = get_gv_defined_file(config.func_file_attribute_pairs["__virtual__global__" + gv_name], gv_name)
+        real_file_path = config.kernel_source_root_path + "/" + real_file
+        macro = f"EXPORT_SYMBOL({gv_name});"
+        if not check_string_in_file(real_file_path, "#include <linux/export.h>"):
+            append_string_to_file(real_file_path, "#include <linux/export.h>")
+        if not check_string_in_file(real_file_path, macro):
+            append_string_to_file(real_file_path, macro)
+    except Exception as e:
+        print(e)
 
 
 def copy_static_inline_func(func_name, module_dir):
-    file_attr = config.func_file_attribute_pairs[func_name]
-    file_info, _, _, _ = extract_source_location(file_attribute=file_attr, function_name=func_name)
-    if file_info.endswith(".h"):
-        return
-    lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
-    print("".join(lines))
-    file_name = file_attr.split('/')[-1]
-    code_c_path = os.path.join(module_dir, file_name + "_code.c")
-    print(f"Add func {func_name} to {code_c_path}.h")
-    append_string_to_file(code_c_path, "\n")
+    try:
+        file_attr = config.func_file_attribute_pairs[func_name]
+        file_info, _, _, _ = extract_source_location(file_attribute=file_attr, function_name=func_name)
+        if file_info.endswith(".h"):
+            return
+        lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
+        print("".join(lines))
+        file_name = file_attr.split('/')[-1]
+        code_c_path = os.path.join(module_dir, file_name + "_code.c")
+        print(f"Add func {func_name} to {code_c_path}.h")
+        append_string_to_file(code_c_path, "\n")
 
-    for i in lines:
-        append_string_to_file(code_c_path, i)
-    pass
+        for i in lines:
+            append_string_to_file(code_c_path, i)
+        pass
+    except Exception as e:
+        print(e)
 
 
 # 向unexport_symbol.h里面添加UNEXPORT_VAR宏

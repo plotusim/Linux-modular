@@ -7,10 +7,14 @@ from utils.bc_utils import get_func_debug_file_and_start_loc, extract_used_gv_fr
 
 # 返回函数的定义
 def extract_funcs(file_attribute, func_name):
-    file, start_loc, end_loc, _ = extract_source_location(file_attribute, func_name)
-    src_file_path = config.kernel_source_root_path + file
-    lines = extract_lines(src_file_path, start_loc, end_loc)
-    return lines
+    try:
+        file, start_loc, end_loc, _ = extract_source_location(file_attribute, func_name)
+        src_file_path = config.kernel_source_root_path + file
+        lines = extract_lines(src_file_path, start_loc, end_loc)
+        return lines
+    except Exception as e:
+        print(e)
+        return [""]
 
 
 # 获得函数在源代码中定义的具体位置
