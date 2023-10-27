@@ -135,8 +135,8 @@
 
 - ```
   cd lib/modules/5.10.176/kernel/drivers/
-  cd auth_gss_module/  //打开模块目录
-  insmod auth_gss_module.ko
+  cd name_module/  //打开模块目录
+  insmod name_module.ko
   ```
 
 
@@ -144,9 +144,9 @@
 
   ```
   [   15.491581] success:text_mutex
-  [   15.498366] success:gss_svc_shutdown
-  [   15.514655] success:rpcsec_gss_net_ops
-  [   15.523455] success:authgss_ops
+  [   15.498366] success:var1_name
+  [   15.514655] success:func1_name
+  [   15.523455] error:func2_name
   [   15.523482] find symbol success
   ```
 
