@@ -94,22 +94,13 @@ AutoBackend根据中端生成的提取建议自动提取内核模块，目前存
 
 ### 提取内核模块：
 
-#### 编译提取工具
+#### 修改config.ini:
 
-- ```shell
-  cd Backend/AutoBackend/cpp
-  make
-  ```
+- modulename = name_module //加上后缀避免同名导致config无法通过
 
-#### 修改config.py:
+- resgraphdotpath 为Middleend目录下的result中的result.dot路径
 
-- res_graph_dot_path为要提取的模块的res.dot的路径
-- module_name为模块名
-- kernel_source_root_path为要修改的Linux源代码的路径
-- kernel_bc_file_root_path为编译生成过bc文件的源代码路径
-- module_template_files_dir为模版文件路径，即为Backend/sys_module文件夹
-
-#### 运行main.py:
+- kernelsourcerootpath 为需要提取内核模块的内核文件目录
 
 - ```shell
   cd Backend/AutoBackend
@@ -123,11 +114,12 @@ AutoBackend根据中端生成的提取建议自动提取内核模块，目前存
 #### 编译内核：
 
 - ```
-  cd linux-5.10.176
+  cd linux-5.10.176  //进入内核文件目录
   make menuconfig defconfig
   ```
 
 - 将KASLR选项设置为"N"
+
   ```shell
   Processor type and features ----> 
   		[] Randomize the address of the kernel image (KASLR)
@@ -139,26 +131,67 @@ AutoBackend根据中端生成的提取建议自动提取内核模块，目前存
 
 #### 手动调试：
 
-- error:implicit declaration of function
+- **error1:** *drivers/name_module/name**_code.c*** :invalid use of undefined type' *<u>typename</u>* '
 
-  将相关函数定义添加到unexport_symbol.h的宏EXPORT_FUNC(func,ret,...)中，并将内核模块代码中相应的函数名func改为_func
+  - **结构体类型未定义**
 
-- error:'var_name’ undeclared (first use in this function)
+  - **solve:** 对于提取函数中的使用到的原文件中的结构体类型定义需要复制出来
 
-  将未导出符号在模块中的名称修改为_var_name，这是由于为避免与内核代码冲突，将未导出符号进行了重命名添加了' _ '前缀。在.c中进行全局替换即可。
+- **error2:** *drivers/name_module/name**_code.c*** :implicit declaration of function ‘*func_name*’
 
-- error:passing argument  of ‘func’ from incompatible pointer type
+  - **使用的原文件宏定义未导出**
 
-  note: expected ‘ret *’ but argument is of type ‘ret **’
+  - **solve:**使用到的原文件中的宏定义需要复制到目前未定义的文件name**_code.c*** 中
 
-  - 一般情况下是未导出符号var通过宏导出后，模块内的函数将符号作为参数使用时添加了&，例如func(a,b,&var)，将&删除即可;
+- **error3:**./include/**path_to**/**name**.h:236:1: error: conflicting types for ‘**func_name**’; 
 
-  - 第二种情况为func(a,b,var)，此时需要修改为func(a,b,*var)
+  - **有些头文件没有ifndef，会出现重复定义**
+
+  - **solve:**在未导出符号处理过程中包含了错误的头文件导致产生了重复定义，需要在unexport_symbol.h或jmp_interface.h删除相关include语句
+
+- **error4:** *drivers/name_module/name**_code.c*** :passing argument 1 of ‘func’ from incompatible pointer type
+
+  ​				func(&var)
+
+  - **未导出符号使用错误**
+
+    - **solve:**由于导出符号方法的局限，此处需要删除&
+
+- **error4:**
+
+  drivers/hw_random_module/core_code.c: ‘_rng_list’ is a pointer; did you mean to use ‘->’?
+  26 |                 new_rng = list_entry(_rng_list.next, struct hwrng, list);
+
+  - **未导出符号使用错误**
+
+  - **solve:**由于导出符号方法局限，此处需将rng_list.next改为rng_list->next
+
+- **error4:**
+
+  drivers/hw_random_module/core_code.c: error: assignment to ‘struct hwrng *’ from incompatible pointer type ‘struct hwrng **’ [-Werror=incompatible-pointer-types]
+
+  50 |         old_rng = _current_rng;
+
+  - **未导出符号使用错误**
+
+  - **solve:**由于导出符号方法局限，此处需修改为*_current_rng
+
+- **error5:**
+
+  unexport_symbol.h中UNEXPORT_VAR或UNEXPOIRT_FUNC中提示struct name undefine
+
+   e.g. UNEXPORT_VAR(a,A) 其中A的类型应该为struct A
+
+  - **自动导出符号宏时遇到结构体定义，没有将struct前缀复制**
+
+  - **solve:**将struct前缀加上即可
+
+- **debug过程中查找bug相关符号的定义（尤其是未定义的结构体、宏）使用[Linux source code (v5.10.176) - Bootlin](https://elixir.bootlin.com/linux/v5.10.176/source)**
 
 #### 编译Busybox:
 
 - ```shell
-  cd busybox
+  cd busybox //进入busybox目录
   make menuconfig
   ```
 
@@ -184,5 +217,41 @@ AutoBackend根据中端生成的提取建议自动提取内核模块，目前存
 
 - ```
   cd linux-5.10.176
-  bash ~/Backend/make.sh
+  bash ~/Backend/make.sh //此处为make.sh的路径
   ```
+
+
+
+
+#### 进入qemu
+
+- ```
+  cd lib/modules/5.10.176/kernel/drivers/
+  cd auth_gss_module/  //打开模块目录
+  insmod auth_gss_module.ko
+  ```
+
+
+- 出现以下调试信息
+
+  ```
+  [   15.491581] success:text_mutex
+  [   15.498366] success:gss_svc_shutdown
+  [   15.514655] success:rpcsec_gss_net_ops
+  [   15.523455] success:authgss_ops
+  [   15.523482] find symbol success
+  ```
+
+- 将error的未导出符号在https://elixir.bootlin.com/linux/v5.10.176/source中查找到定义所在的文件之后，在内核代码中找到相应文件的该符号定义位置，将static前缀删除。
+
+
+- 重新执行
+
+
+  ```
+  make
+  bash /home/plot/test_linux_modular/Linux-modular/Backend/make.sh
+  ```
+
+
+​		直到所有未导出符号success
