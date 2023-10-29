@@ -18,6 +18,8 @@ def del_funcs(file, func_name):
     except RuntimeError as e:
         print("Not DELETE FUNC:\t" + func_name)
         print(e)
+    except Exception as e:
+        print(e)
 
 
 def handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path):

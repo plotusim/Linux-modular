@@ -1,3 +1,4 @@
+# Unused
 def find_struct_definitions(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -54,12 +55,12 @@ def find_struct_definitions(file_path):
 
     return definitions
 
-
-if __name__ == '__main__':
-
-    # 使用方式
-    source_file = '/home/plot/hn_working_dir/Test/struct.txt'  # 替换为您的文件路径
-    structs = find_struct_definitions(source_file)
-    for struct_def in structs:
-        print("-------------------------------")
-        print(struct_def)
+#
+# if __name__ == '__main__':
+#
+#     # 使用方式
+#     source_file = '/home/plot/hn_working_dir/Test/struct.txt'  # 替换为您的文件路径
+#     structs = find_struct_definitions(source_file)
+#     for struct_def in structs:
+#         print("-------------------------------")
+#         print(struct_def)

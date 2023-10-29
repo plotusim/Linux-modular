@@ -149,6 +149,7 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
     for real_file, i in res.items():
         # 目前处理头文件还有bug，于是暂时先跳过
         if real_file.endswith(".h"):
+            print(f"func {i} in header {real_file}")
             continue
 
         # 遍历该文件中的需要处理的函数列表
@@ -168,10 +169,11 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
                 pass
 
             if handle_way == "DELETE":
-                handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path)
-                # if real_file.endswith(".h"):
-                #     need_add_include_header_file_set.add(real_file)
-                # handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
+                # handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path)
+                print(f"Found Delete {handle_way} func {func_name} in file {real_file}, but handled as interface")
+                if real_file.endswith(".h"):
+                    need_add_include_header_file_set.add(real_file)
+                handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
 
             elif handle_way == "NORMAL":
                 handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)

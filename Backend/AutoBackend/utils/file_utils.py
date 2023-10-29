@@ -1,5 +1,6 @@
 import fileinput
 import sys
+import os
 
 
 # 把content添加到filename文件后面
@@ -91,20 +92,26 @@ def replace_specific_word_with(old, new, file_path):
 
 # 在最后出现keyword的行后添加content
 def insert_after_last_keyword_list(filename, keyword, content_to_insert):
-    # 打开文件并读取所有行
-    with open(filename, 'r') as file:
-        lines = file.readlines()
+    # 检查文件是否存在
+    if not os.path.exists(filename):
+        # 如果文件不存在，创建文件并写入内容
+        with open(filename, 'w') as file:
+            file.write(content_to_insert + '\n')
+    else:
+        # 如果文件存在，按原有逻辑处理
+        with open(filename, 'r') as file:
+            lines = file.readlines()
 
-    # 反向查找最后一个包含 #include 的行
-    for index in reversed(range(len(lines))):
-        if len([i for i in keyword if i in lines[index]]) > 0:
-            # 在找到的行之后插入内容
-            lines.insert(index + 1, content_to_insert + '\n')
-            break
+        # 反向查找最后一个包含关键字的行
+        for index in reversed(range(len(lines))):
+            if len([i for i in keyword if i in lines[index]]) > 0:
+                # 在找到的行之后插入内容
+                lines.insert(index + 1, content_to_insert + '\n')
+                break
 
-    # 将修改后的内容写回文件
-    with open(filename, 'w') as file:
-        file.writelines(lines)
+        # 将修改后的内容写回文件
+        with open(filename, 'w') as file:
+            file.writelines(lines)
 
 
 # 返回文件start到end行的内容
