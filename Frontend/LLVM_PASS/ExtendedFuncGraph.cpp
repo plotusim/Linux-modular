@@ -85,6 +85,18 @@ public:
             }
         }
 
+        for (auto &GlobalAlias: M.aliases()) {
+            // 别名本身的名字
+            StringRef AliasName = GlobalAlias.getName();
+
+            // 此别名所指向的实际内容
+            if (auto *Aliasee = GlobalAlias.getAliasee()) {
+                if (auto *F = dyn_cast<Function>(Aliasee))
+                    initFunctions.insert(const_cast<llvm::Function *>(dyn_cast<Function>(F)));
+            }
+        }
+
+
 //         if no initialize funcs then skip initializeing initFunction
 //         if there are/is init funcs, we initialize a initVirtualFunc as virtual node to connect them
         if (initFunctions.size() != 0) {
