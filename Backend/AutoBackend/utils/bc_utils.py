@@ -21,14 +21,16 @@ def get_func_debug_info(executable_path, bc_file, function_name):
 
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while getting function debug info: {str(e)}")
-
-    return None, None
+        return None, None
 
 
 def get_func_debug_file_and_start_loc(bc_file, function_name):
     executable_path = os.path.join(config.current_project_dir, "cpp", "FunctionFileAndStartLine")
     filepath, line = get_func_debug_info(executable_path, bc_file, function_name)
-    return filepath.rsplit("Kernel_src", 1)[1], line
+    if filepath and line:
+        return filepath.rsplit("Kernel_src", 1)[1], line
+    else:
+        return None, None
 
 
 def get_gv_debug_info(executable_path, bc_file):

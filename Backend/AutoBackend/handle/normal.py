@@ -10,7 +10,7 @@ def handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
     except Exception as e:
         print(e)
         print("NORMAL FUNC:\t" + func_name + "Can't be done")
-        return
+        return False
 
     print("NORMAL FUNC:\t" + func_name)
     file_name = file_attribute.split('/')[-1]
@@ -18,6 +18,7 @@ def handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
     code = "".join(lines)
     insert_after_last_keyword_list(module_src_file, ["#include", "#define"], code)
     del_funcs(file_attribute, func_name)
+    return True
 
 
 if __name__ == '__main__':

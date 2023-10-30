@@ -101,7 +101,7 @@ def run_auto_backend(subsystem):
     # 启动后端流程
     execute_command(["python", "main.py"], ".", logger)
     execute_command(["make", "defconfig"], dir_path, logger)
-    execute_command(["make", "-j", "8"], dir_path, logger)
+    execute_command(["make", "-j", "24"], dir_path, logger)
 
 
 def execute_command(command, cwd, logger):

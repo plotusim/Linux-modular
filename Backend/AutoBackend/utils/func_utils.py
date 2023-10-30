@@ -7,14 +7,10 @@ from utils.bc_utils import get_func_debug_file_and_start_loc, extract_used_gv_fr
 
 # 返回函数的定义
 def extract_funcs(file_attribute, func_name):
-    try:
-        file, start_loc, end_loc, _ = extract_source_location(file_attribute, func_name)
-        src_file_path = config.kernel_source_root_path + file
-        lines = extract_lines(src_file_path, start_loc, end_loc)
-        return lines
-    except Exception as e:
-        print(e)
-        return [""]
+    file, start_loc, end_loc, _ = extract_source_location(file_attribute, func_name)
+    src_file_path = config.kernel_source_root_path + file
+    lines = extract_lines(src_file_path, start_loc, end_loc)
+    return lines
 
 
 # 获得函数在源代码中定义的具体位置
@@ -24,7 +20,7 @@ def extract_source_location(file_attribute, function_name):
     # 获得文件和开始行号
     file_info, start_loc = get_func_debug_file_and_start_loc(bc_file_path, function_name)
 
-    if file_info is None:
+    if file_info is None or start_loc is None:
         raise RuntimeError("Not Found File Info: " + file_attribute + " " + function_name)
 
     src_file_path = config.kernel_source_root_path + file_info
@@ -198,9 +194,13 @@ def contains_inline(s):
 
 
 def is_inline_func(func_name):
-    file_attr = config.func_file_attribute_pairs[func_name]
-    lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
-    return contains_inline(" ".join(lines))
+    try:
+        file_attr = config.func_file_attribute_pairs[func_name]
+        lines = extract_funcs(file_attribute=file_attr, func_name=func_name)
+        return contains_inline(" ".join(lines))
+    except Exception as e:
+        print(e)
+        return True
 
 
 def get_children_funcs(func_name):

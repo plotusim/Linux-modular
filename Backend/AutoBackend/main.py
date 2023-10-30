@@ -54,9 +54,10 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
     module_dir_path = init_module_dir(module_name)
     # 修改模块目录下的kconfig
     modify_kconfig(module_dir_path, module_name)
-    # 读取中端给出的建议，res是一个字典，key文件，value是该文件里面需要处理的函数
+    # 读取中端给出的建议，res是一个字典，key文件名字，value是该文件里面需要处理的函数
     res = get_res(dot_path)
 
+    # 需要加入到Makefile的文件列表
     files_name = []
 
     # 需要按照函数开始行从大到小排序，因为修改某函数之前的函数可能会影响到该函数的开始位置，所以我们需要从后往前修改
@@ -69,23 +70,16 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
 
     # 在头文件里面修改的interface函数，需要在原头文件里面添加include语句，这个集合用来存放这些头文件的名字
     need_add_include_header_file_set = set()
-    need_add_copy_macro_set = set()
+
     # 寻找到所有需要添加include的*_code.c文件
     for i in res.values():
         for j in i:
             file_attribute = j.file_attribute
-            if j.handle_way in {"NORMAL", "INTERFACE"}:
+            # if j.handle_way in {"NORMAL", "INTERFACE"}:
+            if j.handle_way in {"NORMAL", "INTERFACE", "DELETE"}:
                 need_add_includes_file_set.add(file_attribute)
-                need_add_copy_macro_set.add(file_attribute)
 
     func_num = {"NORMAL": 0, "INTERFACE": 0, "DELETE": 0}
-
-    for i in res.values():
-        for j in i:
-            func_num[j.handle_way] += 1
-
-    print("Func Num: \n")
-    print(func_num)
 
     # 所有要添加的include
     angle_includes_list = []
@@ -100,9 +94,6 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
             for func in value:
                 if func not in quote_includes_pairs_dict[key]:
                     quote_includes_pairs_dict[key].append(func)
-
-    # for i in need_add_copy_macro_set:
-    #     copy_macro_file(i, module_dir_path)
 
     # 给jmp_interface.h添加include
     add_includes_to_jump_interface(angle_includes_list, quote_includes_pairs_dict, module_dir_path)
@@ -120,13 +111,14 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
             file_attribute = j.file_attribute
             handle_way = j.handle_way
             func_name = j.func_name
-            if handle_way in {"NORMAL", "INTERFACE"}:
+            # if handle_way in {"NORMAL", "INTERFACE"}:
+            if handle_way in {"NORMAL", "INTERFACE", "DELETE"}:
                 export_funcs.add(func_name)
                 unexport_var = unexport_var.union(
                     extract_func_used_gv(file_attribute=file_attribute, func_name=func_name))
                 unexport_funcs = unexport_funcs.union(extract_func_used_func(file_attribute, func_name))
     # 给所有未导出函数在unexport_symbol.h文件里添加宏
-    print("unexport_funcs:\n")
+    print("original unexport_funcs:\n")
     unexport_funcs = unexport_funcs.difference(export_funcs)
     print(unexport_funcs)
     unexport_funcs = add_unexport_func_macro(module_dir=module_dir_path, unexport_funcs=unexport_funcs)
@@ -147,23 +139,22 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
 
     # 依次处理res中的函数
     for real_file, i in res.items():
-        # 目前处理头文件还有bug，于是暂时先跳过
-        if real_file.endswith(".h"):
-            print(f"func {i} in header {real_file}")
-            continue
-
         # 遍历该文件中的需要处理的函数列表
         for j in i:
             file_attribute = j.file_attribute
             handle_way = j.handle_way
             func_name = j.func_name
             real_file = j.real_file
-            # files_name.append(file_attribute.split('/')[-1] + "_code") 原代码
-            # 修改后的files_name处理
+
+            # 目前处理头文件可能会导致重复处理，于是暂时先跳过
+            if real_file.endswith(".h"):
+                print(f"func {func_name} in header {real_file}, {handle_way}")
+                continue
+
             new_file_name = file_attribute.split('/')[-1] + "_code"
             if new_file_name not in files_name:
-                if handle_way == "NORMAL" or handle_way == "INTERFACE":
-                    files_name.append(new_file_name)
+                # if handle_way == "NORMAL" or handle_way == "INTERFACE":
+                files_name.append(new_file_name)
             else:
                 # 如果字符串已存在于列表中，则忽略它。
                 pass
@@ -171,17 +162,19 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
             if handle_way == "DELETE":
                 # handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path)
                 print(f"Found Delete {handle_way} func {func_name} in file {real_file}, but handled as interface")
-                if real_file.endswith(".h"):
-                    need_add_include_header_file_set.add(real_file)
-                handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
+
+                need_add_include_header_file_set.add(real_file)
+                if handle_interface_func(func_name, file_attribute, module_name, module_dir_path):
+                    func_num[handle_way] += 1
 
             elif handle_way == "NORMAL":
-                handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path)
+                if handle_normal_funcs(func_name, file_attribute, module_name, module_dir_path):
+                    func_num[handle_way] += 1
 
             elif handle_way == "INTERFACE":
-                # if real_file.endswith(".h"):
                 need_add_include_header_file_set.add(real_file)
-                handle_interface_func(func_name, file_attribute, module_name, module_dir_path)
+                if handle_interface_func(func_name, file_attribute, module_name, module_dir_path):
+                    func_num[handle_way] += 1
                 pass
 
     # 处理需要添加宏的原头文件
@@ -205,6 +198,9 @@ def modular(module_name=config.module_name, dot_path=config.res_graph_dot_path):
 
     print("Found global vars but not handled:")
     print(not_handled_vars)
+
+    print("Func Num: \n")
+    print(func_num)
 
 
 if __name__ == '__main__':
