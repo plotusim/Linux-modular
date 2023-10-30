@@ -132,6 +132,9 @@ def execute_command(command, cwd, logger):
 
 
 def find_string_in_logs(directory):
+    auto_ok_num = 0
+    make_ok_num = 0
+    all_num = 0
     results = []
     # 遍历指定目录下的所有文件
     for foldername, _, filenames in os.walk(directory):
@@ -146,16 +149,26 @@ def find_string_in_logs(directory):
                     with open(file_path, 'r') as file:
                         # 读取文件内容
                         content = file.read()
+                        all_num += 1
 
-                        # 搜索特定字符串
-                        if 'Kernel: arch/x86/boot/bzImage is ready' in content:
-                            if "Found global vars but not handled" in content:
-                                print(f"'Kernel: arch/x86/boot/bzImage is ready' found in {file_path}")
-                                print(f"'Found global vars but not handled'  found in {file_path}")
+                        if "Found global vars but not handled" in content:
+                            auto_ok_num += 1
+
+                            # print(f"'Found global vars but not handled'  found in {file_path}")
+
+                            # 搜索特定字符串
+                            if 'Kernel: arch/x86/boot/bzImage is ready' in content:
+                                # print(f"'Kernel: arch/x86/boot/bzImage is ready' found in {file_path}")
                                 results.append(file_path)
+                                make_ok_num += 1
+                        else:
+                            print(f"Auto not ok {file_path}")
+
                 except Exception as e:
                     print(f"An error occurred while reading {file_path}: {str(e)}")
-
+    print(f"There are {all_num}")
+    print(f"auto_ok  {auto_ok_num}")
+    print(f"make_ok_num  {make_ok_num}")
     return results
 
 
@@ -170,5 +183,5 @@ def result_aggregation():
 
 
 if __name__ == '__main__':
-    run()
+    # run()
     result_aggregation()

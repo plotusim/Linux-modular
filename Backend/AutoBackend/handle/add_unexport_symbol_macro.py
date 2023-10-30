@@ -70,11 +70,15 @@ def add_unexport_func_macro(module_dir, unexport_funcs):
     unexport_funcs = work_set.copy()
 
     for i in unexport_funcs:
-        file_attr = config.func_file_attribute_pairs[i]
-        print(f"Add unexport_func_macro for {i} at Loc {file_attr}")
-        return_type, param_string, _ = extract_function_info(
-            "".join(extract_funcs(file_attribute=file_attr, func_name=i)))
-        add_macro_to_unexport_func_header(i, return_type, param_string, module_dir)
+        try:
+            file_attr = config.func_file_attribute_pairs[i]
+            print(f"Add unexport_func_macro for {i} at Loc {file_attr}")
+            return_type, param_string, _ = extract_function_info(
+                "".join(extract_funcs(file_attribute=file_attr, func_name=i)))
+            add_macro_to_unexport_func_header(i, return_type, param_string, module_dir)
+        except Exception as e:
+            print(f"unexpected func error {i}")
+            print(e)
     return unexport_funcs
 
 
