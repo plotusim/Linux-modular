@@ -1,6 +1,7 @@
 import os
 import pydot
 from collections import defaultdict
+from datetime import datetime
 
 base_path = "../"
 dot_pa_dir = os.path.join(base_path, "Data/dots_pa")
@@ -9,53 +10,26 @@ merged_dot_dir = os.path.join(base_path, "Data/dots_merge")
 
 func_use_gv = defaultdict(set)
 gv_use_func = defaultdict(set)
+gv_use_gv = defaultdict(set)
 reversed_func_use_gv = defaultdict(set)
+reversed_gv_use_gv = defaultdict(set)
 
-
-class UnionFind:
-    def __init__(self):
-        self.parent = {}
-        self.rank = {}
-
-    def find(self, u):
-        if u != self.parent.setdefault(u, u):
-            self.parent[u] = self.find(self.parent[u])  # 路径压缩
-        return self.parent[u]
-
-    def union(self, u, v):
-        u = self.find(u)
-        v = self.find(v)
-        if u == v:
-            return
-
-        if self.rank.setdefault(u, 0) < self.rank.setdefault(v, 0):
-            u, v = v, u
-
-        self.parent[v] = u
-
-        if self.rank[u] == self.rank[v]:
-            self.rank[u] += 1
-
-
-uf = UnionFind()
 
 
 def get_gv_use_func(gv_name):
-    return gv_use_func[uf.find(gv_name)]
+    return gv_use_func[gv_name]
 
 
 def add_gv_use_func(gv_name, func_name):
     get_gv_use_func(gv_name).add(func_name)
 
 
-def union_gvs(gv_a, gv_b):
-    union_funcs = get_gv_use_func(gv_a).union(get_gv_use_func(gv_b))
-    uf.union(gv_a, gv_b)
-    get_gv_use_func(gv_a).union(union_funcs)
+def add_gv_use_gv(gv_s, gv_d):
+    gv_use_gv[gv_s].add(gv_d)
 
 
-def add_func_to_gv(func_name, gv_name):
-    func_use_gv[func_name].add(uf.find(gv_name))
+def add_func_use_gv(func_name, gv_name):
+    func_use_gv[func_name].add(gv_name)
 
 
 def is_global(name):
@@ -65,22 +39,55 @@ def is_global(name):
 def gen_use_relation():
     all_dot_pa_graph_path = os.path.join(dot_pa_dir, "all.dot")
     graph = pydot.graph_from_dot_file(all_dot_pa_graph_path)[0]
+    current_time = datetime.now()
+    print("当前时间：", current_time)
+    print("finish read all.dot")
     for i in graph.get_edges():
         sour = i.get_source()
         dest = i.get_destination()
         if is_global(sour):
             if is_global(dest):
-                union_gvs(sour, dest)
+                add_gv_use_gv(sour, dest)
             else:
                 add_gv_use_func(sour, dest)
         else:
             if is_global(dest):
-                add_func_to_gv(sour, dest)
+                add_func_use_gv(sour, dest)
+
+    for key, value in gv_use_gv.items():
+        for v in value:
+            reversed_gv_use_gv[v].add(key)    
+
+    visited = set()
+    for leaf in reversed_gv_use_gv.keys():
+        if leaf not in gv_use_gv.keys():
+            visited.add(leaf)
+
+    temp = dict(gv_use_gv)  # 创建gv_use_gv的副本
+
+    while temp:
+        delete = None  # 初始化delete变量
+
+        for key, value in temp.items():
+            if set(value).issubset(visited):
+                delete = key
+                visited.add(key)
+                for i in value:
+                    for j in gv_use_func[i]:
+                        add_gv_use_func(key, j)
+                break
+        
+        if delete is not None:
+            del temp[delete]
+        else:
+            break  # 如果没有找到满足条件的key，退出循环
 
     for key, value in func_use_gv.items():
         for v in value:
-            reversed_func_use_gv[uf.find(v)].add(key)
-
+            reversed_func_use_gv[v].add(key)
+    current_time = datetime.now()
+    print("当前时间：", current_time)
+    print("gen finish")
 
 def merge_pa_dots(relative_folder_path: str):
     print(f"begin merge:\t{relative_folder_path}")
@@ -124,7 +131,7 @@ def merge_pa_dots(relative_folder_path: str):
                                 dot_graph.add_edge(new_edge)
                 else:
                     if is_global(sour):
-                        for func in reversed_func_use_gv[uf.find(sour)]:
+                        for func in reversed_func_use_gv[sour]:
                             if len(dot_graph.get_node(func)):
                                 if len(dot_graph.get_edge(func, dest)) == 0:
                                     new_edge = pydot.Edge(func, dest)
@@ -141,7 +148,14 @@ def merge_pa_dots(relative_folder_path: str):
 
 
 if __name__ == '__main__':
+    current_time = datetime.now()
+    print("当前时间：", current_time)
     print("gen_use_relation")
     gen_use_relation()
+
+
     print("begin merge")
     merge_pa_dots("")
+    current_time = datetime.now()
+    print("当前时间：", current_time)
+    print("merge finish")
