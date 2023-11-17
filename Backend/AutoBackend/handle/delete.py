@@ -12,12 +12,18 @@ def del_funcs(file, func_name):
         # 使用空行替换
         replace_with_empty_lines(src_file_path, start_loc, end_loc)
         print("DELETE FUNC:\t" + func_name)
+        return True
     except ValueError as e:
         print("Not DELETE FUNC:\t" + func_name)
         print(e)
+        return False
     except RuntimeError as e:
         print("Not DELETE FUNC:\t" + func_name)
         print(e)
+        return False
+    except Exception as e:
+        print(e)
+        return False
 
 
 def handle_delete_funcs(func_name, file_attribute, module_name, module_dir_path):

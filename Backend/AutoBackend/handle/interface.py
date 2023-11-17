@@ -56,7 +56,7 @@ def handle_interface_func(func_name, file_attribute, module_name, module_dir_pat
     except Exception as e:
         print(e)
         print("INTERFACE FUNC:\t" + func_name + "Can't be done")
-        return
+        return False
 
     print("INTERFACE FUNC:\t" + func_name)
     # 添加INTERFACE函数的宏
@@ -74,6 +74,7 @@ def handle_interface_func(func_name, file_attribute, module_name, module_dir_pat
     replace_line_in_file(source_file, bc_start_loc, code)
     # 修改先前插入进去的函数对该函数的引用
     modify_call_func_name(file_path, func_name)
+    return True
 
 
 if __name__ == '__main__':

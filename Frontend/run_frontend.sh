@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+
+# 11111111
 ## Pre：编译.so
 ### 进入LLVM_PASS，编译.so
 cd ./LLVM_PASS
@@ -54,12 +57,9 @@ pa_so_path="./LLVM_PASS/Steensggard.so"
 pa_txt_path="../Data/txts_pa"
 
 echo "generate txts start"
-
 python "$generate_txt_file" --so "$so_path" --output_txt "$txt_path" &
 python "$generate_txt_file" --so "$pa_so_path" --output_txt "$pa_txt_path"
-
 echo "generate txts exit"
-
 
 ## 生成.dot
 generate_dot_file="scripts/generate_dots.py"
@@ -67,14 +67,15 @@ generate_pa_dot_file="scripts/generate_dots_pa.py"
 
 ### 函数分析的dots
 ### 指针分析的dots
-
 echo "generate dots start"
-
 python "$generate_dot_file"  &
 python "$generate_pa_dot_file" 
-
 echo "generate dots exit"
 
+
+
+# 22222222
+### combine pa dots
 base_path="../"
 
 combine_python_file="scripts/combine_dots.py"
@@ -89,16 +90,12 @@ fi
 
 
 
-
+# 33333333
 ## 生成增量dots
 merge_dot_file="scripts/merge_pa.py"
-
 echo "merge dots_pa to dots"
-
 python "$merge_dot_file"
-
 echo "merge finish"
-
 
 ## 合并dot文件到all.dot
 base_path="../"
@@ -106,12 +103,12 @@ base_path="../"
 combine_python_file="scripts/combine_dots.py"
 input_file="${base_path}Data/dots_merge"
 output_file="${base_path}Data/dots_merge/all.dot"
-
 python "$combine_python_file" -i "$input_file" -o "$output_file"
-
 echo "combine merge dots to all.dot"
 
 
+
+# 44444444
 ## 函数分类
 classify_funcs_file="scripts/classify_functions.py"
 

@@ -40,30 +40,6 @@ def extract_macros(lines):
     return macros
 
 
-#
-# # 使用正则表达式提取宏定义
-# def extract_multi_line_macros(text):
-#     # 此正则表达式查找以 #define 开头，然后跟着任何非换行符的内容，
-#     # 然后是一个续行符 (\)，然后是任何内容（包括换行符），直到达到没有续行符的行为止
-#     macro_regex = r'#define\s+([a-zA-Z0-9_]+)(.*\\\n)*.*'
-#     matches = re.finditer(macro_regex, text, re.MULTILINE)
-#
-#     macros = {}
-#     for match in matches:
-#         full_match_text = match.group(0)
-#
-#         # 分割宏定义行，删除续行符和空白行
-#         lines = [line.strip() for line in full_match_text.splitlines() if line.strip()]
-#
-#         # 第一行是宏名称; 剩下的是宏内容
-#         macro_name = lines[0].split()[1]  # 假设宏名称与#define之间有空格
-#         macro_content = ' '.join(lines[1:]).replace('\\', '').strip()  # 合并内容并删除续行符
-#
-#         macros[macro_name] = macro_content
-#
-#     return macros
-
-
 def copy_macro_file(file_attr, module_dir):
     print(f"Copy macro defined in {file_attr}")
     kernel_source_file_path = config.kernel_source_root_path + "/" + file_attr + ".c"
