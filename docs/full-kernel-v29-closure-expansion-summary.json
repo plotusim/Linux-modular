@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v29-closure-expansion",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM 22"
+  },
+  "reference_graph": {
+    "sha256": "b4e58930a4485380c23e7de6da1e5c4947c5bcb186af6adb669ac3480a284e16",
+    "nodes": 266009,
+    "edges": 3011804,
+    "function_nodes": 169996,
+    "unresolved_calls": 1256
+  },
+  "strict_plan": {
+    "minimum_estimated_savings_bytes": 4096,
+    "candidates": 717,
+    "candidate_readiness": {
+      "READY": 31,
+      "BLOCKED": 350,
+      "NEEDS_EVIDENCE": 336
+    },
+    "ready_final_elf_functions": 81,
+    "ready_known_bytes": 56120,
+    "final_elf_categories": {
+      "CORE": {
+        "functions": 48385,
+        "function_ratio_percent": 93.618791,
+        "bytes": 13096340,
+        "byte_ratio_percent": 96.960821
+      },
+      "READY": {
+        "functions": 81,
+        "function_ratio_percent": 0.156725,
+        "bytes": 56120,
+        "byte_ratio_percent": 0.415493
+      },
+      "BLOCKED": {
+        "functions": 338,
+        "function_ratio_percent": 0.653987,
+        "bytes": 46787,
+        "byte_ratio_percent": 0.346395
+      },
+      "UNKNOWN": {
+        "functions": 2879,
+        "function_ratio_percent": 5.570497,
+        "bytes": 307590,
+        "byte_ratio_percent": 2.277291
+      }
+    }
+  },
+  "v29_closure_preflight": [
+    {
+      "candidate_id": "candidate:9e7f2a7395e92640",
+      "feature": "nanosleep",
+      "status": "REJECTED_NEGATIVE_RESIDENT_SAVINGS",
+      "unloaded_resident_savings_bytes": -66,
+      "loaded_module_bytes": 1615
+    },
+    {
+      "candidate_id": "candidate:a586519acba4e148",
+      "feature": "read-write",
+      "status": "REJECTED_MARGINAL_AND_EXPORT_HEAVY",
+      "unloaded_resident_savings_bytes": 23,
+      "loaded_module_bytes": 1953
+    },
+    {
+      "candidate_id": "candidate:17e72b9d7e1474ff",
+      "feature": "pidfd",
+      "status": "BLOCKED_PRIVATE_STATE",
+      "blocking_dependency": "pidfd_fops"
+    },
+    {
+      "candidate_id": "candidate:87b07c19cf44d74b",
+      "feature": "select-pselect-poll",
+      "status": "BLOCKED_PRIVATE_CLOSURE"
+    },
+    {
+      "candidate_id": "candidate:ce15c89016ae2939",
+      "feature": "capget-capset",
+      "status": "VALIDATED",
+      "unloaded_resident_savings_bytes": 1204,
+      "loaded_module_bytes": 2831
+    },
+    {
+      "candidate_id": "candidate:4dc64a0b8eafe915",
+      "feature": "settimeofday-adjtimex_time32",
+      "status": "VALIDATED",
+      "unloaded_resident_savings_bytes": 734,
+      "loaded_module_bytes": 1548
+    }
+  ],
+  "final_elf_denominator": {
+    "positive_size_functions": 51683,
+    "function_bytes": 13506837,
+    "exact_graph_matches": 50017,
+    "coverage_percent": 96.776503,
+    "unmatched_functions_classified_unknown": 1666
+  },
+  "successful_modularization": {
+    "status": "validated",
+    "candidate_count": 8,
+    "selected_source_function_definitions": 70,
+    "additional_duplicated_helpers_not_counted": 8,
+    "final_elf_functions": 45,
+    "function_ratio_percent": 0.087069,
+    "baseline_function_bytes": 22359,
+    "function_byte_ratio_percent": 0.165538,
+    "modules": [
+      "ioprio_lazy",
+      "splice_lazy",
+      "setns_lazy",
+      "quotactl_lazy",
+      "stat_lazy_v2",
+      "sys_identity_lazy",
+      "capability_lazy",
+      "wallclock_lazy"
+    ],
+    "baseline_resident_bytes": 65823,
+    "modular_resident_bytes": 47869,
+    "unloaded_resident_savings_bytes": 17954,
+    "loaded_module_bytes": 30905,
+    "loaded_delta_bytes": 12951,
+    "baseline_bzimage_bytes": 9756736,
+    "modular_bzimage_bytes": 9747744,
+    "bzimage_delta_bytes": -8992
+  },
+  "comparison_to_v28": {
+    "successful_final_elf_functions": {
+      "before": 41,
+      "after": 45,
+      "delta": 4
+    },
+    "successful_baseline_function_bytes": {
+      "before": 20028,
+      "after": 22359,
+      "delta": 2331
+    },
+    "unloaded_resident_savings_bytes": {
+      "before": 16016,
+      "after": 17954,
+      "delta": 1938
+    },
+    "bzimage_delta_bytes": {
+      "before": -6880,
+      "after": -8992,
+      "additional_reduction_bytes": 2112
+    }
+  },
+  "qemu_validation": {
+    "passed": true,
+    "steps": 8,
+    "elapsed_seconds": 1.63,
+    "compat_adjtimex_time32_dynamically_covered": true,
+    "settimeofday_dynamically_covered": true
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 16,
+    "baseline_median": {
+      "ready_uptime_seconds": 0.85,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 465532,
+      "slab_kb": 12598
+    },
+    "modular_median": {
+      "ready_uptime_seconds": 0.86,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 465534,
+      "slab_kb": 12612
+    },
+    "deltas_modular_minus_baseline": {
+      "ready_uptime_seconds": 0.01,
+      "permanent_kernel_kb": 0,
+      "mem_available_kb": 2,
+      "slab_kb": 14
+    }
+  },
+  "artifact_hashes": {
+    "strict_plan_sha256": "ecccd9318ca19195346a9c96f24f104f57fbcf8883fd71515ba3938c7a94d564",
+    "successful_validation_sha256": "c20c4f3f6389900855c1974a2cecb6bf70185c8f7872f501c487deacbd6873ea",
+    "full_kernel_accounting_sha256": "3636e5ddde18d32e8277c372b4ee092b588a83477737fc8e848c0729f5f2f352",
+    "combined_size_gate_sha256": "e2ee8f33cee7f4e57fe94bf1eb5ef92ad10659d62ea4e0114e357444f2180d0f",
+    "combined_qemu_validation_sha256": "7e31d08b3dd2db0dd3e5e1f45599a4aa219ae6d79d310f04eedfd71531739e54",
+    "combined_startup_ab_sha256": "0edabdfa5b61a99ac9c7ee220e5cf1ed26279f3349449cac9b8d2aaf9bf06d4d",
+    "capability_size_gate_sha256": "855fc7ef4c3919f0a8553ce74d4d21c2a2fd9a93cccbecac21a751f9db724acf",
+    "capability_qemu_validation_sha256": "50ac7b358e52e1626d05fb08a45520e6798b7141adcb28a4015e751ed4a6b69a",
+    "capability_startup_ab_sha256": "f63d733be1936490e4502be6ab12854d91a4288c7b9c21d6abb7daed7ac4218f",
+    "wallclock_size_gate_sha256": "caec08862b14081735975c247277afe010684eb3e703f3fc8fe75ee2084e82ee",
+    "wallclock_qemu_validation_sha256": "6793c5d2f2cdf3af1fd0151eeb42c92250f4ff9af1850b6c667ebc75ac29b609",
+    "combined_bzimage_sha256": "56bfee5b4473169f0c09d3bd0a1b97aad2482028ff073515a21442cacbf2309c"
+  }
+}

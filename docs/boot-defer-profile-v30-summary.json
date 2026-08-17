@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "experiment": "boot-defer-profile-v30",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM 22"
+  },
+  "scope": {
+    "workload": "QEMU -nodefaults BusyBox initramfs",
+    "loader_ready_traces": 1,
+    "planner_dispositions_used_for_boot_split": false,
+    "boot_cold_is_empirical_upper_bound": true
+  },
+  "final_elf_boot_phase": {
+    "positive_size_functions": 51683,
+    "function_bytes": 13506837,
+    "exact_graph_matches": 50017,
+    "categories": {
+      "BOOT_HOT": {
+        "functions": 5544,
+        "function_ratio_percent": 10.726931,
+        "bytes": 1460841,
+        "byte_ratio_percent": 10.815567
+      },
+      "POST_BOOT_ONLY": {
+        "functions": 0,
+        "function_ratio_percent": 0.0,
+        "bytes": 0,
+        "byte_ratio_percent": 0.0
+      },
+      "BOOT_COLD": {
+        "functions": 44473,
+        "function_ratio_percent": 86.049571,
+        "bytes": 12010088,
+        "byte_ratio_percent": 88.918582
+      },
+      "UNKNOWN": {
+        "functions": 1666,
+        "function_ratio_percent": 3.223497,
+        "bytes": 35908,
+        "byte_ratio_percent": 0.265851
+      }
+    },
+    "entirely_defer_only_source_units": {
+      "units": 1124,
+      "functions": 17232,
+      "bytes": 5174893
+    }
+  },
+  "existing_kconfig_module_profile": {
+    "symbols_changed_from_y_to_m": [
+      "CONFIG_DRM_I915",
+      "CONFIG_CFG80211",
+      "CONFIG_MAC80211",
+      "CONFIG_NFS_FS",
+      "CONFIG_EXT4_FS",
+      "CONFIG_E1000",
+      "CONFIG_E1000E",
+      "CONFIG_R8169",
+      "CONFIG_SND_HDA_INTEL"
+    ],
+    "vmlinux_positive_size_functions": {
+      "baseline": 51683,
+      "profile": 39457,
+      "delta": -12226
+    },
+    "vmlinux_function_bytes": {
+      "baseline": 13506837,
+      "profile": 9753814,
+      "delta": -3753023
+    },
+    "permanent_allocatable_elf_bytes": {
+      "baseline": 26854034,
+      "profile": 21500341,
+      "delta": -5353693,
+      "reduction_percent": 19.936271
+    },
+    "bzimage_bytes": {
+      "baseline": 9756736,
+      "profile": 7300416,
+      "delta": -2456320,
+      "reduction_percent": 25.175633
+    },
+    "build": {
+      "vmlinux_passed": true,
+      "bzimage_passed": true,
+      "modules_passed": true,
+      "modpost_passed": true
+    }
+  },
+  "residual_after_existing_modules": {
+    "reused_baseline_trace": true,
+    "fresh_profile_trace_required_for_release": true,
+    "positive_size_functions": 39457,
+    "function_bytes": 9753814,
+    "exact_graph_matches": 38542,
+    "exact_graph_match_percent": 97.68102,
+    "categories": {
+      "BOOT_HOT": {
+        "functions": 5421,
+        "bytes": 1438380
+      },
+      "BOOT_COLD": {
+        "functions": 33121,
+        "bytes": 8282414
+      },
+      "UNKNOWN": {
+        "functions": 915,
+        "bytes": 33020
+      }
+    },
+    "entirely_defer_only_source_units": {
+      "units": 780,
+      "functions": 9131,
+      "bytes": 2419640
+    }
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 8,
+    "baseline_median": {
+      "ready_uptime_seconds": 0.835,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 466560,
+      "slab_kb": 12600
+    },
+    "profile_median": {
+      "ready_uptime_seconds": 0.69,
+      "permanent_kernel_kb": 20469,
+      "mem_available_kb": 474164,
+      "slab_kb": 8346
+    },
+    "deltas_profile_minus_baseline": {
+      "ready_uptime_seconds": -0.145,
+      "permanent_kernel_kb": -5162,
+      "mem_available_kb": 7604,
+      "slab_kb": -4254
+    }
+  },
+  "deferred_load_validation": {
+    "module": "e1000",
+    "absent_at_ready": true,
+    "modprobe_passed": true,
+    "unload_passed": true,
+    "qemu_steps": 3,
+    "passed": true
+  },
+  "artifact_hashes": {
+    "boot_phase_accounting_sha256": "81136b31850f0c9d73f876db8e6f42da536acea7ee1c707649a184fd4c3a3366",
+    "profile_residual_boot_phase_sha256": "3d0f53d63838c49e3680738c5af3f8d680fd6c740539f9c2fa521b6f3d83566e",
+    "profile_size_gate_sha256": "deed0b522e37e5e24fe81cdef233daa2809b405549a0a9101dae007f43457caf",
+    "profile_startup_ab_sha256": "a4e9ed5cf0ca1ca3d3f715f048804a0c91072ef5ad7cfeb950462b514e99a4fe",
+    "e1000_qemu_validation_sha256": "09cd5985afdb24c6a74feb421474ec66b161023f94d546eb48721d24dc40788a",
+    "profile_config_sha256": "62952ae65fbc41a03d46eaf7f56bbe56ca7e9e176ceceb3b1a519535369919b4",
+    "profile_vmlinux_sha256": "b4dc21ee1f57f9d6f78572accb6d3bc5382b22cf3d762eee9b53c5f8a6759cb0",
+    "profile_bzimage_sha256": "26676ca7e07958e8895506aca1761b20836a347aaff680d18583bc358f32aef9"
+  }
+}

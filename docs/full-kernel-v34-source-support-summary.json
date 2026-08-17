@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v34-automatic-source-support",
+  "date": "2026-08-01",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM",
+    "llvm_ias": false,
+    "profile": "v31 dependency-aware Kconfig startup profile"
+  },
+  "new_capabilities": {
+    "source_local_declaration_fixed_point": [
+      "typedef",
+      "enum",
+      "named record"
+    ],
+    "source_local_macro_fixed_point": true,
+    "lexical_macro_definition_selection": true,
+    "cross_translation_unit_support_conflict_rejection": true,
+    "private_type_public_abi_rejection": true,
+    "symvers_guarded_external_export_inference": true
+  },
+  "reference_graph": {
+    "fact_streams": 1503,
+    "nodes": 143300,
+    "edges": 910007,
+    "ir_function_nodes": 95831,
+    "elf_sized_graph_sha256": "0da3a4fb93527d5970bdfc98bc7231c62e49f370b49b06a655d9d7a0f0a8949c",
+    "plan_sha256": "e21f81a378a6d03728b386242c07f3539dab7f28ab999a0f721e817e4e4ff7eb"
+  },
+  "new_experimental_module": {
+    "name": "deferred_select_v34",
+    "candidate_id": "candidate:87b07c19cf44d74b",
+    "selected_source_functions": 9,
+    "selected_source_globals": 0,
+    "matched_final_elf_functions": 4,
+    "matched_baseline_bytes": 2013,
+    "matched_function_ratio_percent": 0.013813,
+    "matched_byte_ratio_percent": 0.030072,
+    "auto_duplicate_functions": [
+      "zero_fd_set"
+    ],
+    "auto_resident_frontier_functions": [
+      "do_select",
+      "do_sys_poll",
+      "poll_select_finish",
+      "poll_select_set_timeout"
+    ],
+    "auto_external_resident_exports": [
+      "set_user_sigmask"
+    ],
+    "source_local_declarations": [
+      "enum poll_time_type",
+      "typedef fd_set_bits",
+      "struct sigset_argpack"
+    ],
+    "source_local_macros": [
+      "FDS_BITPERLONG",
+      "FDS_LONGS",
+      "FDS_BYTES"
+    ],
+    "source_closure_sha256": "0271708c1403b289162a6b9eb16b1c6ee8faa78e4c035b23d890c6d5ed90bbac",
+    "source_extraction_sha256": "3f695149171d1c4d320aad1763e02c3b4bce0f33a0c48fabfec013f2a753bf5d",
+    "module_sha256": "9e103a4e342655fa22cb9303a728f051532ba9d7c5de2b1fc9b9e27b3132f2b6"
+  },
+  "incremental_size": {
+    "exploratory_gate_passed": true,
+    "strict_release_gate_passed": false,
+    "baseline_resident_object_bytes": 11617,
+    "modular_resident_object_bytes": 10004,
+    "unloaded_resident_savings_bytes": 1613,
+    "loaded_module_bytes": 3329,
+    "all_loaded_delta_bytes": 1716,
+    "baseline_linked_permanent_bytes": 15704648,
+    "modular_linked_permanent_bytes": 15704648,
+    "linked_permanent_delta_bytes": 0,
+    "baseline_bzimage_bytes": 5040224,
+    "modular_bzimage_bytes": 5044288,
+    "bzimage_delta_bytes": 4064,
+    "baseline_vmlinux_sha256": "dee89c2834ea6961208d2e2990d4a3619048828fe98cc02e887dd16611f461fb",
+    "modular_vmlinux_sha256": "8038a91db9a404ecbe6594fc1b4ccaa1405f5ee62e2e6f6cb19e93431bcdd231",
+    "baseline_bzimage_sha256": "e224f76c039f3d95fb47e5e22bf5699133ac32629e248e4fab8566d438480ce8",
+    "modular_bzimage_sha256": "ccd4a26933f17977ae33edbbc537f68c70e1bf0af90b3106c374aac8b7b17a5d",
+    "exploratory_report_sha256": "2e8ce5000d0764fd62e1eb9f9046dd922a78c646549a4e67c840c035374b8bf2",
+    "strict_report_sha256": "73fb382d6ad967efad3caa69af6a7dfb41c2e0d4c93a70165a7cadd1990cc7cb"
+  },
+  "linker_alignment": {
+    "alignment_bytes": 2097152,
+    "baseline_payload_before_alignment_bytes": 6547632,
+    "modular_payload_before_alignment_bytes": 6510768,
+    "payload_delta_bytes": -36864,
+    "baseline_padding_before_alignment_bytes": 1840976,
+    "modular_padding_before_alignment_bytes": 1877840,
+    "final_text_delta_bytes": 0,
+    "additional_payload_reduction_to_previous_boundary_bytes": 219312,
+    "report_sha256": "521a647305f0deff70ed5140e079bfe56cee3dd98290b16ae6951e30f8764a67"
+  },
+  "qemu_lifecycle": {
+    "passed": true,
+    "repeats": 4,
+    "completed_steps_per_run": 8,
+    "median_ready_seconds": 0.5,
+    "trigger_source_sha256": "f410ef7772131676c8eb9d20408157f7a926efa2e692660213ab563fe3b3680f",
+    "trigger_binary_sha256": "1411dbd2dfcabb270b277c13e09a9808178e3360d427504ce77af6b42932d718",
+    "initramfs_sha256": "e794c1ecb93d2f0da9a14ca6ef9416d119851b2db8fdc2a125bc3f7a216d7026",
+    "scenario_sha256": "57d9d01937d9acfcc19d33b1034462272d84ade041284ff9eef0c940d4ca4114",
+    "result_sha256": "b3429c2225a1b45cd5ecd451ebdcb09c1960cb095b2546b0a81dab6bf38c85f1"
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 8,
+    "deltas_modular_minus_baseline": {
+      "permanent_kernel_kb": 0.0,
+      "ready_uptime_seconds": 0.0,
+      "mem_available_kb": -28.0,
+      "slab_kb": -4.0
+    },
+    "result_sha256": "72f80f82365124fbd1e30ca721f94aca94d0d4ff10038d711041ee9123f5723d"
+  },
+  "final_elf_accounting": {
+    "total_functions": 28959,
+    "total_bytes": 6693841,
+    "exact_ir_to_elf_matches": 28129,
+    "exact_coverage_percent": 97.133879,
+    "CORE": {
+      "functions": 26732,
+      "ratio_percent": 92.309817,
+      "bytes": 6353289
+    },
+    "READY": {
+      "functions": 81,
+      "ratio_percent": 0.279706,
+      "bytes": 56123
+    },
+    "BLOCKED": {
+      "functions": 296,
+      "ratio_percent": 1.022135,
+      "bytes": 42480
+    },
+    "UNKNOWN": {
+      "functions": 1850,
+      "ratio_percent": 6.388342,
+      "bytes": 241949
+    }
+  },
+  "combined_mechanism_validated": {
+    "modules": 12,
+    "selected_source_functions": 131,
+    "matched_final_elf_functions": 91,
+    "matched_final_elf_function_ratio_percent": 0.314237,
+    "matched_baseline_bytes": 39529,
+    "matched_baseline_byte_ratio_percent": 0.590528,
+    "unloaded_resident_object_savings_bytes": 33001,
+    "accounting_sha256": "3388854deb6cd6118204e1112e370089f3df4bce186466714dc8adadc4513845"
+  },
+  "combined_strict_release": {
+    "modules": 11,
+    "selected_source_functions": 122,
+    "matched_final_elf_functions": 87,
+    "matched_final_elf_function_ratio_percent": 0.300425,
+    "matched_baseline_bytes": 37516,
+    "matched_baseline_byte_ratio_percent": 0.560455,
+    "unloaded_resident_object_savings_bytes": 31388
+  },
+  "interpretation": {
+    "new_module_mechanism_validated": true,
+    "new_module_release_qualified": false,
+    "measured_startup_page_reduction_bytes": 0,
+    "claim": "LLVM-guided extraction now carries source-local declarations and macros and infers a symvers-proven external export; the select module passes build and lifecycle validation but is excluded from the strict release set because its incremental bzImage grows by 4064 bytes.",
+    "next_target": "Batch larger BOOT_COLD source closures and remove at least 219312 additional pre-entry payload bytes while requiring a non-growing compressed image and a real final-link boundary crossing."
+  }
+}

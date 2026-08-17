@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "command": [
+    "qemu-system-x86_64",
+    "-nodefaults",
+    "-no-reboot",
+    "-nographic",
+    "-serial",
+    "stdio",
+    "-m",
+    "1024",
+    "-kernel",
+    "/absolute/path/to/arch/x86/boot/bzImage",
+    "-initrd",
+    "/absolute/path/to/initramfs.cpio.gz",
+    "-append",
+    "console=ttyS0 panic=-1 rdinit=/init"
+  ],
+  "boot_expect": "LINUX_MODULARIZER_READY",
+  "boot_timeout_seconds": 120,
+  "steps": [
+    {
+      "send": "test ! -d /sys/module/deferred_math && echo BEFORE_OK",
+      "expect": "BEFORE_OK",
+      "timeout_seconds": 10
+    },
+    {
+      "send": "/bin/modularizer-trigger",
+      "expect": "RESULT_OK",
+      "timeout_seconds": 30
+    },
+    {
+      "send": "grep '^deferred_math ' /proc/modules && echo AUTOLOAD_OK",
+      "expect": "AUTOLOAD_OK",
+      "timeout_seconds": 10
+    },
+    {
+      "send": "rmmod deferred_math && echo UNLOAD_OK",
+      "expect": "UNLOAD_OK",
+      "timeout_seconds": 10
+    },
+    {
+      "send": "/bin/modularizer-trigger",
+      "expect": "RESULT_OK",
+      "timeout_seconds": 30
+    },
+    {
+      "send": "grep '^deferred_math ' /proc/modules && echo RELOAD_OK",
+      "expect": "RELOAD_OK",
+      "timeout_seconds": 10
+    }
+  ],
+  "shutdown_command": "poweroff -f",
+  "shutdown_timeout_seconds": 15
+}

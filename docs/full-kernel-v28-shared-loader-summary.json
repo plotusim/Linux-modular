@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v28-shared-loader",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM 22"
+  },
+  "reference_graph": {
+    "sha256": "b4e58930a4485380c23e7de6da1e5c4947c5bcb186af6adb669ac3480a284e16",
+    "nodes": 266009,
+    "edges": 3011804,
+    "function_nodes": 169996,
+    "unresolved_calls": 1256
+  },
+  "loader_ready_observation": {
+    "schema_version": 2,
+    "observation_sha256": "b554ece42d6b6fb3a55e89c2d3deb6b9c7d451547d7c3cec319a0ea7a14a544c",
+    "marker": "LINUX_MODULARIZER_MODULE_LOADER_READY",
+    "marker_timestamp_seconds": 1.952301,
+    "observed_graph_functions": 5583,
+    "pre_loader_only_functions": 5426,
+    "post_loader_only_functions": 0,
+    "pre_and_post_loader_functions": 157,
+    "unknown_phase_functions": 0
+  },
+  "backend_optimizations": {
+    "runtime_binding": "one typed operations-table export per module with symbol_get/symbol_put",
+    "resident_loader": "one shared noinline lazy loader per resident source",
+    "audited_closure_controls": [
+      "duplicate_functions",
+      "resident_exports",
+      "external_resident_exports",
+      "module_defines"
+    ],
+    "function_like_module_defines": true,
+    "first_interface_stub_estimate_bytes": 640,
+    "additional_interface_stub_estimate_bytes": 96,
+    "previous_additional_interface_stub_estimate_bytes": 384
+  },
+  "phase_candidate_classes": {
+    "EARLY_CORE": 5,
+    "PRELOAD": 0,
+    "LAZY_READY": 390,
+    "UNKNOWN_PHASE": 322
+  },
+  "strict_plan": {
+    "minimum_estimated_savings_bytes": 4096,
+    "candidates": 717,
+    "candidate_readiness": {
+      "READY": 31,
+      "BLOCKED": 350,
+      "NEEDS_EVIDENCE": 336
+    },
+    "candidate_viability": {
+      "with_resident_interface": 460,
+      "with_executable_interface": 397,
+      "with_proven_load_safe_interface": 390,
+      "positive_net": 201,
+      "meeting_minimum_savings": 1,
+      "ready_via_aggregate_savings": 30,
+      "ready": 31
+    },
+    "ready_final_elf_functions": 81,
+    "ready_known_bytes": 56120,
+    "individual_ready_candidates": 1,
+    "aggregate_ready_candidates": 30,
+    "aggregate_group": {
+      "id": "aggregate:3a40ea51180974a4",
+      "candidates": 30,
+      "functions": 78,
+      "estimated_net_bytes": 24969
+    },
+    "final_elf_categories": {
+      "CORE": {
+        "functions": 48385,
+        "function_ratio_percent": 93.618791,
+        "bytes": 13096340,
+        "byte_ratio_percent": 96.960821
+      },
+      "READY": {
+        "functions": 81,
+        "function_ratio_percent": 0.156725,
+        "bytes": 56120,
+        "byte_ratio_percent": 0.415493
+      },
+      "BLOCKED": {
+        "functions": 338,
+        "function_ratio_percent": 0.653987,
+        "bytes": 46787,
+        "byte_ratio_percent": 0.346395
+      },
+      "UNKNOWN": {
+        "functions": 2879,
+        "function_ratio_percent": 5.570497,
+        "bytes": 307590,
+        "byte_ratio_percent": 2.277291
+      }
+    }
+  },
+  "comparison_to_v27": {
+    "strict_ready_candidates": {
+      "before": 22,
+      "after": 31,
+      "delta": 9
+    },
+    "strict_ready_final_elf_functions": {
+      "before": 45,
+      "after": 81,
+      "delta": 36,
+      "relative_increase_percent": 80.0
+    },
+    "successful_final_elf_functions": {
+      "before": 28,
+      "after": 41,
+      "delta": 13,
+      "relative_increase_percent": 46.428571
+    },
+    "successful_baseline_function_bytes": {
+      "before": 14617,
+      "after": 20028,
+      "delta": 5411,
+      "relative_increase_percent": 37.01854
+    },
+    "unloaded_resident_savings_bytes": {
+      "before": 12317,
+      "after": 16016,
+      "delta": 3699,
+      "relative_increase_percent": 30.031663
+    },
+    "bzimage_delta_bytes": {
+      "before": -4320,
+      "after": -6880,
+      "additional_reduction_bytes": 2560
+    }
+  },
+  "amortized_cost_validation": {
+    "candidate_id": "candidate:1ed0136972156455",
+    "feature": "seven signal syscall interfaces",
+    "resident_compile_passed": true,
+    "module_compile_passed": false,
+    "known_function_bytes": 3445,
+    "model_boundary_cost_bytes": 1216,
+    "observed_boundary_cost_bytes": 995,
+    "conservative_margin_bytes": 221,
+    "observed_resident_savings_bytes": 2450,
+    "previous_observed_boundary_cost_bytes": 1703,
+    "boundary_cost_reduction_bytes": 708,
+    "status": "READY_BLOCKED_BACKEND_CLOSURE",
+    "counts_as_success": false
+  },
+  "final_elf_denominator": {
+    "positive_size_functions": 51683,
+    "function_bytes": 13506837,
+    "exact_graph_matches": 50017,
+    "exact_graph_match_bytes": 13470929,
+    "coverage_percent": 96.776503,
+    "unmatched_functions_classified_unknown": 1666,
+    "unmatched_bytes_classified_unknown": 35908
+  },
+  "successful_modularization": {
+    "status": "validated",
+    "candidate_count": 6,
+    "selected_source_function_definitions": 66,
+    "additional_duplicated_helpers_not_counted": 4,
+    "final_elf_functions": 41,
+    "function_ratio_percent": 0.07933,
+    "baseline_function_bytes": 20028,
+    "function_byte_ratio_percent": 0.14828,
+    "modules": [
+      "ioprio_lazy",
+      "splice_lazy",
+      "setns_lazy",
+      "quotactl_lazy",
+      "stat_lazy_v2",
+      "sys_identity_lazy"
+    ],
+    "baseline_resident_bytes": 55128,
+    "modular_resident_bytes": 39112,
+    "unloaded_resident_savings_bytes": 16016,
+    "loaded_module_bytes": 26526,
+    "loaded_delta_bytes": 10510,
+    "baseline_bzimage_bytes": 9756736,
+    "modular_bzimage_bytes": 9749856,
+    "bzimage_delta_bytes": -6880
+  },
+  "qemu_validation": {
+    "passed": true,
+    "steps": 8,
+    "elapsed_seconds": 1.433
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 16,
+    "baseline_median": {
+      "ready_uptime_seconds": 0.85,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 465540,
+      "slab_kb": 12596
+    },
+    "modular_median": {
+      "ready_uptime_seconds": 0.85,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 465486,
+      "slab_kb": 12608
+    },
+    "deltas_modular_minus_baseline": {
+      "ready_uptime_seconds": 0,
+      "permanent_kernel_kb": 0,
+      "mem_available_kb": -54,
+      "slab_kb": 12
+    }
+  },
+  "artifact_hashes": {
+    "policy_sha256": "f5a4818167ae444ddfb52e1b5b4151efa0eb1d151a5bc0b0a643ecfb21ffc6c9",
+    "strict_plan_sha256": "ecccd9318ca19195346a9c96f24f104f57fbcf8883fd71515ba3938c7a94d564",
+    "strict_accounting_sha256": "e8f2ecc47519b118b06a1adf3a1a358f9a2f425beabad64a4ac1308aab4ff6a7",
+    "successful_validation_sha256": "e3b3ddf3318b8e4136f2c376734b101c029e532e85f7ba8c0c71288eb36b66ab",
+    "combined_size_gate_sha256": "f5948cae6a8da8d33a8e1235441ee205c142589c832d705e2b516a74c0fe2f8e",
+    "combined_qemu_validation_sha256": "9021bc7e6d5d48a8433a0a55550a86ea8f451e4edaa9de9a5375436f7a7f46d8",
+    "combined_startup_ab_sha256": "691354c2004794bd20c28b85b2479805d6b19c2e3906e7d35cc263447853ef4b",
+    "stat_size_gate_sha256": "1fd6eb3f5634b65a06fad772a3cf6aba65b019b7fef0b18a792a07d9e180eab4",
+    "stat_qemu_validation_sha256": "405a067820c343c17caa0fe53d536aaef65eeb6b96d6817b88fc4bb39f3f8f03",
+    "stat_startup_ab_sha256": "1263380931f9f847bb8e0038ee3f3c9f110e1c85cd2aefcc96d97053fb4f8419",
+    "sys_identity_size_gate_sha256": "c49320d11b93a0297d7b2f546406003def2ef4ae9c61945fbbf634052aa2340d",
+    "sys_identity_qemu_validation_sha256": "48487ec6c5ce1e0b639ede04874f57cb53253184005da8ba8b95e9cd2a897d0d",
+    "sys_identity_startup_ab_sha256": "819f80825029bcae314866176950773aa301cb20363b0f6291295f1011a3a95e",
+    "signal_cost_preflight_sha256": "337fc3ec57c99f930a13505ad4f3ebbcd3c579162201d167d516d6e75c5c8c07"
+  }
+}

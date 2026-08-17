@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "experiment": "boot-defer-auto-profile-v31",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM 22"
+  },
+  "scope": {
+    "workload": "QEMU -nodefaults BusyBox initramfs",
+    "goal": "minimize the unloaded built-in kernel needed to reach loader-ready",
+    "planner_dispositions_used_for_profile_selection": false,
+    "existing_kconfig_module_capability": true,
+    "universal_hardware_profile": false,
+    "all_deferred_features_functionally_validated": false
+  },
+  "automatic_profile": {
+    "algorithm": "request every originally-y tristate that is currently assignable to m, iterate Kconfig dependencies to a fixed point, and fail if an explicit keep symbol changes",
+    "explicit_keep_symbols": [
+      "CONFIG_BINFMT_SCRIPT",
+      "CONFIG_SERIAL_8250"
+    ],
+    "defined_symbols": 15159,
+    "explicit_module_requests": 137,
+    "effective_changes": 266,
+    "requested_but_still_y": 0,
+    "transition_counts": {
+      "y->m": 256,
+      "y->n": 8,
+      "n->y": 1,
+      "cubic->reno": 1
+    },
+    "transition_note": "Only baseline-y tristates were explicitly requested. Kconfig dependency and choice propagation produced the other changes; CONFIG_DEFAULT_RENO and CONFIG_DEFAULT_TCP_CONG changed when the built-in CUBIC default became a module.",
+    "olddefconfig_applied": true
+  },
+  "build": {
+    "vmlinux_passed": true,
+    "bzimage_passed": true,
+    "modules_passed": true,
+    "modpost_passed": true
+  },
+  "static_reduction": {
+    "vmlinux_positive_size_functions": {
+      "baseline": 51683,
+      "profile": 28959,
+      "delta": -22724,
+      "reduction_percent": 43.968036
+    },
+    "vmlinux_function_bytes": {
+      "baseline": 13506837,
+      "profile": 6693841,
+      "delta": -6812996,
+      "reduction_percent": 50.441091
+    },
+    "permanent_allocatable_elf_bytes": {
+      "baseline": 26854034,
+      "profile": 16221225,
+      "delta": -10632809,
+      "reduction_percent": 39.59483
+    },
+    "vmlinux_file_bytes": {
+      "baseline": 53241376,
+      "profile": 34750312,
+      "delta": -18491064,
+      "reduction_percent": 34.730628
+    },
+    "bzimage_bytes": {
+      "baseline": 9756736,
+      "profile": 5056256,
+      "delta": -4700480,
+      "reduction_percent": 48.176767
+    }
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 8,
+    "balanced_adjacent_order": true,
+    "baseline_median": {
+      "ready_uptime_seconds": 0.84,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 466608,
+      "slab_kb": 12568
+    },
+    "profile_median": {
+      "ready_uptime_seconds": 0.49,
+      "permanent_kernel_kb": 15336,
+      "mem_available_kb": 482946,
+      "slab_kb": 6174
+    },
+    "deltas_profile_minus_baseline": {
+      "ready_uptime_seconds": -0.35,
+      "permanent_kernel_kb": -10295,
+      "mem_available_kb": 16338,
+      "slab_kb": -6394
+    }
+  },
+  "deferred_load_validation": {
+    "module": "e1000",
+    "absent_at_ready": true,
+    "modprobe_passed": true,
+    "present_after_modprobe": true,
+    "unload_passed": true,
+    "qemu_steps": 3,
+    "passed": true,
+    "coverage_note": "This proves one representative deferred driver lifecycle; it is not functional coverage for every generated module."
+  },
+  "residual_after_existing_modules": {
+    "reused_baseline_trace_and_graph": true,
+    "fresh_profile_trace_and_graph_required_for_release": true,
+    "positive_size_functions": 28959,
+    "function_bytes": 6693841,
+    "exact_graph_matches": 28071,
+    "exact_graph_match_percent": 96.933596,
+    "categories": {
+      "BOOT_HOT": {
+        "functions": 4709,
+        "bytes": 1244664
+      },
+      "POST_BOOT_ONLY": {
+        "functions": 0,
+        "bytes": 0
+      },
+      "BOOT_COLD": {
+        "functions": 23362,
+        "bytes": 5373211
+      },
+      "UNKNOWN": {
+        "functions": 888,
+        "bytes": 75966
+      }
+    },
+    "entirely_defer_only_source_units": {
+      "units": 560,
+      "functions": 5942,
+      "bytes": 1517810
+    },
+    "interpretation": "The BOOT_COLD set is the next empirical function-extraction pool, not a module-safety proof."
+  },
+  "artifact_hashes": {
+    "profile_plan_sha256": "0d76dc2a1459ea14cf4b4eca0a1bdcbc524d4dadd17b7cf39c63be2779c79b19",
+    "profile_size_gate_sha256": "bfaf2781c53df21f66e6c41e22bd3185a5ee78053cba1b7323756faa35eb90fb",
+    "profile_startup_ab_sha256": "b588f8f98fa55f442f8ff50f304be14562049f8d4a3422f81176bbb1521ed068",
+    "e1000_qemu_validation_sha256": "ac5c5e3452567deff6287272d8449a8075b0c6d99c8735fd2c2ebe87908a2f13",
+    "profile_residual_boot_phase_sha256": "e8bfcc15043f8c17678de27eb135d646040528192b2a63527de7e2405a9ddb38",
+    "profile_config_sha256": "0842462e6b7f036b68bee13864d6456ea616dfb7c8bcbf58e95a5dafc404c16c",
+    "profile_vmlinux_sha256": "117aebeb2649e772d0dfef2158029235dea27e40c001cbe33519c0ed29dff39e",
+    "profile_bzimage_sha256": "7af5a80bf47775682060ffc8a7fc830f3f44abf9a4265fe58b812e37bff39b05"
+  }
+}

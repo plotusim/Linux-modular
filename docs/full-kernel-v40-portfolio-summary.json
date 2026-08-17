@@ -1,0 +1,405 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v40-complementary-callback-portfolio",
+  "date": "2026-08-02",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang 22.0.0git",
+    "profile": "v31 dependency-aware Kconfig startup profile"
+  },
+  "new_capabilities": {
+    "automatic_complementary_release_portfolios": true,
+    "multi_source_multi_module_strict_size_gate": true,
+    "proc_process_callback_runtime_trigger": true,
+    "sync_file_real_fence_runtime_fixture": true,
+    "same_fd_cross_unload_reload_validation": true,
+    "four_way_multi_module_first_use_validation": true
+  },
+  "reference_graph": {
+    "fact_streams": 1503,
+    "nodes": 143300,
+    "edges": 910007,
+    "ir_function_nodes": 95831,
+    "elf_sized_graph_sha256": "0da3a4fb93527d5970bdfc98bc7231c62e49f370b49b06a655d9d7a0f0a8949c",
+    "plan_sha256": "e21f81a378a6d03728b386242c07f3539dab7f28ab999a0f721e817e4e4ff7eb"
+  },
+  "callback_portfolio_ranking": {
+    "recognized_callback_tables": 685,
+    "ready_callback_tables": 154,
+    "ready_positive_direct_tables": 37,
+    "ready_source_groups": 69,
+    "release_savings_threshold_bytes": 4096,
+    "estimated_standalone_release_groups": 1,
+    "estimated_complementary_pair_portfolios": 54,
+    "positive_direct_net_bytes_without_source_closure": 33210,
+    "selected_portfolio_rank": 3,
+    "selected_source_paths": [
+      "drivers/dma-buf/sync_file.c",
+      "fs/proc/base.c"
+    ],
+    "selected_estimated_direct_net_bytes": 6288,
+    "selected_estimated_interfaces": 22,
+    "ranking_sha256": "bfc429cac96595e57ad582387a8f344a4c5d02f57e0bd8a3936c7b867c7182b2"
+  },
+  "modules": {
+    "deferred_proc_base_v40_cb": {
+      "candidate_id": "callback-table:50a3951028258ea5",
+      "source_translation_unit": "fs/proc/base.c",
+      "autoload_alias": "lmproc40cb",
+      "selected_callback_tables": [
+        "proc_auxv_operations",
+        "proc_coredump_filter_operations",
+        "proc_environ_operations",
+        "proc_loginuid_operations",
+        "proc_mem_operations",
+        "proc_oom_adj_operations",
+        "proc_oom_score_adj_operations",
+        "proc_pid_attr_operations",
+        "proc_pid_cmdline_ops",
+        "proc_pid_set_comm_operations",
+        "proc_pid_set_timerslack_ns_operations",
+        "proc_sessionid_operations",
+        "proc_timens_offsets_operations"
+      ],
+      "selected_lazy_interfaces": [
+        "auxv_read",
+        "proc_coredump_filter_read",
+        "proc_coredump_filter_write",
+        "environ_read",
+        "proc_loginuid_read",
+        "proc_loginuid_write",
+        "mem_lseek",
+        "mem_read",
+        "mem_write",
+        "oom_adj_read",
+        "oom_adj_write",
+        "oom_score_adj_read",
+        "oom_score_adj_write",
+        "proc_pid_attr_read",
+        "proc_pid_attr_write",
+        "proc_pid_cmdline_read",
+        "comm_write",
+        "timerslack_ns_write",
+        "proc_sessionid_read",
+        "timens_offsets_write"
+      ],
+      "resident_lifetime_interfaces": [
+        "auxv_open",
+        "comm_open",
+        "environ_open",
+        "mem_open",
+        "mem_release",
+        "proc_pid_attr_open",
+        "timens_offsets_open",
+        "timerslack_ns_open"
+      ],
+      "moved_functions": [
+        "__set_oom_adj",
+        "auxv_read",
+        "comm_write",
+        "environ_read",
+        "get_mm_cmdline",
+        "get_mm_proctitle",
+        "get_task_cmdline",
+        "mem_lseek",
+        "mem_read",
+        "mem_rw",
+        "mem_write",
+        "oom_adj_read",
+        "oom_adj_write",
+        "oom_score_adj_read",
+        "oom_score_adj_write",
+        "proc_coredump_filter_read",
+        "proc_coredump_filter_write",
+        "proc_loginuid_read",
+        "proc_loginuid_write",
+        "proc_pid_attr_read",
+        "proc_pid_attr_write",
+        "proc_pid_cmdline_read",
+        "proc_sessionid_read",
+        "timens_offsets_write",
+        "timerslack_ns_write"
+      ],
+      "external_resident_dependencies": [
+        "access_remote_vm",
+        "audit_set_loginuid",
+        "find_lock_task_mm",
+        "has_capability_noaudit",
+        "oom_adj_mutex",
+        "proc_timens_set_offset",
+        "process_shares_mm",
+        "security_getprocattr",
+        "security_setprocattr",
+        "security_task_setscheduler"
+      ],
+      "resident_inline_proxies": [
+        "set_task_comm",
+        "trace_oom_score_adj_update"
+      ],
+      "matched_final_elf_functions": 22,
+      "matched_baseline_bytes": 7044,
+      "matched_functions": [
+        {"name": "__set_oom_adj", "size_bytes": 729},
+        {"name": "auxv_read", "size_bytes": 67},
+        {"name": "comm_write", "size_bytes": 268},
+        {"name": "environ_read", "size_bytes": 436},
+        {"name": "mem_lseek", "size_bytes": 43},
+        {"name": "mem_read", "size_bytes": 18},
+        {"name": "mem_rw", "size_bytes": 425},
+        {"name": "mem_write", "size_bytes": 21},
+        {"name": "oom_adj_read", "size_bytes": 281},
+        {"name": "oom_adj_write", "size_bytes": 228},
+        {"name": "oom_score_adj_read", "size_bytes": 231},
+        {"name": "oom_score_adj_write", "size_bytes": 195},
+        {"name": "proc_coredump_filter_read", "size_bytes": 275},
+        {"name": "proc_coredump_filter_write", "size_bytes": 584},
+        {"name": "proc_loginuid_read", "size_bytes": 224},
+        {"name": "proc_loginuid_write", "size_bytes": 202},
+        {"name": "proc_pid_attr_read", "size_bytes": 242},
+        {"name": "proc_pid_attr_write", "size_bytes": 338},
+        {"name": "proc_pid_cmdline_read", "size_bytes": 925},
+        {"name": "proc_sessionid_read", "size_bytes": 224},
+        {"name": "timens_offsets_write", "size_bytes": 781},
+        {"name": "timerslack_ns_write", "size_bytes": 307}
+      ],
+      "llvm_graph_coverage_complete": true,
+      "integration_transaction_id": "7b45e28a9c5b6dc2",
+      "source_closure_sha256": "603847c5ac1d2dd06e1bb167fb909774754beabadcf66a27a16f9f2dba76a65f",
+      "source_extraction_sha256": "dae032315eadc3eae753d312de863be9c839ae4f0f742382494b3625775193c7",
+      "callback_discovery_sha256": "21f9c04a33fc0e2f01fb0ddaff69ee152598c51dcf1c5d88ccbe5b9db612fdb6",
+      "bundle_manifest_sha256": "a8f10430bb05687352520c93dbe7ce9794b00c727cf60237fa074c6be71de711"
+    },
+    "deferred_sync_file_v40_cb": {
+      "candidate_id": "callback-table:f09f2ab24e2d146e",
+      "source_translation_unit": "drivers/dma-buf/sync_file.c",
+      "autoload_alias": "lmsync40cb",
+      "selected_callback_tables": [
+        "sync_file_fops"
+      ],
+      "selected_lazy_interfaces": [
+        "sync_file_ioctl",
+        "sync_file_poll"
+      ],
+      "resident_lifetime_interfaces": [
+        "sync_file_release"
+      ],
+      "moved_functions": [
+        "add_fence",
+        "get_fences",
+        "sync_file_get_name",
+        "sync_file_ioctl",
+        "sync_file_ioctl_fence_info",
+        "sync_file_ioctl_merge",
+        "sync_file_merge",
+        "sync_file_poll",
+        "sync_file_set_fence",
+        "sync_fill_fence_info"
+      ],
+      "resident_dependency_functions": [
+        "fence_check_cb_func",
+        "sync_file_alloc",
+        "sync_file_fdget"
+      ],
+      "matched_final_elf_functions": 3,
+      "matched_baseline_bytes": 3732,
+      "matched_functions": [
+        {"name": "sync_file_get_name", "size_bytes": 134},
+        {"name": "sync_file_ioctl", "size_bytes": 3415},
+        {"name": "sync_file_poll", "size_bytes": 183}
+      ],
+      "llvm_graph_coverage_complete": true,
+      "integration_transaction_id": "e22bca86b5b39595",
+      "source_closure_sha256": "d6502d60b3ce6da8eea56c0a15adbc562e302dee5b289c6f17870529d5f73e79",
+      "source_extraction_sha256": "132d122468eef00fdf2858301f1b6b45d0b26a8387605da53cd5cfcbd10ab2c8",
+      "callback_discovery_sha256": "e67a27d8c0688e2e04c3d5507a99fd548b5c4d5528ec58713c7d2236c2792bdc",
+      "bundle_manifest_sha256": "5ac20ccfc2528b62cfc8cf723a0e8f613089e1cc544816eb66ddb5b8d77da304"
+    }
+  },
+  "incremental_size": {
+    "individual_proc_gate": {
+      "passed": false,
+      "unloaded_resident_savings_bytes": 4618,
+      "loaded_module_bytes": 9219,
+      "all_loaded_delta_bytes": 4601,
+      "bzimage_delta_bytes": 1280,
+      "failure_reason": "compressed image grew",
+      "report_sha256": "59a39c1fdc007935232ecec3c2ca9121a35e445c137497fa6fefac02b7ff3eef"
+    },
+    "individual_sync_file_gate": {
+      "passed": false,
+      "unloaded_resident_savings_bytes": 3203,
+      "loaded_module_bytes": 4928,
+      "all_loaded_delta_bytes": 1725,
+      "bzimage_delta_bytes": -5088,
+      "failure_reason": "resident savings below 4096-byte release threshold",
+      "report_sha256": "aeecfb05d00054303ab2ccce57f0a1415857c0ca4a373793345d9e9897910639"
+    },
+    "combined_portfolio_gate": {
+      "passed": true,
+      "minimum_resident_savings_bytes": 4096,
+      "baseline_resident_object_bytes": 38469,
+      "modular_resident_object_bytes": 30648,
+      "unloaded_resident_savings_bytes": 7821,
+      "loaded_module_bytes": 14147,
+      "all_loaded_delta_bytes": 6326,
+      "baseline_linked_permanent_bytes": 15704648,
+      "modular_linked_permanent_bytes": 15704648,
+      "linked_permanent_delta_bytes": 0,
+      "baseline_bzimage_bytes": 5017376,
+      "modular_bzimage_bytes": 5013568,
+      "bzimage_delta_bytes": -3808,
+      "report_sha256": "5bdf4ef2008f2c56d28df9e2e3ce25c282a9ab9bc7347064317f9f34868ab883"
+    }
+  },
+  "build": {
+    "passed": true,
+    "modpost_passed": true,
+    "generated_source_warnings": 0,
+    "vmlinux_file_bytes": 34719624,
+    "vmlinux_sha256": "5b087d72abbacf4e402a9785ecf0fcc14f38647160155c7ac7c2816aeb72f2d2",
+    "bzimage_file_bytes": 5013568,
+    "bzimage_sha256": "56cf0b996dba4071831e0c091f07777b4ffb732854fdf0f0f040f78e26f3d107",
+    "proc_resident_object_file_bytes": 66904,
+    "proc_resident_object_sha256": "714a94b6e9d44754bcec9fa193bb551332acc0eb55128632dab903be2213d665",
+    "sync_resident_object_file_bytes": 7112,
+    "sync_resident_object_sha256": "e440beed42043757001e0dc2e67958e91f4a1fa7e6273206c4a13c2263d364c7",
+    "proc_module_file_bytes": 22832,
+    "proc_module_sha256": "328e846e980cb244512a45d1fc603d399afe3a636ecb9f7d62ed8c6b1d79df0a",
+    "sync_module_file_bytes": 12600,
+    "sync_module_sha256": "00130eeb5583a8399a7709534074bae8981916b0f3f3d8c413016c07c2f8c1d1"
+  },
+  "linker_alignment": {
+    "alignment_bytes": 2097152,
+    "v39_payload_before_alignment_bytes": 6478000,
+    "current_payload_before_alignment_bytes": 6469808,
+    "incremental_payload_delta_bytes": -8192,
+    "pure_v32_payload_before_alignment_bytes": 6547632,
+    "cumulative_payload_delta_bytes": -77824,
+    "current_padding_before_alignment_bytes": 1918800,
+    "final_text_bytes": 10493448,
+    "final_text_delta_bytes": 0,
+    "additional_payload_reduction_to_previous_boundary_bytes": 178352,
+    "report_sha256": "fbe7499ce94480817a46ac763364586aaf0e3251f8651692b7d80dbd2126a2f6"
+  },
+  "qemu_lifecycle": {
+    "passed": true,
+    "repeats": 4,
+    "completed_steps_per_run": 16,
+    "completed_steps_total": 64,
+    "median_ready_seconds": 2.24,
+    "run_elapsed_seconds": [11.278, 11.005, 11.492, 10.781],
+    "initially_absent": true,
+    "proc_first_use_autoload": true,
+    "proc_mem_read_write_lseek_covered": true,
+    "proc_policy_audit_lsm_timens_covered": true,
+    "sync_poll_merge_info_signal_covered": true,
+    "proc_same_fd_cross_unload_reload": true,
+    "sync_same_fd_cross_unload_reload": true,
+    "four_way_concurrent_first_use": true,
+    "both_modules_unload_reload": true,
+    "dmesg_clean": true,
+    "trigger_source_sha256": "03f1c608ff8e84e095da8a79bd7f46de4affd5ceb3677930add54c6be2947c17",
+    "trigger_binary_sha256": "bd5385da06576d1ac637e54a6fcff63455169f1d6fe076d8cfc502dd0ef58ae0",
+    "sync_fixture_source_sha256": "a2aaeb798811eef83cc37a3e9883f8637723c8d1fbe3c70f7603146f407bbef9",
+    "sync_fixture_module_sha256": "09b9b2a1eb3c6319a8a939072d0c03146979f2271a06087b74b2c131c37bdb6e",
+    "initramfs_sha256": "68dce15590789e0115f4a055321c045ac571b8e3abe55d6abc050fe36973522a",
+    "scenario_sha256": "413f6671617f658a344365405065800f2a4527d37494014fad002d421909790d",
+    "single_run_result_sha256": "abb5f82caaf6164287636b6b0098ae0d2c50a2c928e8e60a20398110bcf0fe46",
+    "repeat_result_sha256": "3a7146fa19154a09e891fa2243ba823d3861e74c0fe2e6d81eefc7540a23f4a8"
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 8,
+    "boots": 16,
+    "identical_initramfs": true,
+    "baseline_median": {
+      "permanent_kernel_kb": 15336.0,
+      "ready_uptime_seconds": 1.01,
+      "mem_available_kb": 459872.0,
+      "slab_kb": 6802.0
+    },
+    "modular_median": {
+      "permanent_kernel_kb": 15336.0,
+      "ready_uptime_seconds": 1.005,
+      "mem_available_kb": 459836.0,
+      "slab_kb": 6800.0
+    },
+    "deltas_modular_minus_baseline": {
+      "permanent_kernel_kb": 0.0,
+      "ready_uptime_seconds": -0.005,
+      "mem_available_kb": -36.0,
+      "slab_kb": -2.0
+    },
+    "baseline_scenario_sha256": "5e5edae7fa6403f28193d460d3f0537af9b21ea5ad219050e9ca345dbe291eea",
+    "modular_scenario_sha256": "bc8cb1881e22196d0889ce4e573537bc444cf5f9a1cc9ea74ab79f9cdb321530",
+    "result_sha256": "92d8da3669c005db04f98743a5d7f1c1a7ac375ea5ba63252b47bacde12da67d"
+  },
+  "final_elf_accounting": {
+    "total_functions": 28959,
+    "total_bytes": 6693841,
+    "CORE": {
+      "functions": 26732,
+      "ratio_percent": 92.309817,
+      "bytes": 6353289
+    },
+    "READY": {
+      "functions": 81,
+      "ratio_percent": 0.279706,
+      "bytes": 56123
+    },
+    "BLOCKED": {
+      "functions": 296,
+      "ratio_percent": 1.022135,
+      "bytes": 42480
+    },
+    "UNKNOWN": {
+      "functions": 1850,
+      "ratio_percent": 6.388342,
+      "bytes": 241949
+    },
+    "note": "CORE/READY/BLOCKED/UNKNOWN are the conservative planner partition. Successful modularization is an orthogonal validated subset because callback-table rewriting can promote planner-CORE functions."
+  },
+  "combined_strict_qualified": {
+    "modules": 17,
+    "selected_source_functions": 309,
+    "matched_final_elf_functions": 200,
+    "matched_final_elf_function_ratio_percent": 0.690632,
+    "matched_baseline_bytes": 93145,
+    "matched_baseline_byte_ratio_percent": 1.391503,
+    "unloaded_resident_object_savings_bytes": 78886,
+    "pure_v32_bzimage_bytes": 5056256,
+    "current_bzimage_bytes": 5013568,
+    "current_bzimage_delta_bytes": -42688,
+    "current_bzimage_delta_percent": -0.844261
+  },
+  "v40_increment": {
+    "new_modules": 2,
+    "selected_source_functions": 35,
+    "matched_final_elf_functions": 25,
+    "matched_final_elf_function_ratio_percent": 0.086329,
+    "matched_baseline_bytes": 10776,
+    "matched_baseline_byte_ratio_percent": 0.160984,
+    "unloaded_resident_object_savings_bytes": 7821,
+    "loaded_module_bytes": 14147,
+    "all_loaded_delta_bytes": 6326,
+    "bzimage_delta_bytes": -3808
+  },
+  "test_suite": {
+    "passed": true,
+    "tests_passed_before_summary_contract": 256,
+    "tests_passed_total": 264,
+    "command": "python3 -m unittest discover -v"
+  },
+  "interpretation": {
+    "new_portfolio_release_qualified": true,
+    "measured_startup_page_reduction_bytes": 0,
+    "exact_unloaded_object_savings_bytes": 7821,
+    "claim": "The complete LLVM reference graph now recommends complementary callback-table portfolios and automatically extracts 35 additional C function definitions into two lazy modules. The pair passes build, combined size, lifecycle, concurrency, and balanced startup A/B gates.",
+    "theory": "Not every function absent from the init trace can be modularized. Init-cold is necessary evidence, while loader readiness, sleepable calling context, persistent object lifetime, mutable state ownership, ABI-spellable types, link-time constant addresses, exports, build closure, size, and runtime behavior remain hard gates.",
+    "init_only_rule": "A function used only during init should normally remain in an __init section and be freed after init; moving it to a demand module can make early boot impossible and can increase total memory.",
+    "demand_rule": "The unloaded saving lasts until first use. Linux does not automatically unload these modules, and loading both modules increases the affected footprint by 6326 bytes versus the original resident implementations. Workloads that use proc monitoring or sync_file immediately will realize little steady-state saving unless an explicit safe unload policy is added.",
+    "alignment_limit": "The 7821-byte object saving reduces pre-alignment payload by 8192 bytes, but x86 2 MiB text alignment absorbs it. Another 178352 bytes are required to cross the current linked text boundary.",
+    "next_target": "Use the new portfolio ranking plus real workload traces to select several low-first-use, high-closure groups, then cross the remaining 178352-byte linker boundary without weakening lifecycle or context guards."
+  }
+}

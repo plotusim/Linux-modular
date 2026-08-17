@@ -1,0 +1,482 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-04",
+  "experiment": "v43 automatic relaxed callback-source portfolio",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang 22.0.0git",
+    "profile": "v31 dependency-aware Kconfig startup profile"
+  },
+  "reference_graph": {
+    "fact_streams": 1503,
+    "nodes": 143300,
+    "edges": 910007,
+    "ir_function_nodes": 95831,
+    "elf_sized_graph_sha256": "0da3a4fb93527d5970bdfc98bc7231c62e49f370b49b06a655d9d7a0f0a8949c",
+    "plan_sha256": "e21f81a378a6d03728b386242c07f3539dab7f28ab999a0f721e817e4e4ff7eb"
+  },
+  "new_capabilities": {
+    "batch_command": "prepare-callback-portfolio",
+    "source_group_isolation": true,
+    "candidate_local_failure_isolation": true,
+    "hash_verified_resume": true,
+    "atomic_json_and_markdown_reports": true,
+    "transactional_integration": true,
+    "modified_source_guard": true,
+    "unknown_and_negative_estimate_exploration": true,
+    "semantic_member_record_closure": true,
+    "original_source_offset_safe_preamble_insertion": true,
+    "prepared_is_not_build_or_runtime_validated": true
+  },
+  "automatic_portfolio": {
+    "command": "python3 -m kernel_modularizer prepare-callback-portfolio GRAPH PLAN --source-extractor Backend/AutoBackend/cpp/SourceExtractor --compile-database COMPILE_COMMANDS --kernel-root KERNEL --output-directory OUTPUT --minimum-estimated-net-bytes -4096",
+    "policy": {
+      "minimum_estimated_net_bytes": -4096,
+      "include_unknown_size": true,
+      "maximum_source_groups": 0,
+      "fail_fast": false,
+      "resume": true,
+      "allow_modified_sources": false,
+      "resident_dependency_pack": "automatic when nonempty"
+    },
+    "callback_census": {
+      "recognized_callback_tables": 685,
+      "ready_callback_tables": 154,
+      "review_required_callback_tables": 407,
+      "no_safe_cold_callback_tables": 124,
+      "ready_source_groups": 69,
+      "selected_source_groups": 69,
+      "selected_callback_tables": 154,
+      "selected_interfaces_before_source_closure": 283
+    },
+    "result_states": {
+      "PREPARED": 33,
+      "SKIPPED_ALREADY_MODULARIZED": 26,
+      "FAILED": 10
+    },
+    "prepared_source_function_definitions": 139,
+    "prepared_lazy_interfaces": 106,
+    "prepared_original_planner_dispositions": {
+      "CORE": 139,
+      "READY": 0,
+      "BLOCKED": 0,
+      "UNKNOWN": 0
+    },
+    "all_prepared_llvm_graph_closures_complete": true,
+    "report_sha256": "4012daaeeda97d453af1bc4a347b8b63a17b94cbc90a1f6eadb16712c310f24a",
+    "failure_boundaries": [
+      {
+        "source": "kernel/printk/printk.c",
+        "reason": "missing source definition for console_cmdline"
+      },
+      {
+        "source": "drivers/char/random.c",
+        "reason": "missing source definitions for private random globals"
+      },
+      {
+        "source": "kernel/kprobes.c",
+        "reason": "missing source definitions for instruction-slot globals"
+      },
+      {
+        "source": "drivers/char/hpet.c",
+        "reason": "missing source definition for hpets"
+      },
+      {
+        "source": "kernel/power/qos.c",
+        "reason": "missing source definition for cpu_latency_constraints"
+      },
+      {
+        "source": "fs/nsfs.c",
+        "reason": "missing source definition for nsfs"
+      },
+      {
+        "source": "kernel/trace/blktrace.c",
+        "reason": "resident variadic dependency lacks a bridgeable prototype"
+      },
+      {
+        "source": "block/blk-mq-debugfs.c",
+        "reason": "missing source definitions for generated seq-operation globals"
+      },
+      {
+        "source": "kernel/trace/trace_uprobe.c",
+        "reason": "missing source definition for uprobe_cpu_buffer"
+      },
+      {
+        "source": "fs/proc/proc_sysctl.c",
+        "reason": "missing source definition for sysctl_table_root"
+      }
+    ],
+    "state_semantics": "PREPARED proves LLVM/Clang closure and bundle generation only; build, MODPOST, size, loader-ready absence, first use, unload, and reload are separate gates."
+  },
+  "modules": {
+    "trace_events": {
+      "source": "kernel/trace/trace_events.c",
+      "module": "deferred_auto_cb_kernel_trace_trace_events_a9a7b715fd35",
+      "callback_tables": 10,
+      "lazy_interfaces": 13,
+      "moved_source_functions": 15,
+      "matched_final_elf_functions": 14,
+      "matched_baseline_bytes": 3152,
+      "baseline_resident_object_bytes": 21195,
+      "modular_resident_object_bytes": 20277,
+      "unloaded_resident_savings_bytes": 918,
+      "loaded_module_bytes": 4845,
+      "all_loaded_delta_bytes": 3927,
+      "module_sha256": "b6cb6c0a324d33d4de024c70bb741b75a83af0d144303738f0a0c42862ab409e",
+      "real_trigger": "read tracefs event metadata"
+    },
+    "regmap_debugfs": {
+      "source": "drivers/base/regmap/regmap-debugfs.c",
+      "module": "deferred_auto_cb_drivers_base_regmap_regma_a8eb410686ea",
+      "callback_tables": 6,
+      "lazy_interfaces": 6,
+      "moved_source_functions": 11,
+      "matched_final_elf_functions": 8,
+      "matched_baseline_bytes": 2776,
+      "baseline_resident_object_bytes": 6725,
+      "modular_resident_object_bytes": 4756,
+      "unloaded_resident_savings_bytes": 1969,
+      "loaded_module_bytes": 4596,
+      "all_loaded_delta_bytes": 2627,
+      "module_sha256": "2be60e8e1f43f059b5099d64a7c56b65766756e9893c01063e3cf9927f03b932",
+      "real_trigger": "read registers and toggle cache_only/cache_bypass on a fixture regmap"
+    },
+    "tty_io": {
+      "source": "drivers/tty/tty_io.c",
+      "module": "deferred_auto_cb_drivers_tty_tty_io_7ab4f7a6c4c8",
+      "callback_tables": 3,
+      "lazy_interfaces": 13,
+      "moved_source_functions": 19,
+      "matched_final_elf_functions": 16,
+      "matched_baseline_bytes": 3506,
+      "baseline_resident_object_bytes": 25383,
+      "modular_resident_object_bytes": 23695,
+      "unloaded_resident_savings_bytes": 1688,
+      "loaded_module_bytes": 5031,
+      "all_loaded_delta_bytes": 3343,
+      "module_sha256": "db08daaacb2857721585bbae27326a7d6939df6a8473d08c4a1242d0f89e49e1",
+      "real_trigger": "write the controlling tty"
+    },
+    "kernfs_file": {
+      "source": "fs/kernfs/file.c",
+      "module": "deferred_auto_cb_fs_kernfs_file_9247db54417a",
+      "callback_tables": 1,
+      "lazy_interfaces": 3,
+      "moved_source_functions": 4,
+      "matched_final_elf_functions": 3,
+      "matched_baseline_bytes": 950,
+      "baseline_resident_object_bytes": 5597,
+      "modular_resident_object_bytes": 5167,
+      "unloaded_resident_savings_bytes": 430,
+      "loaded_module_bytes": 2436,
+      "all_loaded_delta_bytes": 2006,
+      "module_sha256": "5dcb2e29325c85c1f0c3f6f077ae35ad3a201a048fc03e595d52a95b0da4cc83",
+      "real_trigger": "read a sysfs kernfs file"
+    },
+    "proc_page": {
+      "source": "fs/proc/page.c",
+      "module": "deferred_auto_cb_fs_proc_page_620ea7b2acb7",
+      "callback_tables": 2,
+      "lazy_interfaces": 2,
+      "moved_source_functions": 5,
+      "matched_final_elf_functions": 3,
+      "matched_baseline_bytes": 1542,
+      "baseline_resident_object_bytes": 1962,
+      "modular_resident_object_bytes": 688,
+      "unloaded_resident_savings_bytes": 1274,
+      "loaded_module_bytes": 3128,
+      "all_loaded_delta_bytes": 1854,
+      "module_sha256": "473aa93d5c8d7e927f3cf43021fdafcfaed09b3b106f0d0e5e43ea347a1ea12f",
+      "real_trigger": "read /proc/kpagecount"
+    },
+    "profile": {
+      "source": "kernel/profile.c",
+      "module": "deferred_auto_cb_kernel_profile_1dbe7829132f",
+      "callback_tables": 2,
+      "lazy_interfaces": 3,
+      "moved_source_functions": 5,
+      "matched_final_elf_functions": 3,
+      "matched_baseline_bytes": 850,
+      "baseline_resident_object_bytes": 4402,
+      "modular_resident_object_bytes": 4163,
+      "unloaded_resident_savings_bytes": 239,
+      "loaded_module_bytes": 2406,
+      "all_loaded_delta_bytes": 2167,
+      "module_sha256": "4b7bb9e0970d9693dff119180244dd22514df6a6188d37ed4d6bf92a8e0a8dd9",
+      "real_trigger": "read /proc/profile with profile=2"
+    },
+    "timerfd": {
+      "source": "fs/timerfd.c",
+      "module": "deferred_auto_cb_fs_timerfd_f898da10e2db",
+      "callback_tables": 1,
+      "lazy_interfaces": 3,
+      "moved_source_functions": 3,
+      "matched_final_elf_functions": 3,
+      "matched_baseline_bytes": 823,
+      "baseline_resident_object_bytes": 5114,
+      "modular_resident_object_bytes": 4883,
+      "unloaded_resident_savings_bytes": 231,
+      "loaded_module_bytes": 2233,
+      "all_loaded_delta_bytes": 2002,
+      "module_sha256": "363038feb374a3ba9109c32f529ffdddb595d0c48628e35f8066b66978a7b834",
+      "real_trigger": "timerfd_create plus poll/read expiration"
+    },
+    "mqueue": {
+      "source": "ipc/mqueue.c",
+      "module": "deferred_auto_cb_ipc_mqueue_2e1a2714473a",
+      "callback_tables": 1,
+      "lazy_interfaces": 2,
+      "moved_source_functions": 2,
+      "matched_final_elf_functions": 2,
+      "matched_baseline_bytes": 488,
+      "baseline_resident_object_bytes": 14576,
+      "modular_resident_object_bytes": 14401,
+      "unloaded_resident_savings_bytes": 175,
+      "loaded_module_bytes": 1768,
+      "all_loaded_delta_bytes": 1593,
+      "module_sha256": "f00027962cc48e1320785780fd97e0808d474dc3b423ecaa03b7d726c08b3568",
+      "real_trigger": "mq_open plus poll/read status"
+    }
+  },
+  "source_closure_elf_accounting": {
+    "passed": true,
+    "source_closures": 8,
+    "moved_source_function_definitions": 64,
+    "moved_source_global_definitions": 0,
+    "original_planner_dispositions": {
+      "CORE": 64,
+      "READY": 0,
+      "BLOCKED": 0,
+      "UNKNOWN": 0
+    },
+    "matched_final_elf_functions": 52,
+    "unmatched_inlined_or_eliminated_definitions": 12,
+    "matched_baseline_bytes": 14087,
+    "report_sha256": "3f668ea262a744fbff5198dcb9c45ae2b63e63efefd2d905ec72ae7cae84e73b"
+  },
+  "candidate_audition": {
+    "individual_object_positive": [
+      {
+        "source": "fs/timerfd.c",
+        "unloaded_resident_savings_bytes": 231,
+        "retained": true
+      },
+      {
+        "source": "ipc/mqueue.c",
+        "unloaded_resident_savings_bytes": 175,
+        "retained": true
+      },
+      {
+        "source": "fs/proc/inode.c",
+        "unloaded_resident_savings_bytes": 24,
+        "retained": false
+      },
+      {
+        "source": "fs/proc/vmcore.c",
+        "unloaded_resident_savings_bytes": 118,
+        "retained": false
+      },
+      {
+        "source": "drivers/acpi/proc.c",
+        "unloaded_resident_savings_bytes": 41,
+        "retained": false
+      },
+      {
+        "source": "kernel/trace/trace_events_trigger.c",
+        "unloaded_resident_savings_bytes": 94,
+        "retained": false
+      }
+    ],
+    "individual_object_non_positive_and_rolled_back": [
+      {
+        "source": "drivers/char/mem.c",
+        "unloaded_resident_savings_bytes": -24
+      },
+      {
+        "source": "fs/block_dev.c",
+        "unloaded_resident_savings_bytes": -69
+      },
+      {
+        "source": "kernel/irq/proc.c",
+        "unloaded_resident_savings_bytes": -150
+      }
+    ],
+    "combination_trials": [
+      {
+        "modules": 12,
+        "object_savings_bytes": 7201,
+        "linked_permanent_delta_bytes": 4032,
+        "bzimage_delta_bytes": -10400,
+        "passed": false,
+        "reason": "final BSS/page alignment regression"
+      },
+      {
+        "modules": 7,
+        "object_savings_bytes": 6693,
+        "linked_permanent_delta_bytes": -64,
+        "bzimage_delta_bytes": -9056,
+        "passed": true
+      },
+      {
+        "modules": 8,
+        "object_savings_bytes": 6924,
+        "linked_permanent_delta_bytes": -64,
+        "bzimage_delta_bytes": -9280,
+        "passed": true
+      },
+      {
+        "modules": 9,
+        "object_savings_bytes": 6948,
+        "linked_permanent_delta_bytes": 4032,
+        "bzimage_delta_bytes": -8128,
+        "passed": false,
+        "reason": "final BSS/page alignment regression"
+      }
+    ],
+    "selection_rule": "Keep individually positive candidates only while the combined final vmlinux does not regress; roll back non-positive objects and page-alignment regressions."
+  },
+  "incremental_size": {
+    "gate": {
+      "minimum_resident_savings_bytes": 1,
+      "maximum_linked_kernel_regression_bytes": 0,
+      "maximum_image_regression_bytes": 0,
+      "strict_4096_byte_candidate_gate": false
+    },
+    "passed": true,
+    "baseline_resident_object_bytes": 84954,
+    "modular_resident_object_bytes": 78030,
+    "unloaded_resident_savings_bytes": 6924,
+    "loaded_module_bytes": 26443,
+    "all_loaded_delta_bytes": 19519,
+    "baseline_linked_permanent_bytes": 15704520,
+    "modular_linked_permanent_bytes": 15704456,
+    "linked_permanent_delta_bytes": -64,
+    "baseline_bzimage_bytes": 4998080,
+    "modular_bzimage_bytes": 4988800,
+    "bzimage_delta_bytes": -9280,
+    "report_sha256": "b6f440de89a874efdaf24e17e1c56928261ee8a9b6c398a0df9667c2c3b4647b"
+  },
+  "build": {
+    "passed": true,
+    "targets": [
+      "vmlinux",
+      "bzImage",
+      "modules"
+    ],
+    "modpost_passed": true,
+    "new_modules_built": 8,
+    "vmlinux_file_bytes": 34711584,
+    "vmlinux_sha256": "a02d8104a1f35705819b75ab76023f3cd1d6b9078f17a7eb5f6e0fe5836ea616",
+    "bzimage_file_bytes": 4988800,
+    "bzimage_sha256": "c31ae7b48e090a330aaa65248fcbbc5de10073078d5082ac81ddad2a2e9bef9a"
+  },
+  "qemu_lifecycle": {
+    "passed": true,
+    "repeats": 4,
+    "completed_steps_per_run": 12,
+    "completed_steps_total": 48,
+    "all_eight_absent_at_loader_ready": true,
+    "real_feature_first_use_autoload_each": true,
+    "unload_each": true,
+    "reload_after_unload": true,
+    "combined_reload_and_unload": true,
+    "timerfd_poll_and_read_covered": true,
+    "mqueue_open_poll_and_read_covered": true,
+    "regmap_read_and_cache_controls_covered": true,
+    "dmesg_clean": true,
+    "elapsed_seconds": [
+      1.677,
+      1.546,
+      1.648,
+      1.516
+    ],
+    "result_sha256s": [
+      "a151e6a989c85725168ab9c6dbe88b06bfefaee0d4aca8e788cee875c9587652",
+      "ae8b97aa43b9ecdb1b18c4c09a1ffe5b77565d6ad961529953d5845dba833a5a",
+      "fdc0d9ef1f5cbf549f440a6734b65d0c462ef18cd68058b786c8a7f192e7d84c",
+      "e390df2881fb4f63504309d991d67b20a3965e3c62f80402370756fc738703ae"
+    ],
+    "log_sha256s": [
+      "7ce60e9b268bcaf229e4ef4a80ae3799a2c4b852024a808fefe689fd4027081d",
+      "0d6e02d648c0ce90a379db14cb836409d8852faae2f454ba207d0c4c33d45ba3",
+      "6d4bf233bcf1c12fabccee36d1f51d436356ff9c53bfdb5e6b1b8f9b95982c9d",
+      "c4f58b7ad06127711f6393ba9660b94303221867950687f9162260fd9fba53a8"
+    ],
+    "scenario_sha256": "f0a6636ebffa199b0a21718cd3d0f5ca41cebe96c3c6fdd404e9286470e7fd01",
+    "initramfs_sha256": "a0036d36d310fccdd9c30f80ef6a085152043c322cecd8c43563ceda2ecbe679"
+  },
+  "final_elf_accounting": {
+    "total_functions": 28959,
+    "total_bytes": 6693841,
+    "CORE": {
+      "functions": 26732,
+      "ratio_percent": 92.309817,
+      "bytes": 6353289,
+      "byte_ratio_percent": 94.912458
+    },
+    "READY": {
+      "functions": 81,
+      "ratio_percent": 0.279706,
+      "bytes": 56123,
+      "byte_ratio_percent": 0.838427
+    },
+    "BLOCKED": {
+      "functions": 296,
+      "ratio_percent": 1.022135,
+      "bytes": 42480,
+      "byte_ratio_percent": 0.634613
+    },
+    "UNKNOWN": {
+      "functions": 1850,
+      "ratio_percent": 6.388342,
+      "bytes": 241949,
+      "byte_ratio_percent": 3.614502
+    },
+    "note": "The immutable v32 planner partition remains conservative. v43 callback promotion moved 64 definitions originally classified CORE; this is an orthogonal validated set, not a rewrite of the old partition."
+  },
+  "v43_increment": {
+    "new_modules": 8,
+    "selected_source_functions": 64,
+    "selected_lazy_interfaces": 45,
+    "matched_final_elf_functions": 52,
+    "matched_final_elf_function_ratio_percent_of_pure_v32": 0.179564,
+    "matched_baseline_bytes": 14087,
+    "matched_baseline_byte_ratio_percent_of_pure_v32": 0.210447,
+    "unloaded_resident_object_savings_bytes": 6924,
+    "loaded_module_bytes": 26443,
+    "all_loaded_delta_bytes": 19519,
+    "linked_permanent_delta_bytes": -64,
+    "bzimage_delta_bytes": -9280
+  },
+  "combined_validated_result": {
+    "qualification": "36 v42 strict modules plus 8 v43 relaxed but build/size/runtime validated modules",
+    "modules": 44,
+    "selected_source_functions": 524,
+    "matched_final_elf_functions": 350,
+    "matched_final_elf_function_ratio_percent": 1.208605,
+    "matched_baseline_bytes": 153880,
+    "matched_baseline_byte_ratio_percent": 2.29883,
+    "unloaded_resident_object_savings_bytes": 119267,
+    "pure_v32_bzimage_bytes": 5056256,
+    "current_bzimage_bytes": 4988800,
+    "current_bzimage_delta_bytes": -67456,
+    "current_bzimage_delta_percent": -1.33411
+  },
+  "provenance": {
+    "portfolio_source_extractor_binary_sha256": "0ef3366e95092ee1b82292fdf942fb4d6e6985c9f8a5445715cdb9b6581b0d32",
+    "source_extractor_cpp_sha256": "2e370df558029ff5e0c4c7bb41cec4d73afd3079795fb8de2117552a70b7443b",
+    "final_source_extractor_binary_sha256": "b09cffea7c1c89febb51898f1642901ecce27a578a636998fcca32e24120d8ed",
+    "runtime_init_sha256": "a66bf8f05874eeffb5be83f03a663faabb23b009d3bf8c130e1dff2c15d9887c",
+    "runtime_trigger_sha256": "6a7ec0f0f6180a72f0ca19c25608b7870943192402eaa6a2d09f40ab72af1d14"
+  },
+  "interpretation": {
+    "claim": "The full LLVM reference graph now drives a resumable batch extractor. It prepared 139 previously CORE source definitions across 33 fresh groups; real build/link/size/QEMU audition retained eight modules containing 64 definitions and 45 lazy interfaces.",
+    "theory": "Not executing before loader-ready is useful upper-bound evidence, but it is not sufficient by itself. The resident callback owner, lazy wrapper, first-use context, object lifetime, dependency ABI, and unload behavior must still form a valid boundary.",
+    "relaxed_scope": "v43 intentionally replaced the per-candidate 4096-byte rule with a one-byte object-saving floor, while still forbidding final vmlinux and bzImage regression.",
+    "alignment_limit": "Four individually object-positive candidates were omitted because combinations crossed a final BSS/page alignment boundary and increased permanent linked bytes by 4032.",
+    "runtime_limit": "The 6924-byte object saving exists only while the eight modules remain unloaded. Loading all eight increases affected resident-plus-module permanent sections by 19519 bytes.",
+    "startup_limit": "The loader-ready absence and functional lifecycle are proven, but v43 did not run a new noisy whole-boot A/B memory benchmark; exact ELF/object/image deltas are the size claim.",
+    "next_target": "Automate build audition and subset selection around page-alignment boundaries, then repair the ten explicit extraction failures and validate more low-first-use prepared groups."
+  }
+}

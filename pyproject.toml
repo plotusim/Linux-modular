@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "linux-kernel-modularizer"
+version = "1.0.0"
+description = "Conservative function-level Linux kernel modularization pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "GPL-2.0-only"}
+dependencies = []
+
+[project.optional-dependencies]
+full-kernel = ["pyroaring"]
+boot-profile = ["kconfiglib>=14.1"]
+
+[project.scripts]
+kernel-modularizer = "kernel_modularizer.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["kernel_modularizer*"]

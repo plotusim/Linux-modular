@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v33-llvm-source-closure",
+  "date": "2026-08-01",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM",
+    "profile": "v31 dependency-aware Kconfig startup profile"
+  },
+  "new_capabilities": {
+    "private_source_closure": {
+      "algorithm": "Clang AST forward closure plus LLVM incoming ownership cut",
+      "graph_coverage_required": true,
+      "cross_translation_unit_users_remain_resident": true,
+      "indirect_dispatch_edges_are_not_treated_as_link_owners": true
+    },
+    "composite_candidates": {
+      "enabled": true,
+      "primary_must_be_ready": true,
+      "merged_needs_evidence_allowlist": [
+        "missing function size data"
+      ],
+      "merged_candidate_phase_required": "LAZY_READY",
+      "all_merged_entry_edges_must_be_load_safe": true
+    },
+    "compat_syscall_ast_support": [
+      "__se_compat_sys_*",
+      "__do_compat_sys_*"
+    ],
+    "source_local_include_canonicalization": true
+  },
+  "reference_graph": {
+    "fact_streams": 1503,
+    "nodes": 143300,
+    "edges": 910007,
+    "ir_function_nodes": 95831,
+    "unsized_graph_sha256": "50068e8396176fe792d278c0ca7482145e616782660f626acd10948c82704fcd",
+    "elf_sized_graph_sha256": "0da3a4fb93527d5970bdfc98bc7231c62e49f370b49b06a655d9d7a0f0a8949c",
+    "plan_sha256": "e21f81a378a6d03728b386242c07f3539dab7f28ab999a0f721e817e4e4ff7eb"
+  },
+  "new_validated_modules": {
+    "modules": [
+      "deferred_fsopen_v33",
+      "deferred_keyctl_v33",
+      "deferred_signal_v33"
+    ],
+    "per_module": {
+      "deferred_fsopen_v33": {
+        "primary_candidate": "candidate:e541e4f5fe71a92a",
+        "merged_candidates": [],
+        "selected_source_functions": 6,
+        "selected_source_globals": 0,
+        "matched_final_elf_functions": 5,
+        "matched_baseline_bytes": 2059,
+        "auto_resident_frontier_functions": 0,
+        "auto_resident_frontier_globals": 1,
+        "resident_dependencies": 11,
+        "baseline_resident_object_bytes": 2952,
+        "modular_resident_object_bytes": 1506,
+        "unloaded_object_savings_bytes": 1446,
+        "module_permanent_bytes": 3325,
+        "module_sha256": "1c3ac9171cb425f7c0805a4b19dd45e53a7721ca684aebaf0cc3d5c56011bc34",
+        "source_closure_sha256": "d329abd7f583e7bbbfab90e1307d998f83baa124399495aeb6f29e24e242194c"
+      },
+      "deferred_keyctl_v33": {
+        "primary_candidate": "candidate:e223ed676a1dafcb",
+        "merged_candidates": [
+          "candidate:b9766c20907420c1"
+        ],
+        "selected_source_functions": 34,
+        "selected_source_globals": 1,
+        "matched_final_elf_functions": 30,
+        "matched_baseline_bytes": 9653,
+        "auto_resident_frontier_functions": 0,
+        "auto_resident_frontier_globals": 0,
+        "resident_dependencies": 21,
+        "baseline_resident_object_bytes": 11027,
+        "modular_resident_object_bytes": 1362,
+        "unloaded_object_savings_bytes": 9665,
+        "module_permanent_bytes": 13407,
+        "module_sha256": "afcb51dcfbb19dc785a434f8bac0bbd2b69f82fbf54283e47172e732469f4961",
+        "source_closure_sha256": "e371f3ea801ecc01ad16cfd4a14881b4f4522e99ce90a345eb06e145538ccd9e"
+      },
+      "deferred_signal_v33": {
+        "primary_candidate": "candidate:1ed0136972156455",
+        "merged_candidates": [],
+        "selected_source_functions": 12,
+        "selected_source_globals": 0,
+        "matched_final_elf_functions": 7,
+        "matched_baseline_bytes": 3445,
+        "auto_resident_frontier_functions": 12,
+        "auto_resident_frontier_globals": 0,
+        "resident_dependencies": 15,
+        "baseline_resident_object_bytes": 39565,
+        "modular_resident_object_bytes": 38028,
+        "unloaded_object_savings_bytes": 1537,
+        "module_permanent_bytes": 3427,
+        "module_sha256": "fecfc9ef1ce32832eeafdf55eb351f10a5f59325e73c50226c14ed38b4180212",
+        "source_closure_sha256": "dabe1766ab380afc9bb622fb9829cd3ad279ffb31f22b72eec36c4bad69988d5"
+      }
+    },
+    "selected_source_functions": 52,
+    "selected_source_globals": 1,
+    "matched_final_elf_functions": 42,
+    "matched_baseline_bytes": 15157,
+    "baseline_resident_object_bytes": 53544,
+    "modular_resident_object_bytes": 40896,
+    "unloaded_object_savings_bytes": 12648,
+    "loaded_module_bytes": 20159,
+    "all_new_modules_loaded_delta_bytes": 7511,
+    "successful_validation_sha256": "9a26d926ddfa39b92d3e83e70386cff30869d7ea9f1ee05175cb0f22d68ba53d"
+  },
+  "combined_validated_function_modules": {
+    "modules": 11,
+    "selected_source_functions": 122,
+    "matched_final_elf_functions": 87,
+    "matched_final_elf_function_ratio_percent": 0.300425,
+    "matched_baseline_bytes": 37516,
+    "matched_baseline_byte_ratio_percent": 0.560455,
+    "unloaded_resident_object_savings_bytes": 31388,
+    "accounting_sha256": "744ce1dce91a717efccfe45cc690d3902357dc8c9319f3fd053929bbf26b4f3b"
+  },
+  "final_elf_accounting": {
+    "total_functions": 28959,
+    "total_bytes": 6693841,
+    "exact_ir_to_elf_matches": 28129,
+    "exact_coverage_percent": 97.133879,
+    "CORE": {
+      "functions": 26732,
+      "ratio_percent": 92.309817,
+      "bytes": 6353289
+    },
+    "READY": {
+      "functions": 81,
+      "ratio_percent": 0.279706,
+      "bytes": 56123
+    },
+    "BLOCKED": {
+      "functions": 296,
+      "ratio_percent": 1.022135,
+      "bytes": 42480
+    },
+    "UNKNOWN": {
+      "functions": 1850,
+      "ratio_percent": 6.388342,
+      "bytes": 241949
+    }
+  },
+  "strict_size_gate": {
+    "passed": true,
+    "scope": "three new resident object groups; linked image contains all eleven function modules",
+    "baseline_affected_resident_bytes": 53544,
+    "modular_affected_resident_bytes": 40896,
+    "unloaded_resident_object_savings_bytes": 12648,
+    "loaded_module_bytes": 20159,
+    "all_new_modules_loaded_delta_bytes": 7511,
+    "baseline_linked_permanent_bytes": 15704648,
+    "modular_linked_permanent_bytes": 15704648,
+    "linked_permanent_delta_bytes": 0,
+    "baseline_bzimage_bytes": 5056256,
+    "modular_bzimage_bytes": 5040224,
+    "bzimage_delta_bytes": -16032,
+    "baseline_vmlinux_sha256": "cb7eb2d37ebf4ee9be488dadd956a28b33cfdb5a33d105b14500cb209d606b62",
+    "modular_vmlinux_sha256": "f7984b84285bb25856340840f85b25d6a4d1df3c7806179e3a0e49a2cafe3664",
+    "baseline_bzimage_sha256": "6afde83e0e16b8a9c0bab67d97edd2ada14a2ed655609498d638278709aafac9",
+    "modular_bzimage_sha256": "204f7861486d2ccbd98580789eba99c1f949e9af12af562b0e083a95a4954e16",
+    "report_sha256": "a526081cc10740f67deb3f0fa9fbdf55d92fc309bc912b00ea440f45ef60d851"
+  },
+  "linker_alignment": {
+    "analysis": "x86 aligned entry-text island",
+    "alignment_bytes": 2097152,
+    "payload_end_symbol": "__kprobes_text_end",
+    "aligned_start_symbol": "__entry_text_start",
+    "next_aligned_start_symbol": "__softirqentry_text_start",
+    "baseline_payload_before_alignment_bytes": 6547632,
+    "modular_payload_before_alignment_bytes": 6514864,
+    "payload_delta_bytes": -32768,
+    "baseline_padding_before_alignment_bytes": 1840976,
+    "modular_padding_before_alignment_bytes": 1873744,
+    "final_text_delta_bytes": 0,
+    "additional_payload_reduction_to_previous_boundary_bytes": 223408,
+    "report_sha256": "61e72237d6b4e9e3acf4e73c10d312629328eec4133ebaacb45fdc831b912f42"
+  },
+  "qemu_lifecycle": {
+    "passed": true,
+    "repeats": 4,
+    "completed_steps_per_run": 8,
+    "median_ready_seconds": 0.52,
+    "trigger_source_sha256": "9d98fc0ae214de50f4e447c112dcc36a45cd8a45c824eb25ef17e2ec36c3178b",
+    "trigger_binary_sha256": "741a6144954c613f4879aea0fbf7eec10c1c734b41912c7b5d5afb307fcfff0d",
+    "initramfs_sha256": "fb8373e08bbc96a841a58738ab6ec8aa3d7f939092be6f0f5aef77dfc0baa3bc",
+    "scenario_sha256": "6e4daa8c8df0b8c6e1bee7baad92d7ad6ddf34ac975c5b72885e1930e086a678",
+    "result_sha256": "5bf179ff66dfc4c94201b4ea73ff984b5e31fbe1612eae364e6ef4a21fb440e0"
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 8,
+    "deltas_modular_minus_baseline": {
+      "permanent_kernel_kb": 0.0,
+      "ready_uptime_seconds": 0.0,
+      "mem_available_kb": 48.0,
+      "slab_kb": -24.0
+    },
+    "result_sha256": "8ba774beb5220d6da17e2fa37ea1e42ae6d3b044d35ee4be62cd8c85df53068c"
+  },
+  "rejected_explorations": {
+    "io_uring": {
+      "source_functions_in_ast_closure": 127,
+      "auto_resident_frontier_functions": 66,
+      "auto_resident_frontier_globals": 3,
+      "accepted": false,
+      "reasons": [
+        "async callbacks may outlive the triggering syscall",
+        "resident file_operations does not provide an implementation-module lifetime pin",
+        "unsafe req_ref_get source semantics were rejected by the backend"
+      ]
+    }
+  },
+  "interpretation": {
+    "measured_startup_page_reduction_bytes": 0,
+    "object_level_unloaded_savings_bytes": 31388,
+    "claim": "LLVM-guided AST closure extraction expanded the validated set to eleven genuinely new function modules without a linked-kernel or startup regression; linker-page startup memory has not yet decreased.",
+    "next_target": "Remove at least 223408 additional pre-entry payload bytes, or place safe cold text after the aligned island, then require the real final link to cross the boundary."
+  }
+}

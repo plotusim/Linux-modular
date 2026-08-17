@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v25-four-syscall-closures",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler_family": "Clang/LLVM"
+  },
+  "reference_graph": {
+    "nodes": 266009,
+    "edges": 3011804,
+    "function_nodes": 169996,
+    "unresolved_calls": 1256,
+    "selected_link_objects": 2499,
+    "objects_with_bitcode": 2470,
+    "objects_without_bitcode": 29
+  },
+  "final_elf_denominator": {
+    "positive_size_functions": 51683,
+    "function_bytes": 13506837,
+    "zero_size_text_symbols_excluded": 75,
+    "exact_graph_matches": 50017,
+    "exact_graph_match_bytes": 13470929,
+    "function_coverage_percent": 96.776503,
+    "unmatched_functions_classified_unknown": 1666,
+    "unmatched_bytes_classified_unknown": 35908
+  },
+  "plans": {
+    "minimum_4096_bytes": {
+      "candidate_readiness": {
+        "READY": 1,
+        "BLOCKED": 467,
+        "NEEDS_EVIDENCE": 346
+      },
+      "final_elf_categories": {
+        "CORE": {
+          "functions": 47938,
+          "function_ratio_percent": 92.753904,
+          "bytes": 13020730,
+          "byte_ratio_percent": 96.40103
+        },
+        "READY": {
+          "functions": 3,
+          "function_ratio_percent": 0.005805,
+          "bytes": 7343,
+          "byte_ratio_percent": 0.054365
+        },
+        "BLOCKED": {
+          "functions": 492,
+          "function_ratio_percent": 0.951957,
+          "bytes": 104696,
+          "byte_ratio_percent": 0.775133
+        },
+        "UNKNOWN": {
+          "functions": 3250,
+          "function_ratio_percent": 6.288335,
+          "bytes": 374068,
+          "byte_ratio_percent": 2.769471
+        }
+      }
+    },
+    "exploratory_minimum_0_bytes": {
+      "candidate_readiness": {
+        "READY": 9,
+        "BLOCKED": 454,
+        "NEEDS_EVIDENCE": 351
+      },
+      "final_elf_categories": {
+        "CORE": {
+          "functions": 47938,
+          "function_ratio_percent": 92.753904,
+          "bytes": 13020730,
+          "byte_ratio_percent": 96.40103
+        },
+        "READY": {
+          "functions": 17,
+          "function_ratio_percent": 0.032893,
+          "bytes": 25110,
+          "byte_ratio_percent": 0.185906
+        },
+        "BLOCKED": {
+          "functions": 459,
+          "function_ratio_percent": 0.888106,
+          "bytes": 80805,
+          "byte_ratio_percent": 0.598253
+        },
+        "UNKNOWN": {
+          "functions": 3269,
+          "function_ratio_percent": 6.325097,
+          "bytes": 380192,
+          "byte_ratio_percent": 2.814811
+        }
+      }
+    }
+  },
+  "successful_modularization": {
+    "status": "validated",
+    "validation_scope": "combined_deployment_bundle",
+    "candidate_count": 4,
+    "moved_source_function_definitions": 53,
+    "final_elf_functions": 28,
+    "function_ratio_percent": 0.054176,
+    "baseline_function_bytes": 14617,
+    "function_byte_ratio_percent": 0.108219,
+    "required_gates": [
+      "source_extraction_passed",
+      "kernel_build_passed",
+      "qemu_boot_passed",
+      "modprobe_passed",
+      "unload_passed",
+      "size_gate_passed",
+      "startup_ab_passed"
+    ],
+    "candidates": [
+      {
+        "candidate_id": "candidate:3b46b9a309310ed6",
+        "module": "ioprio_lazy",
+        "source": "block/ioprio.c",
+        "moved_source_functions": 4,
+        "final_elf_functions": 3,
+        "baseline_function_bytes": 1577,
+        "unloaded_resident_savings_bytes": 240,
+        "loaded_module_bytes": 2599
+      },
+      {
+        "candidate_id": "candidate:4ef41a1f49ddd314",
+        "module": "splice_lazy",
+        "source": "fs/splice.c",
+        "moved_source_functions": 9,
+        "final_elf_functions": 4,
+        "baseline_function_bytes": 2628,
+        "unloaded_resident_savings_bytes": 1176,
+        "loaded_module_bytes": 3277
+      },
+      {
+        "candidate_id": "candidate:3f6e8c5a1b73acf9",
+        "module": "setns_lazy",
+        "source": "kernel/nsproxy.c",
+        "moved_source_functions": 6,
+        "final_elf_functions": 1,
+        "baseline_function_bytes": 1462,
+        "unloaded_resident_savings_bytes": 515,
+        "loaded_module_bytes": 2549
+      },
+      {
+        "candidate_id": "candidate:92412baaec79073c",
+        "module": "quotactl_lazy",
+        "source": "fs/quota/quota.c",
+        "moved_source_functions": 34,
+        "final_elf_functions": 20,
+        "baseline_function_bytes": 8950,
+        "unloaded_resident_savings_bytes": 8356,
+        "loaded_module_bytes": 10207
+      }
+    ]
+  },
+  "combined_size_validation": {
+    "passed": true,
+    "baseline_resident_object_bytes": 25977,
+    "modular_resident_object_bytes": 15690,
+    "unloaded_resident_savings_bytes": 10287,
+    "loaded_module_bytes": 18632,
+    "loaded_delta_bytes": 8345,
+    "baseline_bzimage_bytes": 9756736,
+    "modular_bzimage_bytes": 9753920,
+    "bzimage_delta_bytes": -2816,
+    "minimum_required_resident_savings_bytes": 4096,
+    "maximum_allowed_image_regression_bytes": 0
+  },
+  "qemu_functional_validation": {
+    "passed": true,
+    "completed_steps": 8,
+    "required_behaviors": [
+      "initial_module_absence",
+      "autoload_on_first_use",
+      "repeat_call_equivalence",
+      "unload",
+      "reload_on_next_use"
+    ]
+  },
+  "startup_ab_validation": {
+    "passed": true,
+    "pairs": 8,
+    "kaslr_disabled_for_layout_repeatability": true,
+    "median_baseline": {
+      "ready_uptime_seconds": 0.85,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 466516,
+      "slab_kb": 12574
+    },
+    "median_modular": {
+      "ready_uptime_seconds": 0.86,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 466588,
+      "slab_kb": 12584
+    },
+    "delta_modular_minus_baseline": {
+      "ready_uptime_seconds": 0.01,
+      "permanent_kernel_kb": 0,
+      "mem_available_kb": 72,
+      "slab_kb": 10
+    }
+  },
+  "reproducible_baseline": {
+    "vmlinux_sha256": "16af2b1327329829021d898c7f992c8c24236fdd345e7d0c3dddea2ce4040d18",
+    "bzimage_sha256": "a82fe8ac82dfe379ccbedda2f600a2e71b70ccee6d3c18af30ae5b6b3e806bd9"
+  },
+  "interpretation": {
+    "resource_win_applies_while_modules_are_unloaded": true,
+    "boot_log_memory_summary_resolution_kb": 1,
+    "mem_available_delta_is_treated_as_noise_not_claimed_savings": true,
+    "production_universality_claimed": false
+  }
+}

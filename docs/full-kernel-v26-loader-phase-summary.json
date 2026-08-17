@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v26-loader-ready-phase",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM 22"
+  },
+  "reference_graph": {
+    "sha256": "b4e58930a4485380c23e7de6da1e5c4947c5bcb186af6adb669ac3480a284e16",
+    "nodes": 266009,
+    "edges": 3011804,
+    "function_nodes": 169996,
+    "unresolved_calls": 1256
+  },
+  "loader_ready_observation": {
+    "schema_version": 2,
+    "trace_sha256": "97a6368474664b29e47556e99076c32cf8d09c5e67da7d24617f88de547645f0",
+    "observation_sha256": "b554ece42d6b6fb3a55e89c2d3deb6b9c7d451547d7c3cec319a0ea7a14a544c",
+    "marker": "LINUX_MODULARIZER_MODULE_LOADER_READY",
+    "marker_timestamp_seconds": 1.952301,
+    "all_traces_observed": true,
+    "traces": 1,
+    "parsed_function_lines": 5697,
+    "observed_graph_functions": 5583,
+    "pre_loader_functions": 5583,
+    "post_loader_functions": 157,
+    "pre_loader_only_functions": 5426,
+    "post_loader_only_functions": 0,
+    "pre_and_post_loader_functions": 157,
+    "unknown_phase_functions": 0,
+    "unmatched_symbols": 3
+  },
+  "phase_candidate_classes": {
+    "EARLY_CORE": 5,
+    "PRELOAD": 0,
+    "LAZY_READY": 300,
+    "UNKNOWN_PHASE": 424
+  },
+  "plans": {
+    "minimum_4096_bytes": {
+      "plan_sha256": "fe8f1e45821d32192a1ce2268c7c9cf2cf27ed3e41c9a05dc6212f0c996725ef",
+      "candidates": 729,
+      "candidate_readiness": {
+        "READY": 1,
+        "BLOCKED": 421,
+        "NEEDS_EVIDENCE": 307
+      },
+      "final_elf_categories": {
+        "CORE": {
+          "functions": 48203,
+          "function_ratio_percent": 93.266645,
+          "bytes": 13076581,
+          "byte_ratio_percent": 96.814532
+        },
+        "READY": {
+          "functions": 3,
+          "function_ratio_percent": 0.005805,
+          "bytes": 7343,
+          "byte_ratio_percent": 0.054365
+        },
+        "BLOCKED": {
+          "functions": 465,
+          "function_ratio_percent": 0.899716,
+          "bytes": 100772,
+          "byte_ratio_percent": 0.746081
+        },
+        "UNKNOWN": {
+          "functions": 3012,
+          "function_ratio_percent": 5.827835,
+          "bytes": 322141,
+          "byte_ratio_percent": 2.385022
+        }
+      }
+    },
+    "exploratory_minimum_0_bytes": {
+      "plan_sha256": "9af97be04ba44665759f35c97999677016f0e7d9365463bd31c4d7b2b9dd3d2c",
+      "candidates": 729,
+      "candidate_readiness": {
+        "READY": 9,
+        "BLOCKED": 409,
+        "NEEDS_EVIDENCE": 311
+      },
+      "final_elf_categories": {
+        "CORE": {
+          "functions": 48203,
+          "function_ratio_percent": 93.266645,
+          "bytes": 13076581,
+          "byte_ratio_percent": 96.814532
+        },
+        "READY": {
+          "functions": 17,
+          "function_ratio_percent": 0.032893,
+          "bytes": 25110,
+          "byte_ratio_percent": 0.185906
+        },
+        "BLOCKED": {
+          "functions": 447,
+          "function_ratio_percent": 0.864888,
+          "bytes": 78432,
+          "byte_ratio_percent": 0.580684
+        },
+        "UNKNOWN": {
+          "functions": 3016,
+          "function_ratio_percent": 5.835575,
+          "bytes": 326714,
+          "byte_ratio_percent": 2.418879
+        }
+      }
+    }
+  },
+  "final_elf_denominator": {
+    "positive_size_functions": 51683,
+    "function_bytes": 13506837,
+    "exact_graph_matches": 50017,
+    "coverage_percent": 96.776503,
+    "unmatched_functions_classified_unknown": 1666
+  },
+  "successful_modularization": {
+    "status": "validated",
+    "candidate_count": 4,
+    "moved_source_function_definitions": 53,
+    "final_elf_functions": 28,
+    "function_ratio_percent": 0.054176,
+    "baseline_function_bytes": 14617,
+    "function_byte_ratio_percent": 0.108219,
+    "unloaded_resident_savings_bytes": 10287,
+    "bzimage_delta_bytes": -2816
+  },
+  "default_ready_backend_preflight": {
+    "candidate_id": "candidate:aed73819b223f6fb",
+    "feature": "io_uring",
+    "planner_classification": "LAZY_READY",
+    "compile_passed": false,
+    "status": "BLOCKED_BACKEND_CLOSURE",
+    "counts_as_success": false
+  },
+  "artifact_hashes": {
+    "policy_sha256": "dc447221e61dd28c4a4ec36b587a9882a826fc6406f77c0624785f5f3b81ea44",
+    "exploratory_accounting_sha256": "2eea004cb7d8bbc64051072afc3931032a752f34080e9eea5620a006179d5565",
+    "strict_accounting_sha256": "c8bcf6d53381d4088cd544db777c739e992a1714e8722f9eb35e93847c4cae1f",
+    "io_uring_preflight_sha256": "ba0a059c6da118a4b50c700ccc3ccba1e904e6686c119df271f160a479b91fe5"
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v27-ready-optimization",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM 22"
+  },
+  "reference_graph": {
+    "sha256": "b4e58930a4485380c23e7de6da1e5c4947c5bcb186af6adb669ac3480a284e16",
+    "nodes": 266009,
+    "edges": 3011804,
+    "function_nodes": 169996,
+    "unresolved_calls": 1256
+  },
+  "loader_ready_observation": {
+    "schema_version": 2,
+    "observation_sha256": "b554ece42d6b6fb3a55e89c2d3deb6b9c7d451547d7c3cec319a0ea7a14a544c",
+    "marker": "LINUX_MODULARIZER_MODULE_LOADER_READY",
+    "marker_timestamp_seconds": 1.952301,
+    "observed_graph_functions": 5583,
+    "pre_loader_only_functions": 5426,
+    "post_loader_only_functions": 0,
+    "pre_and_post_loader_functions": 157,
+    "unknown_phase_functions": 0
+  },
+  "ready_optimizations": {
+    "structural_syscall_entry_prefixes": [
+      "__x64_sys_",
+      "__ia32_sys_",
+      "__ia32_compat_sys_",
+      "__x64_compat_sys_",
+      "__x32_compat_sys_"
+    ],
+    "aggregate_savings_groups": true,
+    "first_interface_stub_estimate_bytes": 640,
+    "additional_interface_stub_estimate_bytes": 384,
+    "previous_interface_stub_estimate_bytes": 768,
+    "runtime_binding": "symbol_get/symbol_put",
+    "safety_rule": "aggregation may remove only the minimum-size blocker; phase, context, boundary and evidence blockers remain"
+  },
+  "phase_candidate_classes": {
+    "EARLY_CORE": 5,
+    "PRELOAD": 0,
+    "LAZY_READY": 390,
+    "UNKNOWN_PHASE": 322
+  },
+  "strict_plan": {
+    "minimum_estimated_savings_bytes": 4096,
+    "candidates": 717,
+    "candidate_readiness": {
+      "READY": 22,
+      "BLOCKED": 359,
+      "NEEDS_EVIDENCE": 336
+    },
+    "ready_candidates": 22,
+    "ready_final_elf_functions": 45,
+    "ready_known_bytes": 43091,
+    "ready_estimated_net_bytes": 20179,
+    "individual_ready_candidates": 1,
+    "aggregate_ready_candidates": 21,
+    "aggregate_group": {
+      "id": "aggregate:d79c9b837ad53691",
+      "candidates": 21,
+      "functions": 42,
+      "estimated_net_bytes": 14244
+    },
+    "final_elf_categories": {
+      "CORE": {
+        "functions": 48385,
+        "function_ratio_percent": 93.618791,
+        "bytes": 13096340,
+        "byte_ratio_percent": 96.960821
+      },
+      "READY": {
+        "functions": 45,
+        "function_ratio_percent": 0.087069,
+        "bytes": 43091,
+        "byte_ratio_percent": 0.319031
+      },
+      "BLOCKED": {
+        "functions": 374,
+        "function_ratio_percent": 0.723642,
+        "bytes": 59816,
+        "byte_ratio_percent": 0.442857
+      },
+      "UNKNOWN": {
+        "functions": 2879,
+        "function_ratio_percent": 5.570497,
+        "bytes": 307590,
+        "byte_ratio_percent": 2.277291
+      }
+    }
+  },
+  "comparison_to_v26": {
+    "strict_ready_candidates": {
+      "before": 1,
+      "after": 22
+    },
+    "strict_ready_final_elf_functions": {
+      "before": 3,
+      "after": 45
+    },
+    "exploratory_ready_candidates": {
+      "before": 9,
+      "after": 22
+    },
+    "exploratory_ready_final_elf_functions": {
+      "before": 17,
+      "after": 45
+    },
+    "final_elf_unknown_functions": {
+      "before": 3016,
+      "after": 2879
+    }
+  },
+  "amortized_cost_validation": {
+    "candidate_id": "candidate:1ed0136972156455",
+    "feature": "seven signal syscall interfaces",
+    "resident_compile_passed": true,
+    "module_compile_passed": false,
+    "known_function_bytes": 3445,
+    "estimated_boundary_cost_bytes": 2944,
+    "observed_boundary_cost_bytes": 1703,
+    "conservative_margin_bytes": 1241,
+    "observed_resident_savings_bytes": 1742,
+    "status": "READY_BLOCKED_BACKEND_CLOSURE",
+    "counts_as_success": false
+  },
+  "final_elf_denominator": {
+    "positive_size_functions": 51683,
+    "function_bytes": 13506837,
+    "exact_graph_matches": 50017,
+    "coverage_percent": 96.776503,
+    "unmatched_functions_classified_unknown": 1666
+  },
+  "successful_modularization": {
+    "status": "validated",
+    "candidate_count": 4,
+    "moved_source_function_definitions": 53,
+    "final_elf_functions": 28,
+    "function_ratio_percent": 0.054176,
+    "baseline_function_bytes": 14617,
+    "function_byte_ratio_percent": 0.108219,
+    "unloaded_resident_savings_bytes": 12317,
+    "loaded_module_bytes": 18840,
+    "loaded_delta_bytes": 6523,
+    "bzimage_delta_bytes": -4320
+  },
+  "qemu_validation": {
+    "passed": true,
+    "steps": 8,
+    "elapsed_seconds": 1.647
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 16,
+    "baseline_median": {
+      "ready_uptime_seconds": 0.85,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 466598,
+      "slab_kb": 12616
+    },
+    "modular_median": {
+      "ready_uptime_seconds": 0.85,
+      "permanent_kernel_kb": 25631,
+      "mem_available_kb": 466542,
+      "slab_kb": 12610
+    },
+    "deltas_modular_minus_baseline": {
+      "ready_uptime_seconds": 0,
+      "permanent_kernel_kb": 0,
+      "mem_available_kb": -56,
+      "slab_kb": -6
+    }
+  },
+  "artifact_hashes": {
+    "policy_sha256": "f5a4818167ae444ddfb52e1b5b4151efa0eb1d151a5bc0b0a643ecfb21ffc6c9",
+    "strict_plan_sha256": "5cc4f7dc295dd293ee69cbb1292a9cb389cca3cc953effaeb5735e943560cdd1",
+    "exploratory_plan_sha256": "627d7dc7dfd38642cc75b063c16dab089bfedaaa768b226c4772e5e9ecd6912f",
+    "strict_accounting_sha256": "0c67f1d8ec2eaeee22275c55db89d60e202f6261b701d4afc690d3dda6918204",
+    "exploratory_accounting_sha256": "ce9a4ebd21b38847c2e7d5033873ed78af959d9aba4bdb0a5d2d8131c2e7c5c2",
+    "amortized_cost_preflight_sha256": "af5d9a8a5d75728d06e8f931dd952684fe1a15500a535c200bda8144f741414c",
+    "size_gate_sha256": "95ddb675bfc19f1f1fbee69dae50a2949cec7cf00ba48dc41b2c78c6949270c8",
+    "qemu_validation_sha256": "1456ae6d2ca81fcbe796bdfe2ad86470f18ae5394d1417c8a40fe112c628a213",
+    "startup_ab_sha256": "54c1663287872428c8a8ad08c7a11c41c10750a94ac5ac8b052ed72143709452",
+    "successful_validation_sha256": "9c67968efbbe4fa8f8777a974b1f6bb3a32e5d602a5837901e05fbf9b0d7e8bb"
+  }
+}

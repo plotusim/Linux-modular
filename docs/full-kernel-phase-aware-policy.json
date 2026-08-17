@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "phase_aware_boot": true,
+  "trace_guarded_indirect_boot": true,
+  "trace_covers_initcalls": true,
+  "field_scoped_unresolved_targets": true,
+  "hard_attributes": [
+    "__head",
+    "__init",
+    "__always_inline",
+    "inline_hint",
+    "early_boot",
+    "entry",
+    "interrupt",
+    "linker_registered",
+    "module_loader_dependency",
+    "naked",
+    "noinstr",
+    "notrace",
+    "notrace_critical",
+    "used"
+  ],
+  "dependency_edges": [
+    "assembly",
+    "direct_call",
+    "indirect_call",
+    "linker_section"
+  ]
+}

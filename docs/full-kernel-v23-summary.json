@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "run": {
+    "kernel": "Linux 5.10.176",
+    "architecture": "x86_64",
+    "analysis_revision": 23,
+    "llvm_major": 22
+  },
+  "reference_graph": {
+    "translation_units": 2470,
+    "facts": 2379985,
+    "nodes": 266009,
+    "function_nodes": 169996,
+    "edges": 3011804,
+    "direct_calls": 350273,
+    "indirect_calls": 2093699,
+    "unresolved_calls": 1256,
+    "unresolved_reduction_from_56736_percent": 97.786238
+  },
+  "elf_enrichment": {
+    "matched_nodes": 95214,
+    "exported_nodes": 11207,
+    "linker_registered_nodes": 198,
+    "missing_objects": 0
+  },
+  "final_elf_denominator": {
+    "positive_size_functions": 51683,
+    "function_bytes": 13506837,
+    "exact_ir_matches": 50017,
+    "exact_ir_match_percent": 96.776503,
+    "unmatched_functions_classified_unknown": 1666,
+    "zero_size_aliases_excluded": 75
+  },
+  "phase_aware": {
+    "categories": {
+      "CORE": {
+        "functions": 48021,
+        "function_percent": 92.914498,
+        "bytes": 13083762,
+        "byte_percent": 96.867697
+      },
+      "READY": {
+        "functions": 0,
+        "function_percent": 0.0,
+        "bytes": 0,
+        "byte_percent": 0.0
+      },
+      "BLOCKED": {
+        "functions": 334,
+        "function_percent": 0.646247,
+        "bytes": 40818,
+        "byte_percent": 0.302203
+      },
+      "UNKNOWN": {
+        "functions": 3328,
+        "function_percent": 6.439255,
+        "bytes": 382257,
+        "byte_percent": 2.8301
+      }
+    },
+    "candidate_viability": {
+      "candidates": 402,
+      "positive_net": 199,
+      "with_resident_interface": 92,
+      "with_executable_interface": 47,
+      "with_proven_load_safe_interface": 0,
+      "meeting_minimum_savings": 0,
+      "meeting_savings_with_proven_load_safe_interface": 0,
+      "ready": 0
+    }
+  },
+  "conservative": {
+    "categories": {
+      "CORE": {
+        "functions": 49274,
+        "function_percent": 95.338893,
+        "bytes": 13362265,
+        "byte_percent": 98.929638
+      },
+      "READY": {
+        "functions": 0,
+        "function_percent": 0.0,
+        "bytes": 0,
+        "byte_percent": 0.0
+      },
+      "BLOCKED": {
+        "functions": 111,
+        "function_percent": 0.214771,
+        "bytes": 8767,
+        "byte_percent": 0.064908
+      },
+      "UNKNOWN": {
+        "functions": 2298,
+        "function_percent": 4.446336,
+        "bytes": 135805,
+        "byte_percent": 1.005454
+      }
+    }
+  },
+  "successful_modularization": {
+    "validated_functions": 0,
+    "percent": 0.0,
+    "validated_permanent_byte_savings": 0,
+    "startup_resource_effect": "not measured because no candidate is READY"
+  }
+}

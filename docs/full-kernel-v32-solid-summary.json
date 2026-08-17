@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v32-solid",
+  "date": "2026-08-01",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM",
+    "analysis_profile_config_sha256": "0842462e6b7f036b68bee13864d6456ea616dfb7c8bcbf58e95a5dafc404c16c",
+    "modular_build_config_sha256": "5ffa09ee3b6875ef9ef0713e8ddf848425ab3123620d121cbe2d526db313a7bc"
+  },
+  "reference_graph": {
+    "fact_streams": 1503,
+    "nodes": 143300,
+    "edges": 910007,
+    "unresolved_indirect_calls": 1087,
+    "points_to_limit": 4096,
+    "solver": "roaring-worklist-v2-hybrid-bounded",
+    "sha256": "50068e8396176fe792d278c0ca7482145e616782660f626acd10948c82704fcd"
+  },
+  "fresh_boot_evidence": {
+    "loader_ready_seconds": 1.291794,
+    "trace_sha256": "50bd260a3234010ab8de1221ecaa8e3b40b0d8e7823d2e033f3c05482ab21eff",
+    "boot_hot_functions": 4219,
+    "boot_hot_bytes": 1127783,
+    "boot_cold_functions": 23910,
+    "boot_cold_bytes": 5534330,
+    "unknown_functions": 830,
+    "unknown_bytes": 31728
+  },
+  "planner": {
+    "ir_function_nodes": 95831,
+    "candidates": 656,
+    "candidate_readiness": {
+      "READY": 31,
+      "BLOCKED": 292,
+      "NEEDS_EVIDENCE": 333
+    },
+    "final_elf_accounting": {
+      "total_functions": 28959,
+      "total_bytes": 6693841,
+      "exact_ir_to_elf_matches": 28129,
+      "exact_coverage_percent": 97.133879,
+      "CORE": {
+        "functions": 26732,
+        "ratio_percent": 92.309817,
+        "bytes": 6353289
+      },
+      "READY": {
+        "functions": 81,
+        "ratio_percent": 0.279706,
+        "bytes": 56123
+      },
+      "BLOCKED": {
+        "functions": 296,
+        "ratio_percent": 1.022135,
+        "bytes": 42480
+      },
+      "UNKNOWN": {
+        "functions": 1850,
+        "ratio_percent": 6.388342,
+        "bytes": 241949
+      }
+    },
+    "plan_sha256": "e21f81a378a6d03728b386242c07f3539dab7f28ab999a0f721e817e4e4ff7eb"
+  },
+  "validated_function_modules": {
+    "modules": [
+      "quotactl_lazy",
+      "stat_lazy_v2",
+      "wallclock_lazy",
+      "capability_lazy",
+      "ioprio_lazy",
+      "splice_lazy",
+      "sys_identity_lazy",
+      "setns_lazy"
+    ],
+    "per_module": {
+      "quotactl_lazy": {
+        "selected_source_functions": 34,
+        "matched_final_elf_functions": 20,
+        "baseline_resident_object_bytes": 9228,
+        "modular_resident_object_bytes": 504,
+        "unloaded_object_savings_bytes": 8724,
+        "module_permanent_bytes": 10305,
+        "dependency_symbols_before_packing": 5,
+        "dependency_export_boundaries_after_packing": 1
+      },
+      "stat_lazy_v2": {
+        "selected_source_functions": 3,
+        "matched_final_elf_functions": 3,
+        "baseline_resident_object_bytes": 8684,
+        "modular_resident_object_bytes": 7489,
+        "unloaded_object_savings_bytes": 1195,
+        "module_permanent_bytes": 2792,
+        "dependency_symbols_before_packing": 2,
+        "dependency_export_boundaries_after_packing": 2
+      },
+      "wallclock_lazy": {
+        "selected_source_functions": 2,
+        "matched_final_elf_functions": 2,
+        "baseline_resident_object_bytes": 7713,
+        "modular_resident_object_bytes": 6910,
+        "unloaded_object_savings_bytes": 803,
+        "module_permanent_bytes": 1582,
+        "dependency_symbols_before_packing": 4,
+        "dependency_export_boundaries_after_packing": 1
+      },
+      "capability_lazy": {
+        "selected_source_functions": 2,
+        "matched_final_elf_functions": 2,
+        "baseline_resident_object_bytes": 2982,
+        "modular_resident_object_bytes": 1761,
+        "unloaded_object_savings_bytes": 1221,
+        "module_permanent_bytes": 2854,
+        "dependency_symbols_before_packing": 4,
+        "dependency_export_boundaries_after_packing": 2
+      },
+      "ioprio_lazy": {
+        "selected_source_functions": 4,
+        "matched_final_elf_functions": 3,
+        "baseline_resident_object_bytes": 2025,
+        "modular_resident_object_bytes": 930,
+        "unloaded_object_savings_bytes": 1095,
+        "module_permanent_bytes": 2717,
+        "dependency_symbols_before_packing": 6,
+        "dependency_export_boundaries_after_packing": 2
+      },
+      "splice_lazy": {
+        "selected_source_functions": 9,
+        "matched_final_elf_functions": 4,
+        "baseline_resident_object_bytes": 11460,
+        "modular_resident_object_bytes": 9470,
+        "unloaded_object_savings_bytes": 1990,
+        "module_permanent_bytes": 3383,
+        "dependency_symbols_before_packing": 5,
+        "dependency_export_boundaries_after_packing": 1
+      },
+      "sys_identity_lazy": {
+        "selected_source_functions": 10,
+        "matched_final_elf_functions": 10,
+        "baseline_resident_object_bytes": 20451,
+        "modular_resident_object_bytes": 17800,
+        "unloaded_object_savings_bytes": 2651,
+        "module_permanent_bytes": 5349,
+        "dependency_symbols_before_packing": 12,
+        "dependency_export_boundaries_after_packing": 1
+      },
+      "setns_lazy": {
+        "selected_source_functions": 6,
+        "matched_final_elf_functions": 1,
+        "baseline_resident_object_bytes": 3264,
+        "modular_resident_object_bytes": 2203,
+        "unloaded_object_savings_bytes": 1061,
+        "module_permanent_bytes": 2716,
+        "dependency_symbols_before_packing": 14,
+        "dependency_export_boundaries_after_packing": 2
+      }
+    },
+    "selected_source_functions": 70,
+    "matched_final_elf_functions": 45,
+    "matched_final_elf_function_ratio_percent": 0.155392,
+    "matched_baseline_bytes": 22359,
+    "matched_baseline_byte_ratio_percent": 0.334023,
+    "dependency_symbols_before_packing": 52,
+    "dependency_export_boundaries_after_packing": 12,
+    "module_operations_exports": 8,
+    "total_generated_export_boundaries": 20,
+    "accounting_sha256": "8e25ac1fe74e1d9af9d6c26d25ec1f48fb5a6fe141170453486835014ce1853f",
+    "successful_validation_sha256": "f3340383f7eddcc9a00282416b51b646466dadde99e3e3c696e2a38bae8a2102"
+  },
+  "strict_size_gate": {
+    "passed": true,
+    "baseline_affected_resident_bytes": 65807,
+    "modular_affected_resident_bytes": 47067,
+    "unloaded_resident_object_savings_bytes": 18740,
+    "loaded_module_bytes": 31698,
+    "all_modules_loaded_delta_bytes": 12958,
+    "baseline_linked_permanent_bytes": 15704648,
+    "modular_linked_permanent_bytes": 15704648,
+    "linked_permanent_delta_bytes": 0,
+    "baseline_bzimage_bytes": 5056256,
+    "modular_bzimage_bytes": 5046784,
+    "bzimage_delta_bytes": -9472,
+    "baseline_vmlinux_sha256": "cb7eb2d37ebf4ee9be488dadd956a28b33cfdb5a33d105b14500cb209d606b62",
+    "modular_vmlinux_sha256": "62040ac847990b5104dac4ec8c5955117fba7c574e1ead696199737cd0296f70",
+    "baseline_bzimage_sha256": "6afde83e0e16b8a9c0bab67d97edd2ada14a2ed655609498d638278709aafac9",
+    "modular_bzimage_sha256": "7809d7e0d2f86c7681fa3cd0f3d5a88bd5294247d1a079e06e3ad5d12f6fb957",
+    "report_sha256": "48044962b1abfb5c91160ea897a3c567fc5738b096fe77b66e9d8f51c4e7954c"
+  },
+  "qemu_lifecycle": {
+    "passed": true,
+    "repeats": 4,
+    "completed_steps_per_run": 8,
+    "median_ready_seconds": 0.505,
+    "trigger_sha256": "be525ab6efa4a74994effd53d3ee67c2bae9a39e899f58d859370fd593f4692e",
+    "initramfs_sha256": "eb26afe1fea34c971d8f94d0d4a74ba382b6d991ed921fc92c2f488c99408543",
+    "scenario_sha256": "3abea7a140ba0cde8639d457c0d15e53f7d1b05b5a80c45bfb34a8588d3aec39",
+    "result_sha256": "a7d74d997ae7b2b3b75949438c0ae7e386c3228f37eb81c78d8981d106d5a5c6"
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 8,
+    "deltas_modular_minus_baseline": {
+      "permanent_kernel_kb": 0.0,
+      "ready_uptime_seconds": 0.0,
+      "mem_available_kb": 62.0,
+      "slab_kb": 42.0
+    },
+    "result_sha256": "8b8dbe66c5d833eac4d8b777e3defb1d44eebf8e07fb0d945d1617a95b12efc2"
+  },
+  "interpretation": {
+    "measured_startup_page_reduction_bytes": 0,
+    "object_level_unloaded_savings_bytes": 18740,
+    "claim": "The eight modules defer code without a linked-kernel or startup regression; page-granularity startup memory has not yet decreased.",
+    "next_target": "Cross a real linker page boundary with a larger safe closure or a dedicated cold-text layout."
+  }
+}

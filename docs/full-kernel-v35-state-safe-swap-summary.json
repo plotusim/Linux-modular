@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v35-state-safe-swap-extraction",
+  "date": "2026-08-01",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang/LLVM",
+    "llvm_ias": false,
+    "profile": "v31 dependency-aware Kconfig startup profile"
+  },
+  "new_capabilities": {
+    "mutable_module_lifetime_state_frontier": true,
+    "escaped_mutable_global_address_frontier": true,
+    "weak_function_frontier": true,
+    "escaped_callback_frontier": true,
+    "macro_argument_identifier_file_ranges": true,
+    "macro_generated_main_file_entity_fixed_point": true,
+    "resident_global_exact_type_packing": true,
+    "resident_dependency_table_ro_after_init": true,
+    "conflicting_ast_edit_rejection": true
+  },
+  "reference_graph": {
+    "fact_streams": 1503,
+    "nodes": 143300,
+    "edges": 910007,
+    "ir_function_nodes": 95831,
+    "elf_sized_graph_sha256": "0da3a4fb93527d5970bdfc98bc7231c62e49f370b49b06a655d9d7a0f0a8949c",
+    "plan_sha256": "e21f81a378a6d03728b386242c07f3539dab7f28ab999a0f721e817e4e4ff7eb"
+  },
+  "new_strict_module": {
+    "name": "deferred_swap_v35",
+    "candidate_id": "candidate:31abb742bea93c07",
+    "candidate_disposition": "READY",
+    "source_translation_unit": "mm/swapfile.c",
+    "selected_source_functions": 28,
+    "selected_source_globals": 0,
+    "matched_final_elf_functions": 13,
+    "matched_baseline_bytes": 9992,
+    "matched_function_ratio_percent": 0.044891,
+    "matched_byte_ratio_percent": 0.149272,
+    "matched_functions": [
+      {
+        "name": "__se_sys_swapoff",
+        "size_bytes": 1188
+      },
+      {
+        "name": "__se_sys_swapon",
+        "size_bytes": 2464
+      },
+      {
+        "name": "claim_swapfile",
+        "size_bytes": 157
+      },
+      {
+        "name": "destroy_swap_extents",
+        "size_bytes": 120
+      },
+      {
+        "name": "discard_swap",
+        "size_bytes": 168
+      },
+      {
+        "name": "drain_mmlist",
+        "size_bytes": 116
+      },
+      {
+        "name": "enable_swap_info",
+        "size_bytes": 198
+      },
+      {
+        "name": "free_swap_count_continuations",
+        "size_bytes": 162
+      },
+      {
+        "name": "read_swap_header",
+        "size_bytes": 413
+      },
+      {
+        "name": "reinsert_swap_info",
+        "size_bytes": 134
+      },
+      {
+        "name": "setup_swap_info",
+        "size_bytes": 215
+      },
+      {
+        "name": "setup_swap_map_and_extents",
+        "size_bytes": 1457
+      },
+      {
+        "name": "try_to_unuse",
+        "size_bytes": 3200
+      }
+    ],
+    "auto_duplicate_functions": [
+      "cluster_count",
+      "cluster_set_flag",
+      "cluster_set_null",
+      "first_se",
+      "next_se",
+      "swap_count"
+    ],
+    "auto_resident_frontier_functions": [
+      "add_swap_extent",
+      "add_to_avail_list",
+      "cluster_list_add_tail",
+      "del_from_avail_list",
+      "inc_cluster_info_page",
+      "max_swapfile_size",
+      "swap_discard_work",
+      "swap_free",
+      "try_to_free_swap"
+    ],
+    "auto_resident_frontier_globals": [
+      "least_priority",
+      "nr_rotate_swap",
+      "nr_swap_pages",
+      "nr_swapfiles",
+      "proc_poll_event",
+      "proc_poll_wait",
+      "swap_active_head",
+      "swap_avail_heads",
+      "swap_info",
+      "swap_lock",
+      "swapon_mutex",
+      "total_swap_pages"
+    ],
+    "intrinsic_resident_reasons": {
+      "max_swapfile_size": "weak_linkage",
+      "swap_discard_work": "escaped_function_address",
+      "least_priority": "mutable_module_lifetime_state",
+      "nr_swapfiles": "mutable_module_lifetime_state",
+      "swap_avail_heads": "mutable_module_lifetime_state",
+      "swap_info": "mutable_module_lifetime_state",
+      "total_swap_pages": "mutable_module_lifetime_state"
+    },
+    "auto_external_resident_exports": 28,
+    "auto_direct_resident_dependencies": 7,
+    "resident_dependency_export_count": 9,
+    "source_local_macros": [
+      "SWAPFILE_CLUSTER",
+      "LATENCY_LIMIT",
+      "SWAP_CLUSTER_INFO_COLS",
+      "SWAP_CLUSTER_SPACE_COLS",
+      "SWAP_CLUSTER_COLS"
+    ],
+    "llvm_graph_coverage_complete": true,
+    "source_closure_sha256": "baed3263e84360bd853f1b9553f2fa582876c553725e25026d1cdfdff272d4d9",
+    "source_extraction_sha256": "acb56559ceeb56030c9477db9dc020a0bc71b359d8ea026889f550a5bbf89fb5",
+    "bundle_manifest_sha256": "ebf7b689d6bf14812325c2ea005bfbaa92422536372bfdf6806d63297cac2526",
+    "preparation_manifest_sha256": "7f121da7de3ba6e2c65615d19b8c2cc307277fcfe6d27e6536021cb1a6b49dc1",
+    "module_file_bytes": 28216,
+    "module_permanent_bytes": 11345,
+    "module_sha256": "67528044835482cb650f32ad080ef039446577f90648dfd88664afb54063523f"
+  },
+  "build": {
+    "passed": true,
+    "targets": [
+      "vmlinux",
+      "modules",
+      "bzImage"
+    ],
+    "modpost_passed": true,
+    "llvm": true,
+    "llvm_ias": false,
+    "fixed_kbuild_build_version": 34,
+    "fixed_timestamp": "2026-08-01 00:00:00 +0800",
+    "vmlinux_file_bytes": 34732072,
+    "vmlinux_sha256": "0022a4cedce7ebc2801812b637eed5d4bb27d3ada2f006b47b72a8ed64a21bd1",
+    "bzimage_file_bytes": 5034112,
+    "bzimage_sha256": "6769aed3f3dbed4e0272b7eb79b63a023c338f0f4568bc23dab1fc6a9a2c2b84",
+    "resident_object_file_bytes": 43336,
+    "resident_object_sha256": "14aa1a1c6230cacf2de32b308bc597502d50ab7341cf64cfb617700a3b52db75"
+  },
+  "incremental_size": {
+    "baseline_is_v34_mechanism_build": true,
+    "strict_release_gate_passed": true,
+    "baseline_resident_object_bytes": 23722,
+    "modular_resident_object_bytes": 14131,
+    "unloaded_resident_savings_bytes": 9591,
+    "loaded_module_bytes": 11345,
+    "all_loaded_delta_bytes": 1754,
+    "baseline_linked_permanent_bytes": 15704648,
+    "modular_linked_permanent_bytes": 15704648,
+    "linked_permanent_delta_bytes": 0,
+    "baseline_bzimage_bytes": 5044288,
+    "modular_bzimage_bytes": 5034112,
+    "bzimage_delta_bytes": -10176,
+    "baseline_resident_object_sha256": "2daaa9678f53b87e6ce3af2a6002c05a6ee2ee37532e93081688ec37dbc1e655",
+    "modular_resident_object_sha256": "14aa1a1c6230cacf2de32b308bc597502d50ab7341cf64cfb617700a3b52db75",
+    "baseline_vmlinux_sha256": "8038a91db9a404ecbe6594fc1b4ccaa1405f5ee62e2e6f6cb19e93431bcdd231",
+    "modular_vmlinux_sha256": "0022a4cedce7ebc2801812b637eed5d4bb27d3ada2f006b47b72a8ed64a21bd1",
+    "baseline_bzimage_sha256": "ccd4a26933f17977ae33edbbc537f68c70e1bf0af90b3106c374aac8b7b17a5d",
+    "modular_bzimage_sha256": "6769aed3f3dbed4e0272b7eb79b63a023c338f0f4568bc23dab1fc6a9a2c2b84",
+    "strict_report_sha256": "0ca747be1e8a0756523917c3db8cd26e686235749ab76dd3c55716c67623f888"
+  },
+  "linker_alignment": {
+    "alignment_bytes": 2097152,
+    "baseline_payload_before_alignment_bytes": 6547632,
+    "modular_payload_before_alignment_bytes": 6502576,
+    "payload_delta_bytes": -45056,
+    "baseline_padding_before_alignment_bytes": 1840976,
+    "modular_padding_before_alignment_bytes": 1886032,
+    "final_text_delta_bytes": 0,
+    "additional_payload_reduction_to_previous_boundary_bytes": 211120,
+    "pure_v32_baseline_bzimage_bytes": 5056256,
+    "current_bzimage_delta_from_pure_v32_bytes": -22144,
+    "report_sha256": "15277ed7c916933b4baab609967f12e5743c4d630f26a17572e036cbd32373bd"
+  },
+  "qemu_lifecycle": {
+    "passed": true,
+    "repeats": 4,
+    "completed_steps_per_run": 11,
+    "median_scenario_elapsed_seconds": 2.446,
+    "initially_absent": true,
+    "first_swapon_autoload": true,
+    "first_swapoff_unload": true,
+    "second_swapon_reload": true,
+    "second_swapoff_unload": true,
+    "initramfs_sha256": "b2bb0203cd36d89254ab1112b9df6454fc6b2da288ee91934dfb981eac6a9c00",
+    "scenario_sha256": "c9729917fef93623363de119ba59e5671295df76926d5234156a543646c0d971",
+    "runs": [
+      {
+        "index": 1,
+        "elapsed_seconds": 2.603,
+        "result_sha256": "99452eaf66b3434346fd848ede42420571c2950aa98fccefe38e2af3734dfd8f",
+        "log_sha256": "ac0f27e33c96212e6d824cfcc9c00d832907622627827b71b736507d9fd19495"
+      },
+      {
+        "index": 2,
+        "elapsed_seconds": 3.152,
+        "result_sha256": "75eae6c73c96e34a4d5b28d41ea441b6af54df56862e30c34022cf59226fa759",
+        "log_sha256": "cadc243dc06e2674bd507d97c1ef6040815ca79455dfc9a5a2508d5920682bfa"
+      },
+      {
+        "index": 3,
+        "elapsed_seconds": 2.289,
+        "result_sha256": "35ca652415ce10734b961fbed0ee3d73d4e2942cc6fef8b757154ebe7b863ab7",
+        "log_sha256": "fca5c77fe33369a3c44949202070a62fce002681224f3c78f7b275c27e871f5f"
+      },
+      {
+        "index": 4,
+        "elapsed_seconds": 2.122,
+        "result_sha256": "c2be1a22689eb8aef14d846889697e29cde65df1ece12c1884d56a1470cb069f",
+        "log_sha256": "a563c3c83ed79238930a5d3291a8b696bbca52a2c337c281b2af04d253068d99"
+      }
+    ]
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 8,
+    "boots": 16,
+    "deltas_modular_minus_baseline": {
+      "permanent_kernel_kb": 0.0,
+      "ready_uptime_seconds": -0.1,
+      "mem_available_kb": 10.0,
+      "slab_kb": -40.0
+    },
+    "baseline_scenario_sha256": "15cbcbf167afabf0b08cd09b26a5544b2a5c9cf5820382ae1ce7ef38af2792d9",
+    "modular_scenario_sha256": "b6f6bfc5867711d43a366d20031e7fe0be618f45f2e7048ecf1fc3aa7f823603",
+    "result_sha256": "512d3e52f904f54fda909e1427ca84f63417bf31758b1a41e256c858ff43ab9f"
+  },
+  "final_elf_accounting": {
+    "total_functions": 28959,
+    "total_bytes": 6693841,
+    "exact_ir_to_elf_matches": 28129,
+    "exact_coverage_percent": 97.133879,
+    "CORE": {
+      "functions": 26732,
+      "ratio_percent": 92.309817,
+      "bytes": 6353289
+    },
+    "READY": {
+      "functions": 81,
+      "ratio_percent": 0.279706,
+      "bytes": 56123
+    },
+    "BLOCKED": {
+      "functions": 296,
+      "ratio_percent": 1.022135,
+      "bytes": 42480
+    },
+    "UNKNOWN": {
+      "functions": 1850,
+      "ratio_percent": 6.388342,
+      "bytes": 241949
+    }
+  },
+  "combined_mechanism_validated": {
+    "modules": 13,
+    "selected_source_functions": 159,
+    "matched_final_elf_functions": 104,
+    "matched_final_elf_function_ratio_percent": 0.359128,
+    "matched_baseline_bytes": 49521,
+    "matched_baseline_byte_ratio_percent": 0.739799,
+    "unloaded_resident_object_savings_bytes": 42592
+  },
+  "combined_strict_qualified": {
+    "modules": 12,
+    "selected_source_functions": 150,
+    "matched_final_elf_functions": 100,
+    "matched_final_elf_function_ratio_percent": 0.345316,
+    "matched_baseline_bytes": 47508,
+    "matched_baseline_byte_ratio_percent": 0.709727,
+    "unloaded_resident_object_savings_bytes": 40979,
+    "note": "This is candidate-level strict accounting. The current v35 artifact is the 13-module mechanism superset and still contains the v34 select module."
+  },
+  "interpretation": {
+    "new_module_mechanism_validated": true,
+    "new_module_release_qualified": true,
+    "measured_startup_page_reduction_bytes": 0,
+    "claim": "A configuration-matched LLVM graph and exact Clang source facts automatically extracted 28 built-in swap functions into a state-safe unloadable module. The module passes a zero-regression strict size gate, repeated real swapon/swapoff autoload-unload-reload tests, and startup A/B.",
+    "limit": "The 9591-byte object reduction is absorbed by an x86 2 MiB aligned text island, so no final linked permanent page is claimed.",
+    "next_target": "Apply the new lifetime-state and ro_after_init boundary model to larger BOOT_COLD ownership closures and remove at least 211120 more pre-alignment payload bytes before rechecking the final linked image."
+  }
+}

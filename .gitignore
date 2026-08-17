@@ -1,3 +1,14 @@
 /.idea
+/.venv/
+/*.egg-info/
 __pycache__/
-
+*.py[cod]
+Frontend/LLVM_PASS/*.so
+Backend/AutoBackend/cpp/SourceExtractor
+/Runtime/fixtures/.*.cmd
+/Runtime/fixtures/*.ko
+/Runtime/fixtures/*.mod
+/Runtime/fixtures/*.mod.c
+/Runtime/fixtures/*.o
+/Runtime/fixtures/Module.symvers
+/Runtime/fixtures/modules.order

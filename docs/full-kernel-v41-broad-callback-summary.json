@@ -1,0 +1,380 @@
+{
+  "schema_version": 1,
+  "experiment": "full-kernel-v41-broad-callback-portfolio",
+  "date": "2026-08-03",
+  "kernel": {
+    "version": "5.10.176",
+    "architecture": "x86_64",
+    "compiler": "Clang 22.0.0git",
+    "profile": "v31 dependency-aware Kconfig startup profile"
+  },
+  "new_capabilities": {
+    "planner_core_callback_promotion": true,
+    "source_closure_final_elf_accounting_command": true,
+    "generated_header_chain_snapshotting": true,
+    "early_pr_fmt_hoisting": true,
+    "four_module_same_fd_cross_unload_validation": true,
+    "sixteen_pair_balanced_startup_validation": true
+  },
+  "reference_graph": {
+    "fact_streams": 1503,
+    "nodes": 143300,
+    "edges": 910007,
+    "ir_function_nodes": 95831,
+    "elf_sized_graph_sha256": "0da3a4fb93527d5970bdfc98bc7231c62e49f370b49b06a655d9d7a0f0a8949c",
+    "plan_sha256": "e21f81a378a6d03728b386242c07f3539dab7f28ab999a0f721e817e4e4ff7eb"
+  },
+  "selection": {
+    "relaxed_exploration_requested": true,
+    "selected_source_translation_units": 4,
+    "selected_callback_tables": 23,
+    "selected_lazy_interfaces": 37,
+    "moved_functions_originally_classified_CORE": 62,
+    "moved_functions_originally_classified_READY": 0,
+    "boundary_rule": "keep open/release and persistent lifetime state resident; defer sleepable process-context operation callbacks"
+  },
+  "modules": {
+    "deferred_selinuxfs_v41_cb": {
+      "candidate_id": "callback-table:18566eb50090c524",
+      "source_translation_unit": "security/selinux/selinuxfs.c",
+      "autoload_alias": "lmselinux41cb",
+      "selected_callback_tables": 20,
+      "selected_lazy_interfaces": 24,
+      "resident_lifetime_interfaces": [
+        "sel_mmap_handle_status",
+        "sel_mmap_policy",
+        "sel_open_handle_status",
+        "sel_open_policy",
+        "sel_release_policy"
+      ],
+      "moved_source_functions": 36,
+      "moved_source_globals": ["write_op"],
+      "matched_final_elf_functions": 25,
+      "matched_baseline_bytes": 7693,
+      "matched_functions": [
+        {"name": "sel_commit_bools_write", "size_bytes": 329},
+        {"name": "sel_make_policy_nodes", "size_bytes": 1982},
+        {"name": "sel_read_avc_cache_threshold", "size_bytes": 163},
+        {"name": "sel_read_avc_hash_stats", "size_bytes": 141},
+        {"name": "sel_read_bool", "size_bytes": 299},
+        {"name": "sel_read_checkreqprot", "size_bytes": 156},
+        {"name": "sel_read_class", "size_bytes": 159},
+        {"name": "sel_read_enforce", "size_bytes": 156},
+        {"name": "sel_read_handle_status", "size_bytes": 65},
+        {"name": "sel_read_handle_unknown", "size_bytes": 180},
+        {"name": "sel_read_initcon", "size_bytes": 170},
+        {"name": "sel_read_mls", "size_bytes": 159},
+        {"name": "sel_read_perm", "size_bytes": 165},
+        {"name": "sel_read_policy", "size_bytes": 132},
+        {"name": "sel_read_policycap", "size_bytes": 167},
+        {"name": "sel_read_policyvers", "size_bytes": 138},
+        {"name": "sel_read_sidtab_hash_stats", "size_bytes": 140},
+        {"name": "sel_write_avc_cache_threshold", "size_bytes": 286},
+        {"name": "sel_write_bool", "size_bytes": 390},
+        {"name": "sel_write_checkreqprot", "size_bytes": 388},
+        {"name": "sel_write_disable", "size_bytes": 316},
+        {"name": "sel_write_enforce", "size_bytes": 432},
+        {"name": "sel_write_load", "size_bytes": 492},
+        {"name": "sel_write_validatetrans", "size_bytes": 576},
+        {"name": "selinux_transaction_write", "size_bytes": 112}
+      ],
+      "llvm_graph_coverage_complete": true,
+      "snapshotted_generated_headers": ["flask.h", "av_permissions.h"],
+      "integration_transaction_id": "7dc8998c6e3408e2",
+      "source_closure_sha256": "cf6b8ea0e9752c9f58a5eec9a3a53b35ba905b6d0988c227cde9cc93e46f3aad",
+      "source_extraction_sha256": "a0c71dc20ed67386bb36969b2679a87a1988c645a3a489c73618ad1ce31f3aca",
+      "callback_discovery_sha256": "7fb0eabaaed9b117eabcf555cb354f56eddb1a2ecbe257725fbf166ccad8d178",
+      "bundle_manifest_sha256": "a39f851df3e31f569f284e795db01277f7db4fc3757ca5583631dfc3f79c452b"
+    },
+    "deferred_vcs_v41_cb": {
+      "candidate_id": "callback-table:0c13d23418623332",
+      "source_translation_unit": "drivers/tty/vt/vc_screen.c",
+      "autoload_alias": "lmvcs41cb",
+      "selected_callback_tables": 1,
+      "selected_lazy_interfaces": [
+        "vcs_fasync",
+        "vcs_lseek",
+        "vcs_poll",
+        "vcs_read",
+        "vcs_write"
+      ],
+      "resident_lifetime_interfaces": ["vcs_open", "vcs_release"],
+      "moved_source_functions": 14,
+      "moved_source_globals": [],
+      "matched_final_elf_functions": 6,
+      "matched_baseline_bytes": 3637,
+      "matched_functions": [
+        {"name": "vcs_fasync", "size_bytes": 88},
+        {"name": "vcs_lseek", "size_bytes": 275},
+        {"name": "vcs_poll", "size_bytes": 108},
+        {"name": "vcs_poll_data_get", "size_bytes": 211},
+        {"name": "vcs_read", "size_bytes": 1476},
+        {"name": "vcs_write", "size_bytes": 1479}
+      ],
+      "llvm_graph_coverage_complete": true,
+      "integration_transaction_id": "59853bfb16c0dcff",
+      "source_closure_sha256": "5ffa01f4a69968f6e2f3a24e9c220739466ed140a3ab0765dddaba95d8cfe8a9",
+      "source_extraction_sha256": "e3c8a8ad42750b2ff12f6e85893283de372b517f0800b0ba8808d08a0352934a",
+      "callback_discovery_sha256": "7c928a3a73f58d4ab5d2b1651e2fbe59f3326f8a3def2aa4f7a109725a0d1d9c",
+      "bundle_manifest_sha256": "854cff144d2d70841f8a2c96650f66e623df528e47f5d28433d822b54a40ba8d"
+    },
+    "deferred_vgaarb_v41_cb": {
+      "candidate_id": "callback-table:f266fb9e14ee68bd",
+      "source_translation_unit": "drivers/gpu/vga/vgaarb.c",
+      "autoload_alias": "lmvga41cb",
+      "selected_callback_tables": 1,
+      "selected_lazy_interfaces": [
+        "vga_arb_fpoll",
+        "vga_arb_read",
+        "vga_arb_write"
+      ],
+      "resident_lifetime_interfaces": ["vga_arb_open", "vga_arb_release"],
+      "moved_source_functions": 6,
+      "moved_source_globals": [],
+      "matched_final_elf_functions": 6,
+      "matched_baseline_bytes": 3700,
+      "matched_functions": [
+        {"name": "vga_arb_fpoll", "size_bytes": 43},
+        {"name": "vga_arb_read", "size_bytes": 378},
+        {"name": "vga_arb_write", "size_bytes": 2788},
+        {"name": "vga_pci_str_to_vars", "size_bytes": 127},
+        {"name": "vga_str_to_iostate", "size_bytes": 122},
+        {"name": "vga_tryget", "size_bytes": 242}
+      ],
+      "llvm_graph_coverage_complete": true,
+      "integration_transaction_id": "9f31f5bcd09a1c54",
+      "source_closure_sha256": "9f6ae1ce915804e0dea1563e8a19f8a1dcd445ef1b759b870e226c09da01bbbd",
+      "source_extraction_sha256": "efe7db8a04a87201814e0008b943efb06c1f2973043aef1e272543969601228a",
+      "callback_discovery_sha256": "621d095ee0d7b787185b03b50f659e3db28aa0cd05a972efefe4372d0f822c8a",
+      "bundle_manifest_sha256": "8823626e1a7211a83219a6e373aa72159eca072d90ba8ab827d9ffff6247f83f"
+    },
+    "deferred_pipe_v41_cb": {
+      "candidate_id": "callback-table:68ddfe638195db82",
+      "source_translation_unit": "fs/pipe.c",
+      "autoload_alias": "lmpipe41cb",
+      "selected_callback_tables": 1,
+      "selected_lazy_interfaces": [
+        "pipe_fasync",
+        "pipe_ioctl",
+        "pipe_poll",
+        "pipe_read",
+        "pipe_write"
+      ],
+      "resident_lifetime_interfaces": ["fifo_open", "pipe_release"],
+      "moved_source_functions": 6,
+      "moved_source_globals": [],
+      "matched_final_elf_functions": 5,
+      "matched_baseline_bytes": 3127,
+      "matched_functions": [
+        {"name": "pipe_fasync", "size_bytes": 168},
+        {"name": "pipe_ioctl", "size_bytes": 248},
+        {"name": "pipe_poll", "size_bytes": 240},
+        {"name": "pipe_read", "size_bytes": 1024},
+        {"name": "pipe_write", "size_bytes": 1447}
+      ],
+      "llvm_graph_coverage_complete": true,
+      "duplicated_resident_helpers": ["__pipe_lock", "__pipe_unlock"],
+      "integration_transaction_id": "365a4f1445e28cc9",
+      "source_closure_sha256": "633db4c9ad43e5ca4db9cf33287094b00b67d8cfdfa4494ed38eff09f3364802",
+      "source_extraction_sha256": "4b946ba4450002f0ac1a021e82797dce0cbf006ee6c6bbefaf2b8564f07eafca",
+      "callback_discovery_sha256": "6450ee3ad14399a8ce5429cf2b5507762ef993b0285a73a797cab2ebbb21f84c",
+      "bundle_manifest_sha256": "f7a06a05980d9a109913b590fc73febeca55a8a6e0ea5f7873cb512446d8599d"
+    }
+  },
+  "source_closure_elf_accounting": {
+    "passed": true,
+    "command": "python3 -m kernel_modularizer summarize-source-closures",
+    "baseline_v40_function_symbols": 28880,
+    "baseline_v40_function_bytes": 6618704,
+    "moved_source_function_definitions": 62,
+    "moved_source_global_definitions": 1,
+    "matched_final_elf_functions": 42,
+    "matched_baseline_bytes": 18157,
+    "unmatched_inlined_or_eliminated_definitions": 20,
+    "report_sha256": "93a79b905f283ad9a5f3995f1f129fdbf3f8d658d5b1b6c7817cf0fb70af1852"
+  },
+  "incremental_size": {
+    "isolated_observations": {
+      "deferred_selinuxfs_v41_cb": {
+        "unloaded_resident_savings_bytes": 4883,
+        "loaded_module_bytes": 11094,
+        "all_loaded_delta_bytes": 6211,
+        "report_sha256": "854fa9dbb15b9dad3ea2895ef6dec7d9b25263eda3afd8c8e7dd1627c9f2d6be"
+      },
+      "deferred_vcs_v41_cb": {
+        "unloaded_resident_savings_bytes": 2995,
+        "loaded_module_bytes": 5600,
+        "all_loaded_delta_bytes": 2605,
+        "report_sha256": "bb895683c298597584b51d4b42da5f20fe8f6f67d95c173728413d03bbe84e07"
+      },
+      "deferred_vgaarb_v41_cb": {
+        "unloaded_resident_savings_bytes": 3015,
+        "loaded_module_bytes": 5355,
+        "all_loaded_delta_bytes": 2340,
+        "report_sha256": "10b568b47c6d366ce424e8e2d9c7350519d0fedcd032c66f4974b2a5e4946d16"
+      },
+      "deferred_pipe_v41_cb": {
+        "unloaded_resident_savings_bytes": 2344,
+        "loaded_module_bytes": 4531,
+        "all_loaded_delta_bytes": 2187,
+        "report_sha256": "2c2eab463538abea7ed921157559c88f672a1af6a40e48ba299159f2fd7b2a76"
+      }
+    },
+    "combined_strict_gate": {
+      "passed": true,
+      "minimum_resident_savings_bytes": 4096,
+      "baseline_resident_object_bytes": 45441,
+      "modular_resident_object_bytes": 32204,
+      "unloaded_resident_savings_bytes": 13237,
+      "loaded_module_bytes": 26580,
+      "all_loaded_delta_bytes": 13343,
+      "baseline_linked_permanent_bytes": 15704648,
+      "modular_linked_permanent_bytes": 15704584,
+      "linked_permanent_delta_bytes": -64,
+      "baseline_bzimage_bytes": 5013568,
+      "modular_bzimage_bytes": 5008160,
+      "bzimage_delta_bytes": -5408,
+      "report_sha256": "b0291bfca91f5c9b18f70956bafee72e0b5431804b9f632976f8a17c23db6614"
+    }
+  },
+  "build": {
+    "passed": true,
+    "modpost_passed": true,
+    "generated_source_warnings": 0,
+    "vmlinux_file_bytes": 34715672,
+    "vmlinux_sha256": "eba55775f7119c5af81c330434cd0d705bd146959c48453e5ec245fd211ba579",
+    "bzimage_file_bytes": 5008160,
+    "bzimage_sha256": "f11cfdcdf1e9da707953f71325e4617cb201c49a78b64dd0823e410dc20447b9",
+    "resident_objects": {
+      "selinuxfs.o": {"file_bytes": 42360, "sha256": "dc9bf3721a662f630f87518858e82fa27e06e55965b82acde409a3ef75a9da74"},
+      "vc_screen.o": {"file_bytes": 7640, "sha256": "2bb5c2e2f44c6f7d404dae2ca02229cac52b5cd6619273a7dd54b90d4e6db0ea"},
+      "vgaarb.o": {"file_bytes": 22720, "sha256": "cd2c3eb43443560f38061652380fbd6089b142e7c7f5569bcfc49e1a20f03e53"},
+      "pipe.o": {"file_bytes": 23768, "sha256": "fa8fb97d1a956ac3120d61bf21f6c7d0ea9573553669a7a5509562f7a8784b43"}
+    },
+    "modules": {
+      "deferred_selinuxfs_v41_cb.ko": {"file_bytes": 28528, "sha256": "5c9806c1990f481d17d6aa1b464b8025e0bf1b770db39af3f21e8139da96153a"},
+      "deferred_vcs_v41_cb.ko": {"file_bytes": 14608, "sha256": "aecfd07591e630a94cb6e4cba35304a1b4b6fe57fd7d69f68dafb8ceeffe6181"},
+      "deferred_vgaarb_v41_cb.ko": {"file_bytes": 12328, "sha256": "8c8f717056ceaf283defe3a6ef16105396a2a0ee1d3f63bb8836f7308aa4addd"},
+      "deferred_pipe_v41_cb.ko": {"file_bytes": 11544, "sha256": "ee0877100c58b931f47a96c7ad59ebd02728c2255dca81f59c67908fdceba497"}
+    }
+  },
+  "linker_alignment": {
+    "alignment_bytes": 2097152,
+    "v40_payload_before_alignment_bytes": 6469808,
+    "current_payload_before_alignment_bytes": 6457200,
+    "incremental_payload_delta_bytes": -12608,
+    "pure_v32_payload_before_alignment_bytes": 6547632,
+    "cumulative_payload_delta_bytes": -90432,
+    "current_padding_before_alignment_bytes": 1931408,
+    "final_text_bytes": 10493448,
+    "final_text_delta_bytes": 0,
+    "additional_payload_reduction_to_previous_boundary_bytes": 165744,
+    "report_sha256": "4a35d3c2089084967d1df0549488d990e602f178cf5a9c2a0130a3ab38ec92a8"
+  },
+  "qemu_lifecycle": {
+    "passed": true,
+    "repeats": 4,
+    "completed_steps_per_run": 24,
+    "completed_steps_total": 96,
+    "median_ready_seconds": 2.46,
+    "run_elapsed_seconds": [16.712, 15.659, 16.785, 16.087],
+    "initially_absent": true,
+    "isolated_first_use_autoload_each": true,
+    "pipe_io_poll_ioctl_fasync_covered": true,
+    "vcs_read_write_lseek_poll_fasync_covered": true,
+    "vga_read_write_poll_covered": true,
+    "selinuxfs_read_write_no_policy_paths_covered": true,
+    "same_fd_cross_unload_reload_each": true,
+    "four_process_concurrent_first_use": true,
+    "all_modules_unload_reload": true,
+    "dmesg_clean": true,
+    "trigger_source_sha256": "59ae6ab0bc561d693e0a93ba59cd9793fa50de969b71ca0794b9233fc82bf5c4",
+    "trigger_binary_sha256": "c9d86ac589f524ef554896f650ce95577da11f2fb08e4328c60aa4fa13f927c4",
+    "init_script_sha256": "9272a1059efe3401194586c6f16875ef6c965d718bfe434af2638f174976e643",
+    "initramfs_sha256": "caa70572843ac05ce3476f8937603988ab380ed0080bb05cf7303cf15bad8963",
+    "scenario_sha256": "0848c98a13fbc7aeb669fad5522130870faa5151f5f475d89108815e76049779",
+    "single_run_result_sha256": "378ab1b36c027fdfd1c9cb7300a66628825b1807b357588f7dad759a37561250",
+    "repeat_result_sha256": "982eb57db5aa870462d0e471501452908903a61c8ff852c861e1f4c0589b1e54"
+  },
+  "startup_ab": {
+    "passed": true,
+    "pairs": 16,
+    "boots": 32,
+    "identical_initramfs": true,
+    "baseline_median": {
+      "permanent_kernel_kb": 15336.0,
+      "ready_uptime_seconds": 2.28,
+      "mem_available_kb": 967144.0,
+      "slab_kb": 7734.0
+    },
+    "modular_median": {
+      "permanent_kernel_kb": 15336.0,
+      "ready_uptime_seconds": 2.43,
+      "mem_available_kb": 967374.0,
+      "slab_kb": 7750.0
+    },
+    "deltas_modular_minus_baseline": {
+      "permanent_kernel_kb": 0.0,
+      "ready_uptime_seconds": 0.15,
+      "mem_available_kb": 230.0,
+      "slab_kb": 16.0
+    },
+    "baseline_scenario_sha256": "51aaddc036b98c12fd88f0cf7be4852a1d196c10057c1621b7e53beb643d855e",
+    "modular_scenario_sha256": "05491ba7fa66a544dafac0341d0d0d02487e80d26244751bbae4c83a68419276",
+    "result_sha256": "2eba2a7220976d2263e4e2043993e45290db36f0c09397bad69119b1c7705a19"
+  },
+  "final_elf_accounting": {
+    "total_functions": 28959,
+    "total_bytes": 6693841,
+    "CORE": {"functions": 26732, "ratio_percent": 92.309817, "bytes": 6353289, "byte_ratio_percent": 94.912458},
+    "READY": {"functions": 81, "ratio_percent": 0.279706, "bytes": 56123, "byte_ratio_percent": 0.838427},
+    "BLOCKED": {"functions": 296, "ratio_percent": 1.022135, "bytes": 42480, "byte_ratio_percent": 0.634613},
+    "UNKNOWN": {"functions": 1850, "ratio_percent": 6.388342, "bytes": 241949, "byte_ratio_percent": 3.614502},
+    "note": "The four planner categories remain a complete conservative partition. Validated callback-table extraction is an orthogonal set and promoted all 62 v41 functions from planner-CORE."
+  },
+  "combined_strict_qualified": {
+    "modules": 21,
+    "selected_source_functions": 371,
+    "matched_final_elf_functions": 242,
+    "matched_final_elf_function_ratio_percent": 0.835664,
+    "matched_baseline_bytes": 111302,
+    "matched_baseline_byte_ratio_percent": 1.662752,
+    "unloaded_resident_object_savings_bytes": 92123,
+    "pure_v32_bzimage_bytes": 5056256,
+    "current_bzimage_bytes": 5008160,
+    "current_bzimage_delta_bytes": -48096,
+    "current_bzimage_delta_percent": -0.951218
+  },
+  "v41_increment": {
+    "new_modules": 4,
+    "selected_source_functions": 62,
+    "selected_source_globals": 1,
+    "matched_final_elf_functions": 42,
+    "matched_final_elf_function_ratio_percent_of_pure_v32": 0.145033,
+    "matched_baseline_bytes": 18157,
+    "matched_baseline_byte_ratio_percent_of_pure_v32": 0.271249,
+    "unloaded_resident_object_savings_bytes": 13237,
+    "loaded_module_bytes": 26580,
+    "all_loaded_delta_bytes": 13343,
+    "linked_permanent_delta_bytes": -64,
+    "bzimage_delta_bytes": -5408
+  },
+  "test_suite": {
+    "passed": true,
+    "targeted_tests_passed": 49,
+    "tests_passed_total": 276,
+    "command": "python3 -m unittest discover -v"
+  },
+  "interpretation": {
+    "relaxed_selection_still_passed_strict_release_gate": true,
+    "all_new_moved_functions_were_planner_core": true,
+    "measured_startup_page_reduction_bytes": 0,
+    "exact_unloaded_object_savings_bytes": 13237,
+    "claim": "The complete LLVM graph plus callback-table rewriting automatically extracted 62 additional built-in C function definitions from four source files into four lazy modules; build, MODPOST, strict size, lifecycle, concurrency, same-FD reload, and 16-pair startup gates passed.",
+    "theory": "Init-cold is useful selection evidence but is not sufficient: loader readiness, sleepable context, callback and object lifetime, persistent state ownership, ABI types, exports, source closure, and actual runtime behavior still determine whether a boundary is valid.",
+    "workload_limit": "The unloaded saving lasts only until first use. Real systemd workloads normally use pipes early, and a distribution that loads SELinux policy early may also load the SELinuxFS implementation before READY; VCS and VGA arbiter are stronger long-lived candidates on headless systems.",
+    "all_loaded_tradeoff": "Loading all four modules increases the affected resident-plus-module footprint by 13343 bytes compared with the original built-in implementations.",
+    "alignment_limit": "The portfolio removes 12608 pre-alignment payload bytes, but x86 2 MiB alignment absorbs them; another 165744 bytes are needed to cross the current linked text boundary.",
+    "next_target": "Combine real target-distribution first-use traces with the callback-table source-group ranking, prioritize low-first-use closures, and accumulate at least 165744 more pre-alignment payload bytes without moving lifetime-critical callbacks."
+  }
+}
